@@ -1,0 +1,3 @@
+[submodule "inst/python/pyelan"]
+	path = inst/python/pyelan
+	url = git@github.com:jonkeane/pyelan.git
