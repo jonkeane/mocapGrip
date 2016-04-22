@@ -1,9 +1,9 @@
 Package: mocapGrip
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Illusion-Grip Motion Capture Package
 Version: 0.1
 Date: 2016-04-22
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Authors@R: person("Jonathan", "keane", email = "jonkeane@uchicago.edu", role = c("aut", "cre"))
+Description: This package contains all of the code to synchronize, clip, extract, and analyze data from a project that uses motion capture to understand visual illusion, reach to grasp action, size estimation, and gesture.
+License: GPL-2
 LazyData: TRUE
