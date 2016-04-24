@@ -185,16 +185,21 @@ clipWriter <- function(data, subjDir) {
   outFilename <- paste(subjDir, "/", paste(subj, session, trial,sep="-"),".csv", sep="")
   write.csv(alignedMarkers, file = outFilename, row.names = FALSE)
 
-#   message(paste("Wrote file: ",outFilename,sep=""))
   message(paste("Finished with:",paste(exp,subj,session,trial,sep="-"),sep=" "))
-  if(exists("twtrNotify")){twtrNotify(paste(subj, session, trial,sep="-"))}
 
   alignedMarkers
 }
 
+
+#' Main function for ingesting motion capture data.
+#'
+#' This function takes in a vector of video files, and writes out elan files with videos linked and synchronized motion capture data linked. It depends on the raw motion capture data, videos, and audio files being in set predetermined folders already.
+#'
+#' @param files A vector of video files
+#' @return Unclear, but not useful currently.
+#'
 #' @export
-mainFunc <- function(files, dirPath = "."){
-  # dir.create(paste(dirPath,"savedData",sep="/"), recursive=TRUE, showWarnings=FALSE) # maybe not needed?
+mainFunc <- function(files){
 
   lapply(files, main)
 }
