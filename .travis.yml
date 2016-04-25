@@ -2,6 +2,7 @@
 language: r
 warnings_are_errors: true
 sudo: required
+cache: packages
 
 # Handle git submodules yourself from http://stackoverflow.com/questions/15674064/github-submodule-access-rights-travis-ci
 git:
