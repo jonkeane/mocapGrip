@@ -9,6 +9,8 @@ Description: This package contains all of the code to synchronize, clip,
     visual illusion, reach to grasp action, size estimation, and gesture.
 Imports: lubridate
 Suggests: testthat
+SystemRequirements: python
 License: GPL-2
 LazyData: TRUE
 RoxygenNote: 5.0.1
+
