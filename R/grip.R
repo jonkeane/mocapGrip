@@ -155,6 +155,7 @@ align <- function(data, windowWidth=10, verbose=TRUE, offset=0){
 
 # main clipping function.
 clipper <- function(data, verbose=FALSE, parallel=TRUE){
+  `5-7` <- `6-8` <- `10-11` <- `9-12` <- NULL # to get rid of note errors
   file <- data[["pathMarkers"]]
 
   filteredMarkerData <- markerRead(file = file, verbose=FALSE)

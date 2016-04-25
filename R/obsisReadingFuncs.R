@@ -1,14 +1,15 @@
 #################### functions ####################
 
 pathsToDF <- function(input,pathToRemove) {
+  Experiment<- subj<- session<- trial<- folder<- file<-  path <- NULL # to get ride of notes
   # split the input vector into a data frame on /
   processed <- sub(paste(normalizePath(pathToRemove),"/",sep=""), "", input)
-  out <- data.frame( do.call( rbind, strsplit( processed, '/' ) ) ) 
+  out <- data.frame( do.call( rbind, strsplit( processed, '/' ) ) )
   # name the columns
-  names(out) <- c("", "Experiment","subj","session","trial","folder","file")  
+  names(out) <- c("", "Experiment","subj","session","trial","folder","file")
   # add the path back
   out$path <- input
-  
+
   subset(out, select = c(Experiment,subj,session,trial,folder,file, path))
 }
 
@@ -30,6 +31,7 @@ csvWithNames <- function(file){
 
 #converts timecodes into seconds
 timeToSecs <- function(time, fps = 30){
+  times <- hours <- minutes <- seconds <- NULL # to get rid of notes
   hms<- substr(time,0,8)
   secs <- times(hms)
   out <- hours(secs)*60*60+minutes(secs)*60+seconds(secs) + (as.numeric(substr(time,10,12))+1)*(1/fps)
@@ -38,6 +40,7 @@ timeToSecs <- function(time, fps = 30){
 
 
 markerRead <- function(file,beginTime=0,endTime=600,verbose=FALSE) {
+  Time..sec. <- NULL # to get rid of note errors
   if(verbose){
     print(file)
     print(beginTime)
@@ -79,9 +82,9 @@ ffmpegDurParse <- function(ffmpegout){
 videoLength <- function(file){
   call <- paste("ffprobe", file, "2>&1", sep=" ")
   length <- tryCatch({
-    
+
     ffmpegout <- system(call, intern=TRUE)
-    
+
     return(ffmpegDurParse(ffmpegout))
   }, error=function(cond) {
     message(paste(call, "does not seem to exist."))
