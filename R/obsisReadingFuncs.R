@@ -31,10 +31,10 @@ csvWithNames <- function(file){
 
 #converts timecodes into seconds
 timeToSecs <- function(time, fps = 30){
-  times <- hours <- minutes <- seconds <- NULL # to get rid of notes
   hms<- substr(time,0,8)
-  secs <- times(hms)
-  out <- hours(secs)*60*60+minutes(secs)*60+seconds(secs) + (as.numeric(substr(time,10,12))+1)*(1/fps)
+  # This used to be a times() function, but has been replaced with lubridate's hms. This should be tested to make sure it works.
+  secs <- lubridate::hms(hms)
+  out <- lubridate::hours(secs)*60*60+lubridate::minutes(secs)*60+lubridate::seconds(secs) + (as.numeric(substr(time,10,12))+1)*(1/fps)
   return(out)
 }
 
