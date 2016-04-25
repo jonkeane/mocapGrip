@@ -238,7 +238,7 @@ main <- function(videoFile){
   }
 
 
-  pathToElanGen <- system.file("python/pyelan/elanGen.py", package = "mocapProcessor", mustWork=TRUE)
+  pathToElanGen <- system.file("python/pyelan/elanGen.py", package = "mocapGrip", mustWork=TRUE)
 
   elanBasename <- base
 
