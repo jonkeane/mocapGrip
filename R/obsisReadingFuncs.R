@@ -104,5 +104,16 @@ videoLength <- function(file){
 }
 
 
+# returns the max that is not infinity for when the mocap data returns infinty
+maxNotInf <- function(vector, ...){
+  vector <- ifelse(is.infinite(vector),NA,vector)
+  max(vector, ...)
+}
+
+# returns the min that is not infinity for when the mocap data returns (negative) infinty
+minNotInf <- function(vector, ...){
+  vector <- ifelse(is.infinite(vector),NA,vector)
+  min(vector, ...)
+}
 
 
