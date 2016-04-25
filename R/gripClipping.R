@@ -238,7 +238,7 @@ main <- function(videoFile){
   }
 
 
-  pathToElanGen <- system.file("pyelan/elanGen.py", package = "mocapProcessor", mustWork=TRUE)
+  pathToElanGen <- system.file("python/pyelan/elanGen.py", package = "mocapProcessor", mustWork=TRUE)
 
   elanBasename <- base
 
@@ -269,6 +269,5 @@ main <- function(videoFile){
 #'
 #' @export
 makeElanFiles <- function(files){
-
   lapply(files, main)
 }
