@@ -9,7 +9,8 @@ cmdArgs <- commandArgs(trailingOnly = TRUE)
 # library(devtools)
 # load_all("./mocapProcessor")
 
-install.packages("./mocapProcessor", repos = NULL, type="source")
-library(mocapProcessor)
+# install.packages("./mocapProcessor", repos = NULL, type="source")
+install_github("jonkeane/mocapGrip")
+library(mocapGrip)
 
 mainFunc(cmdArgs) -> output
