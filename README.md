@@ -1,0 +1,1 @@
+[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=master)](https://travis-ci.org/jonkeane/mocapGrip)
