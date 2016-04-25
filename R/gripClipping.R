@@ -193,7 +193,7 @@ clipWriter <- function(data, subjDir) {
 
 
 
-main <- function(videoFile){
+makeOneElanFile <- function(videoFile){
   # runs through the video files, find csvs in the GRIP folder, generate csvs, generate elan files
   # Change the warn option so that warnings are displayd along with progress. There should be a better way to do this...
   oldWarn <- getOption("warn")
@@ -269,5 +269,5 @@ main <- function(videoFile){
 #'
 #' @export
 makeElanFiles <- function(files){
-  lapply(files, main)
+  lapply(files, makeOneElanFile)
 }
