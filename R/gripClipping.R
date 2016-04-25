@@ -199,6 +199,13 @@ makeOneElanFile <- function(videoFile){
   oldWarn <- getOption("warn")
   options(warn = 1)
 
+  # check if the videoFile exists
+  if(!file.exists(videoFile)){
+    warning(paste("The video file (",as.character(videoFile),") does not exist. No Elan files have been created.", sep = ""))
+    return(1)
+  }
+
+
   base <- strsplit(tail(strsplit(videoFile, "/", fixed=TRUE)[[1]], 1), ".", fixed=TRUE)[[1]][1]
   df <- data.frame(Experiment="GRIP",
                    subj = strsplit(base, "-", fixed=TRUE)[[1]][1],
