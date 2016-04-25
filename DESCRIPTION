@@ -7,6 +7,8 @@ Authors@R: person("Jonathan", "keane", email = "jonkeane@uchicago.edu", role = c
 Description: This package contains all of the code to synchronize, clip,
     extract, and analyze data from a project that uses motion capture to understand
     visual illusion, reach to grasp action, size estimation, and gesture.
+Imports:
+    lubridate
 License: GPL-2
 LazyData: TRUE
 RoxygenNote: 5.0.1
