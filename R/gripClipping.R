@@ -13,34 +13,39 @@ extractMarkers <- function(data, markers, verbose=FALSE){
   dfOut
 }
 
+#' @importFrom magrittr %>%
 calculateDistances <- function(data, markers){
-  # this could be changed to dplyr?
-  dists <- c()
-  for(m in 1:length(data$times)) {
-    mOne <- c(data[m,paste("X", markers[1] ,sep="")], data[m,paste("Y", markers[1] ,sep="")], data[m,paste("Z", markers[1] ,sep="")])
-    mTwo <- c(data[m,paste("X", markers[2] ,sep="")], data[m,paste("Y", markers[2] ,sep="")], data[m,paste("Z", markers[2] ,sep="")])
-    dists <- append(dists, as.numeric(dist(rbind(mOne,mTwo))))
-  }
-  dfOut <- data
+  # make marker names and label name
+  x1 <- paste("X", markers[1] ,sep="")
+  y1 <- paste("Y", markers[1] ,sep="")
+  z1 <- paste("Z", markers[1] ,sep="")
+  x2 <- paste("X", markers[2] ,sep="")
+  y2 <- paste("Y", markers[2] ,sep="")
+  z2 <- paste("Z", markers[2] ,sep="")
   label <- paste(markers, collapse="-")
-  dfOut[,label] <- dists
+
+  # setup distance evaluation funciton
+  distanceValue <- lazyeval::interp(~dist(rbind(c(x1, y1, z1), c(x2, y2, z2))),
+                                    x1=as.name(x1), y1=as.name(y1), z1=as.name(z1),
+                                    x2=as.name(x2), y2=as.name(y2), z2=as.name(z2)
+                                    )
+
+  dfOut <- data %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate_(.dots = setNames(list(distanceValue), label))
+
   dfOut
 }
 
 meanOnAxis <- function(data, markers, axis){
-  # this could be changed to dplyr?
-  means <- c()
-  for(m in 1:length(data$times)) {
-    points <- c()
-    for(marker in markers){
-      points <- append(points, data[m,paste(axis, marker ,sep="")])
-    }
-    means <- append(means, as.numeric(mean(points, na.rm=TRUE)))
-  }
-  dfOut <- data
+  # make marker names and label name
+  markersWithAxis <- paste(axis, markers ,sep="")
   label <- paste("mean",axis,paste(markers, collapse="-"), sep="-")
-  dfOut[,label] <- means
-  dfOut
+
+  # Get means for each row of only the marker/axes that we care about
+  data[,label] <- rowMeans(data[,markersWithAxis], na.rm = TRUE)
+
+  data
 }
 
 # A gross alignment function that looks for and finds peaks that are over the threshold amplitude
@@ -161,13 +166,14 @@ clipper <- function(data, verbose=FALSE, parallel=TRUE){
   filteredMarkerData <- markerRead(file = file, verbose=FALSE)
 
   filteredMarkers <- extractMarkers(filteredMarkerData, c(0,1,2,3,4,5,6,7,8,9,10,11,12))
+  # return(filteredMarkers) # for calculateDistances debug
   filteredMarkers <- calculateDistances(filteredMarkers, c(5,7))
   filteredMarkers <- calculateDistances(filteredMarkers, c(6,8))
   filteredMarkers <- calculateDistances(filteredMarkers, c(10,11))
   filteredMarkers <- calculateDistances(filteredMarkers, c(9,12))
   filteredMarkers <- calculateDistances(filteredMarkers, c(0,1))
   filteredMarkers <- meanOnAxis(filteredMarkers, c(0,1,2,3,4), axis="Y")
-
+  # return(filteredMarkers) # for calculateDistances debug
   # average the clapper marker distances
   filteredMarkers$clapperState <- apply(subset(filteredMarkers, select = c(`5-7`,`6-8`,`10-11`,`9-12`)), 1, mean, na.rm=T)
   # ggplot(filteredMarkers) + geom_line(aes(x=times, y=clapperState), alpha = 1)  + xlim(5,15)
@@ -183,6 +189,7 @@ clipWriter <- function(data, subjDir) {
   message(paste("Starting on:",paste(exp,subj,session,trial,sep="-"),sep=" "))
 
   alignedMarkers <- clipper(data)
+  # return(alignedMarkers) # for calculateDistances debug
   outFilename <- paste(subjDir, "/", paste(subj, session, trial,sep="-"),".csv", sep="")
   write.csv(alignedMarkers, file = outFilename, row.names = FALSE)
 
@@ -207,22 +214,33 @@ makeOneElanFile <- function(videoFile){
 
 
   base <- strsplit(tail(strsplit(videoFile, "/", fixed=TRUE)[[1]], 1), ".", fixed=TRUE)[[1]][1]
+  baseDir <- dirname(videoFile)
+  subjNum <- basename(baseDir) # save the subject number for checkeing
+  baseDir <- dirname(baseDir) # peal off the subject numbe
+  clippedVideo <- basename(baseDir) # save the clipped video for checkeing
+  baseDir <- dirname(baseDir) # this is the final basename
+
+  if( !{grepl("\\d\\d\\d", subjNum)&grepl("Clipped Video", clippedVideo)} ) {
+    stop("Error, path to the video file (",videoFile,") is not what is expected. The video file should be in a folder ./Clipped Video/[subject number]", sep="")
+  }
+
   df <- data.frame(Experiment="GRIP",
                    subj = strsplit(base, "-", fixed=TRUE)[[1]][1],
                    session = strsplit(base, "-", fixed=TRUE)[[1]][2],
                    trial = strsplit(base, "-", fixed=TRUE)[[1]][3])
-  df$pathMarkers <- paste("./mocapData/",df$Experiment, df$subj, df$session, df$trial,"Filtered Markers","Filtered Markers.txt",sep="/")
+  df$pathMarkers <- paste(baseDir,"mocapData",df$Experiment, df$subj, df$session, df$trial,"Filtered Markers","Filtered Markers.txt",sep="/")
 
   #   csvDir <- paste(dirPath,"mocapCSVs",unique(df$subj),sep="/")
-  csvDir <- paste("mocapCSVs",unique(df$subj),sep="/")
+  csvDir <- paste(baseDir,"mocapCSVs",unique(df$subj),sep="/")
 
   dir.create(csvDir, recursive=TRUE, showWarnings=FALSE)
 
   #   elanDir <- paste(dirPath,"elanFilesOut",unique(df$subj),sep="/")
-  elanDir <- paste("elanFilesOut",unique(df$subj),sep="/")
+  elanDir <- paste(baseDir,"elanFilesOut",unique(df$subj),sep="/")
   dir.create(elanDir, recursive=TRUE, showWarnings=FALSE)
 
   markerData <- clipWriter(data=df, subjDir=csvDir)
+  # return(markerData) # for calculateDistances debug
   # "tracks" : [{"name": "clapper", "column": 36, "min":0, "max":200}]
   grip <- paste('{"name": "grip", "column": ',which( colnames(markerData)=="0-1" )-1,', "min":',minNotInf(markerData$`0-1`, na.rm=TRUE),', "max":',maxNotInf(markerData$`0-1`, na.rm=TRUE),'}', sep='')
   clapper <- paste('{"name": "clapper", "column": ',which( colnames(markerData)=="clapperState" )-1,', "min":',minNotInf(markerData$clapperState, na.rm=TRUE),', "max":',maxNotInf(markerData$clapperState, na.rm=TRUE),'}', sep='')
