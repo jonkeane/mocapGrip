@@ -1,4 +1,9 @@
 library(mocapGrip)
+
+load(file.path('extractedMarkerData.Rdata')) # markerDataHead
+load(file.path('dist57.RData')) # dist57head
+load(file.path('meanData.Rdata')) # meanDataHead
+
 context("distance calculationss")
 
 test_that("calculateDistances returns the correct distances", {
