@@ -1,10 +1,9 @@
 library(mocapGrip)
 context("distance calculationss")
 
-load(file.path('.','tests','testthat','extractedMarkerData.Rdata')) # markerDataHead
-load(file.path('dist57.RData')) # dist57head
-
 test_that("calculateDistances returns the correct distances", {
+  load(file.path('extractedMarkerData.Rdata')) # markerDataHead
+  load(file.path('dist57.RData')) # dist57head
   expect_equal(mocapGrip:::calculateDistances(markerDataHead, c(5,7)), dist57head)
 })
 
