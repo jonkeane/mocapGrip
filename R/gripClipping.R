@@ -258,10 +258,10 @@ makeOneElanFile <- function(videoFile){
   mediaPaths <- c(videoFilePaths,audioFilePaths)
   media <- paste('["',paste(mediaPaths, collapse='","'),'"]', sep='')
 
-  call <- paste("python ",pathToElanGen," \"",elanDir,"\" \"",elanBasename,"\" \'",media,"\'"," \'[{\"file\" : \"",paste(csvDir, "/", paste(df$subj, df$session, df$trial,sep="-"),".csv", sep=""),"\", ",tracks,"}]\'", sep="")
+  arugments <- c(pathToElanGen,paste(" \"",elanDir,"\" \"",elanBasename,"\" \'",media,"\'"," \'[{\"file\" : \"",paste(csvDir, "/", paste(df$subj, df$session, df$trial,sep="-"),".csv", sep=""),"\", ",tracks,"}]\'", sep=""))
 
   options(warn = oldWarn)
-  system(call)
+  system2("python", args = arugments)
   call
 }
 
