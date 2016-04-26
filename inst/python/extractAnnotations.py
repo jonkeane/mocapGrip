@@ -125,7 +125,9 @@ def setup_warning_catcher():
 
 
 destDir = sys.argv[1]
-# destDir = "../../extractedData"
+# check that destdir exists:
+if os.path.isdir(destDir) == False:
+  raise Exception("The destination directory ("+str(destDir)+") does not exist. Please create it and try again.")
 
 eafFiles = sys.argv[2:]
 # eafFiles = ['../../elanFiles/GRI_016/GRI_016-SESSION_001-TRIAL_006.eaf']
