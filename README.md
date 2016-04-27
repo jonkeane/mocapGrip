@@ -22,6 +22,6 @@ Currently, the only dependency (other than R package dependencies which will be 
 TBD
 
 ## Testing
-This project uses unit testing and the package (testthat)[https://github.com/hadley/testthat] to run those unit tests (found in the `tests/testthat/` directory). These tests (as well as general R package well-formedness) are also run externally on (Travis CI)[https://travis-ci.org]. Currently, the status is[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=master)](https://travis-ci.org/jonkeane/mocapGrip)
+This project uses unit testing and the package (testthat)[https://github.com/hadley/testthat] to run those unit tests (found in the `tests/testthat/` directory). These tests (as well as general R package well-formedness) are also run externally on (Travis CI)[https://travis-ci.org].
 
 This project includes a decent amount of code from other projects that were not test-driven. Therefor not all functions are well tested. 
