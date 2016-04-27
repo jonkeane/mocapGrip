@@ -6,22 +6,22 @@ This package contains all of the code used to process and analyze motion capture
 
 The main functions are:
 * synchronize motion capture and video data,
-* setup annotation files to be annotated with (elan)[https://tla.mpi.nl/tools/tla-tools/elan/], 
+* setup annotation files to be annotated with [elan](https://tla.mpi.nl/tools/tla-tools/elan/), 
 * extract and check the annotations for errors,
 * run basic analyses on the extracted data (forthcoming) 
 
 ## Install
 
-The easiest way to install the package is to use the (devtools)[https://github.com/hadley/devtools] package (to install devtools, just type `install.packages("devtools")` at an R command prompt) and type `library(devtools); install_github("jonkeane/mocapGrip")`
+The easiest way to install the package is to use the [devtools](https://github.com/hadley/devtools) package (to install devtools, just type `install.packages("devtools")` at an R command prompt) and type `library(devtools); install_github("jonkeane/mocapGrip")`
 
 ## Dependencies (non-R)
 
-Currently, the only dependency (other than R package dependencies which will be installed by R in the installation) is a working modern (>=2.6) version of python. Some functions rely on the python module (pyelan)[https://github.com/jonkeane/pyelan] for parsing elan files. This should be downloaded automatically in the `[package install location]/python/` directory as `pyelan`.
+Currently, the only dependency (other than R package dependencies which will be installed by R in the installation) is a working modern (>=2.6) version of python. Some functions rely on the python module [pyelan](https://github.com/jonkeane/pyelan) for parsing elan files. This should be downloaded automatically in the `[package install location]/python/` directory as `pyelan`.
  
 ## Usage
 TBD
 
 ## Testing
-This project uses unit testing and the package (testthat)[https://github.com/hadley/testthat] to run those unit tests (found in the `tests/testthat/` directory). These tests (as well as general R package well-formedness) are also run externally on (Travis CI)[https://travis-ci.org].
+This project uses unit testing and the package [testthat](https://github.com/hadley/testthat) to run those unit tests (found in the `tests/testthat/` directory). These tests (as well as general R package well-formedness) are also run externally on [Travis CI](https://travis-ci.org).
 
 This project includes a decent amount of code from other projects that were not test-driven. Therefor not all functions are well tested. 
