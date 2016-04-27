@@ -12,7 +12,11 @@ The main functions are:
 
 ## Install
 
-The easiest way to install the package is to use the [devtools](https://github.com/hadley/devtools) package (to install devtools, just type `install.packages("devtools")` at an R command prompt) and type `library(devtools); install_github("jonkeane/mocapGrip")`
+The easiest way to install the package is to use the [devtools](https://github.com/hadley/devtools) package. 
+
+First, to install devtools, just type `install.packages("devtools")` at an R command prompt. 
+
+To install mocapGrip type `library(devtools); install_github("jonkeane/mocapGrip")` at an R command prompt.
 
 ## Dependencies (non-R)
 
