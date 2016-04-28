@@ -14,11 +14,11 @@ The main functions are:
 
 The easiest way to install the package is to use the [devtools](https://github.com/hadley/devtools) package. 
 
-First, to install devtools, just type `install.packages("devtools")` at an R command prompt.
+First, to install devtools, just type `install.packages("devtools")` at an R command prompt. (You can skip this step if you already have devtools installed.)
 
 To install mocapGrip type `library(devtools); install_github("jonkeane/mocapGrip")` at an R command prompt.
 
-By default, this installation will not include [pyelan](https://github.com/jonkeane/pyelan) to install it, type `library(mocapGrip); installPyelan()` at an R command prompt.
+By default, this installation will not include [pyelan](https://github.com/jonkeane/pyelan). To install it, type `library(mocapGrip); installPyelan()` at an R command prompt. (This will have to be done once each time you install a new version of `mocapGrip`, but shouldn't need to be run more than that.)
 
 ## Dependencies (non-R)
 
