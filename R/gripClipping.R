@@ -335,6 +335,7 @@ fixPaths <- function(files){
   system2("python", args = arugments)
   call
 
+  print("Warning: a backup of each eaf and tsconf file has been created (with the same name as the original plus .bak at the end). If this command is run again, those backup files will be overwritten.")
   return()
 }
 
