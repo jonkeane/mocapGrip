@@ -160,17 +160,29 @@ for eafFile in eafFiles:
     if len(tsconfs) > 1:
         warnings.warn("There's more than one tsconf file")
 
+    # setup a list to store warnings about tsconf files in. This will allow us to throw warnings about serious errors with tsconf files, but not for simply not finding files (which are being ignored)
+    tsconfWarnings = []
+
     for tsconf in tsconfs:
         # this should only be one file for this data
         # fix links, but supress warnings about those links for cleaner output
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
 
-            ts = pyelan.timeSeries(file = tsconf)
-            ts.fixLinks(searchDir = os.path.sep.join([destDir,"..","mocapCSVs"]))
+            try:
+                ts = pyelan.timeSeries(file = tsconf)
+            except:
+                # save a warning string to add to warnings after we are no longer ignoring them (see above)
+                tsconfWarnings.append("The tsconf file is not properly configured. This is likely due to tracks not being selected. Please check the "+tsconf+" file.")
+            else:
+                ts.fixLinks(searchDir = os.path.sep.join([destDir,"..","mocapCSVs"]))
 
     # catch warnings to fail elegantly.
     caught_warnings_list = setup_warning_catcher()
+
+    if len(tsconfWarnings) > 0:
+        for tsconfWarning in tsconfWarnings:
+            warnings.warn(tsconfWarning)
 
     # extract the annotations from the overlaps tear
     annos = []
