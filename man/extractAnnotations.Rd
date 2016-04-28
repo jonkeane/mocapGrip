@@ -4,13 +4,15 @@
 \alias{extractAnnotations}
 \title{Main function for extracitng (and checking) annotations from elan files.}
 \usage{
-extractAnnotations(files)
+extractAnnotations(files, destDir)
 }
 \arguments{
 \item{files}{A vector of video files}
+
+\item{destDir}{The destination directory where the extract csvs should be saved}
 }
 \value{
-Unclear, but not useful currently.
+Nothing, not useful currently.
 }
 \description{
 This function takes in a vector of elan files and extracts the annotations from them. Additionally it preforms some checking to makes ure that the annotations are in the format we expect. This won't catch all possible annotation errors, but should catch many of the most common ones.

@@ -289,11 +289,13 @@ makeOneElanFile <- function(videoFile){
 #' This function takes in a vector of video files, and writes out elan files with videos linked and synchronized motion capture data linked. It depends on the raw motion capture data, videos, and audio files being in set predetermined folders already.
 #'
 #' @param files A vector of video files
-#' @return Unclear, but not useful currently.
+#' @return Nothing, not useful currently.
 #'
 #' @export
 makeElanFiles <- function(files){
   lapply(Sys.glob(files), makeOneElanFile)
+
+  return()
 }
 
 
@@ -302,10 +304,17 @@ makeElanFiles <- function(files){
 #' This function takes in a vector of elan files and extracts the annotations from them. Additionally it preforms some checking to makes ure that the annotations are in the format we expect. This won't catch all possible annotation errors, but should catch many of the most common ones.
 #'
 #' @param files A vector of video files
-#' @return Unclear, but not useful currently.
+#' @param destDir The destination directory where the extract csvs should be saved
+#' @return Nothing, not useful currently.
 #'
 #' @export
-extractAnnotations <- function(files){
-  lapply(Sys.glob(files), makeOneElanFile)
+extractAnnotations <- function(files, destDir){
+  pathToExtractScript <- system.file("python/extractAnnotations.py", package = "mocapGrip", mustWork=TRUE)
+
+  arugments <- c(pathToExtractScript, destDir, Sys.glob(files))
+  system2("python", args = arugments)
+  call
+
+  return()
 }
 

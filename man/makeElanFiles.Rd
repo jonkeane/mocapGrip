@@ -10,7 +10,7 @@ makeElanFiles(files)
 \item{files}{A vector of video files}
 }
 \value{
-Unclear, but not useful currently.
+Nothing, not useful currently.
 }
 \description{
 This function takes in a vector of video files, and writes out elan files with videos linked and synchronized motion capture data linked. It depends on the raw motion capture data, videos, and audio files being in set predetermined folders already.
