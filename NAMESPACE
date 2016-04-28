@@ -2,5 +2,6 @@
 
 export(extractAnnotations)
 export(fixPaths)
+export(installPyelan)
 export(makeElanFiles)
 importFrom(magrittr,"%>%")

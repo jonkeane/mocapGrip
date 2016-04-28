@@ -262,7 +262,7 @@ makeOneElanFile <- function(videoFile){
   }
 
 
-  pathToElanGen <- system.file("python/pyelan/elanGen.py", package = "mocapGrip", mustWork=TRUE)
+  pathToElanGen <- system.file("python","pyelan","elanGen.py", package = "mocapGrip", mustWork=TRUE)
 
   elanBasename <- base
 
@@ -309,7 +309,7 @@ makeElanFiles <- function(files){
 #'
 #' @export
 extractAnnotations <- function(files, destDir){
-  pathToExtractScript <- system.file("python/extractAnnotations.py", package = "mocapGrip", mustWork=TRUE)
+  pathToExtractScript <- system.file("python","extractAnnotations.py", package = "mocapGrip", mustWork=TRUE)
 
   arugments <- c(pathToExtractScript, destDir, Sys.glob(files))
   system2("python", args = arugments)
@@ -329,7 +329,7 @@ extractAnnotations <- function(files, destDir){
 #'
 #' @export
 fixPaths <- function(files){
-  pathToExtractScript <- system.file("python/relPathFixGRIP.py", package = "mocapGrip", mustWork=TRUE)
+  pathToExtractScript <- system.file("python","relPathFixGRIP.py", package = "mocapGrip", mustWork=TRUE)
 
   arugments <- c(pathToExtractScript, Sys.glob(files))
   system2("python", args = arugments)
@@ -339,3 +339,13 @@ fixPaths <- function(files){
   return()
 }
 
+#' Install pyelan from source
+#'
+#' By default, installing this r package directly from github will not install the submodule dependency of pyelan.
+#'
+#' @return Nothing, not useful currently.
+#'
+#' @export
+installPyelan <- function(){
+  git2r::clone("https://github.com/jonkeane/pyelan.git", system.file("python", "pyelan", package = "mocapGrip"))
+}

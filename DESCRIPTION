@@ -12,7 +12,8 @@ Imports: dplyr (>= 0.3.0),
          lubridate,
          magrittr
 Suggests: testthat,
-          devtools
+          devtools,
+          git2r
 SystemRequirements: python
 License: GPL-2
 LazyData: TRUE
