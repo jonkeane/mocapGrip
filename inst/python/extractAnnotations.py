@@ -22,9 +22,11 @@ def gestureCheck(trialType, condition, typ, eafFile):
     pattern = re.compile('(EYESCLOSED) *(NO GESTURE|.+)')
     match = pattern.match(' '.join(trialType[2]))
 
+    # Check if eyes closed exists, if not warn for that
+
     if match.group(2) != "NO GESTURE":
         # if this is a gesture event
-        pattern = re.compile('(PLANNING) *(GRIP)? *(MOVEMENT) *(OPEN)? *(RELEASE)?')
+        pattern = re.compile('(PLANNING) *(GRIP)? *(MOVEMENT) *(OPEN|CLOSED|OPEN-CLOSED)? *(RELEASE)?')
         subAnnos = match.group(2)
         match = pattern.match(subAnnos)
         if not match:
@@ -65,6 +67,11 @@ def annoChecker(annos, eafFile, trialTypesPerTrial = 3):
             typ = match.group(2)
             period = match.group(3)
             gripType = match.group(4) # does gripType need to be checked? probably to make sure it coocurs with movement only
+
+            # merge period and gripType if griptype is not None
+            if gripType != None:
+                period = ' '.join([period,gripType])
+
         except AttributeError:
             warnings.warn("Could not parse the annotation values for the annotation: "+val+" In the file "+eafFile+" This likely means there is a typo or other error in annotations.")
 
