@@ -284,7 +284,7 @@ makeOneElanFile <- function(videoFile){
 
 
 
-#' Main function for making (blank) elan files from motion capture, video, and audio data.
+#' Make (blank) elan files from motion capture, video, and audio data.
 #'
 #' This function takes in a vector of video files, and writes out elan files with videos linked and synchronized motion capture data linked. It depends on the raw motion capture data, videos, and audio files being in set predetermined folders already.
 #'
@@ -299,7 +299,7 @@ makeElanFiles <- function(files){
 }
 
 
-#' Main function for extracitng (and checking) annotations from elan files.
+#' Extract (and check) annotations from elan files.
 #'
 #' This function takes in a vector of elan files and extracts the annotations from them. Additionally it preforms some checking to makes ure that the annotations are in the format we expect. This won't catch all possible annotation errors, but should catch many of the most common ones.
 #'
@@ -312,6 +312,26 @@ extractAnnotations <- function(files, destDir){
   pathToExtractScript <- system.file("python/extractAnnotations.py", package = "mocapGrip", mustWork=TRUE)
 
   arugments <- c(pathToExtractScript, destDir, Sys.glob(files))
+  system2("python", args = arugments)
+  call
+
+  return()
+}
+
+#' Fix the paths of elan files
+#'
+#' This function takes in a vector of elan files and it searches the path where the files are for video, audio, csv, and tsconf files to link to if the links do not currently work.
+#'
+#' It uses a search that matches the filename and as much as the path as it can, but the search is limited to the folder structure for the project. In other words, it will only search in the folders AUDIO, Clipped Videos, mocapCSVs, (which must be located in the parent of the parent folder where the elan files are located) additionally, it searches in the folder containing the elan file for tsconf file links.
+#'
+#' @param files A vector of video files
+#' @return Nothing, not useful currently.
+#'
+#' @export
+fixPaths <- function(files){
+  pathToExtractScript <- system.file("python/relPathFixGRIP.py", package = "mocapGrip", mustWork=TRUE)
+
+  arugments <- c(pathToExtractScript, Sys.glob(files))
   system2("python", args = arugments)
   call
 

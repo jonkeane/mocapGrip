@@ -2,7 +2,7 @@
 % Please edit documentation in R/gripClipping.R
 \name{makeElanFiles}
 \alias{makeElanFiles}
-\title{Main function for making (blank) elan files from motion capture, video, and audio data.}
+\title{Make (blank) elan files from motion capture, video, and audio data.}
 \usage{
 makeElanFiles(files)
 }

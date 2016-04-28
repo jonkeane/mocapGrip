@@ -2,7 +2,7 @@
 % Please edit documentation in R/gripClipping.R
 \name{extractAnnotations}
 \alias{extractAnnotations}
-\title{Main function for extracitng (and checking) annotations from elan files.}
+\title{Extract (and check) annotations from elan files.}
 \usage{
 extractAnnotations(files, destDir)
 }
