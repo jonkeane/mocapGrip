@@ -20,7 +20,7 @@ To install mocapGrip type `library(devtools); install_github("jonkeane/mocapGrip
 
 ## Dependencies (non-R)
 
-Currently, the only dependency (other than R package dependencies which will be installed by R in the installation) is a working modern (>=2.6) version of python. Some functions rely on the python module [pyelan](https://github.com/jonkeane/pyelan) for parsing elan files. This should be downloaded automatically in the `[package install location]/python/` directory as `pyelan`.
+Currently, the only dependency (other than R package dependencies which will be installed by R in the installation) is a working modern (>=2.6) version of python as well as [ffmpeg](https://ffmpeg.org/). Some functions rely on the python module [pyelan](https://github.com/jonkeane/pyelan) for parsing elan files. This should be downloaded automatically in the `[package install location]/python/` directory as `pyelan`.
  
 ## Usage
 TBD
