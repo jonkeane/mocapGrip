@@ -295,3 +295,17 @@ makeOneElanFile <- function(videoFile){
 makeElanFiles <- function(files){
   lapply(Sys.glob(files), makeOneElanFile)
 }
+
+
+#' Main function for extracitng (and checking) annotations from elan files.
+#'
+#' This function takes in a vector of elan files and extracts the annotations from them. Additionally it preforms some checking to makes ure that the annotations are in the format we expect. This won't catch all possible annotation errors, but should catch many of the most common ones.
+#'
+#' @param files A vector of video files
+#' @return Unclear, but not useful currently.
+#'
+#' @export
+extractAnnotations <- function(files){
+  lapply(Sys.glob(files), makeOneElanFile)
+}
+
