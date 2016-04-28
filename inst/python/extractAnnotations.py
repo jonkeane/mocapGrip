@@ -23,17 +23,19 @@ def gestureCheck(trialType, condition, typ, eafFile):
     match = pattern.match(' '.join(trialType[2]))
 
     # Check if eyes closed exists, if not warn for that
-
-    if match.group(2) != "NO GESTURE":
-        # if this is a gesture event
-        pattern = re.compile('(PLANNING) *(GRIP)? *(MOVEMENT) *(OPEN|CLOSED|OPEN-CLOSED)? *(RELEASE)?')
-        subAnnos = match.group(2)
-        match = pattern.match(subAnnos)
-        if not match:
-            warnings.warn("There is no PLANNING period for condition "+str(typ)+" in file "+eafFile+" Condition: "+str(condition[0])+" Periods found: "+str(trialType[2]))
-        else:
-            if not match.group(4):
-                warnings.warn("There is no OPEN, CLOSED, or OPEN-CLOSED annotation for condition "+str(typ)+" in file "+eafFile+" Condition: "+str(condition[0])+" Periods found: "+str(trialType[2]))
+    if  not match or match.group(1) != "EYESCLOSED":
+        warnings.warn("There is no EYESCLOSED period for condition "+str(typ)+" in file "+eafFile+" Condition: "+str(condition[0])+" Periods found: "+str(trialType[2]))
+    else:
+        if match.group(2) != "NO GESTURE":
+            # if this is a gesture event
+            pattern = re.compile('(PLANNING) *(GRIP)? *(MOVEMENT) *(OPEN|CLOSED|OPEN-CLOSED)? *(RELEASE)?')
+            subAnnos = match.group(2)
+            match = pattern.match(subAnnos)
+            if not match:
+                warnings.warn("There is no PLANNING period for condition "+str(typ)+" in file "+eafFile+" Condition: "+str(condition[0])+" Periods found: "+str(trialType[2]))
+            else:
+                if not match.group(4):
+                    warnings.warn("There is no OPEN, CLOSED, or OPEN-CLOSED annotation for condition "+str(typ)+" in file "+eafFile+" Condition: "+str(condition[0])+" Periods found: "+str(trialType[2]))
 
 
 
