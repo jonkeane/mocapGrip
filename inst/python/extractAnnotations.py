@@ -32,7 +32,7 @@ def gestureCheck(trialType, condition, typ, eafFile):
             subAnnos = match.group(2)
             match = pattern.match(subAnnos)
             if not match:
-                warnings.warn("There is no PLANNING period for condition "+str(typ)+" in file "+eafFile+" Condition: "+str(condition[0])+" Periods found: "+str(trialType[2]))
+                warnings.warn("There is not at least one PLANNING and one MOVEMENT periods for condition "+str(typ)+" in file "+eafFile+" Condition: "+str(condition[0])+" Periods found: "+str(trialType[2]))
             else:
                 if not match.group(4):
                     warnings.warn("There is no OPEN, CLOSED, or OPEN-CLOSED annotation for condition "+str(typ)+" in file "+eafFile+" Condition: "+str(condition[0])+" Periods found: "+str(trialType[2]))
