@@ -293,5 +293,5 @@ makeOneElanFile <- function(videoFile){
 #'
 #' @export
 makeElanFiles <- function(files){
-  lapply(files, makeOneElanFile)
+  lapply(Sys.glob(files), makeOneElanFile)
 }
