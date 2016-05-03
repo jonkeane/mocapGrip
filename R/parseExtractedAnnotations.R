@@ -163,7 +163,7 @@ gestMoveGripProc <-function(data) {
   # Side information for experiments involving side choices
   # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
   filter_criteria <- lazyeval::interp(~ which_column == "GESTURE", which_column = as.name("type"))
-  merge(data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~moveProc(.)), actionSideDF, all.y=FALSE)
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~moveProc(.))
 }
 
 gestMaxGripProc <-function(data) {
@@ -171,7 +171,7 @@ gestMaxGripProc <-function(data) {
   # Side information for experiments involving side choices
   # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
   filter_criteria <- lazyeval::interp(~ which_column == "GESTURE", which_column = as.name("type"))
-  merge(data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripProc(.)), actionSideDF, all.y=FALSE)
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripProc(.))
 }
 
 
