@@ -8,6 +8,7 @@ Description: This package contains all of the code to synchronize, clip,
     extract, and analyze data from a project that uses motion capture to understand
     visual illusion, reach to grasp action, size estimation, and gesture.
 Imports: dplyr (>= 0.3.0),
+        ggplot2,
         lazyeval,
         lubridate,
         magrittr,
