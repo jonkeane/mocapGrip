@@ -207,4 +207,6 @@ readExportedMocapData <- function(path){
   #gesture movement
   # gestMoveData <- gestMoveGripProc(data)
   # write.csv(file="gestureMove.csv", gestMoveData)
+
+  return(list("action"=actionData, "estimation"=estimationData, "maxGripFromEstimation" = estimationMaxGripData))
 }
