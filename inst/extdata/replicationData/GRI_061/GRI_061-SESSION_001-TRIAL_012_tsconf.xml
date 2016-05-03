@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<timeseries date="2016-01-20T18:25:07-06:00" version="1.0">
+    <tracksource sample-type="Unknown" source-url="file:///Volumes/GRIP_Seagate_Backup_Drive/GRIP-ML/elanFilesToAnnotate/GRI_061/../../mocapCSVs/GRI_061/GRI_061-SESSION_001-TRIAL_012.csv" time-column="0">
+        <property key="provider" value="mpi.eudico.client.annotator.timeseries.csv.CSVServiceProvider"/>
+    </tracksource>
+</timeseries>

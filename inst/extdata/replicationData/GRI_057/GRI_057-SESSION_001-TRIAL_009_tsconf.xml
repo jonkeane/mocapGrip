@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<timeseries date="2015-10-26T19:50:57-06:00" version="1.0">
+    <tracksource sample-type="Continuous Rate"
+        source-url="file:///Volumes/GRIP Seagate Backup Plus Drive/GRIP/mocapCSVs/GRI_057/GRI_057-SESSION_001-TRIAL_009.csv" time-column="0">
+        <property key="provider" value="mpi.eudico.client.annotator.timeseries.csv.CSVServiceProvider"/>
+        <track derivative="0" name="meanY">
+            <property key="detect-range" value="true"/>
+            <sample-position>
+                <pos col="45" row="0"/>
+            </sample-position>
+            <description/>
+            <units/>
+            <range max="1114.7218" min="938.55444"/>
+            <color>0,0,0</color>
+        </track>
+        <track derivative="0" name="clapper">
+            <property key="detect-range" value="true"/>
+            <sample-position>
+                <pos col="46" row="0"/>
+            </sample-position>
+            <description/>
+            <units/>
+            <range max="362.6616" min="17.738876"/>
+            <color>0,0,0</color>
+        </track>
+        <track derivative="0" name="grip">
+            <property key="detect-range" value="true"/>
+            <sample-position>
+                <pos col="44" row="0"/>
+            </sample-position>
+            <description/>
+            <units/>
+            <range max="137.10706" min="21.898952"/>
+            <color>0,0,0</color>
+        </track>
+    </tracksource>
+</timeseries>

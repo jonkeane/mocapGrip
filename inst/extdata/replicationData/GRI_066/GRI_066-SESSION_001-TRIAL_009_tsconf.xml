@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<timeseries date="2016-01-02T19:15:09-06:00" version="1.0">
+    <tracksource sample-type="Continuous Rate"
+        source-url="file:///C:/Users/zcui/Desktop/GRIP/elanFilesToAnnotate/GRI_066/../../mocapCSVs/GRI_066/GRI_066-SESSION_001-TRIAL_009.csv" time-column="0">
+        <property key="provider" value="mpi.eudico.client.annotator.timeseries.csv.CSVServiceProvider"/>
+        <track derivative="0" name="meanY">
+            <property key="detect-range" value="true"/>
+            <sample-position>
+                <pos col="45" row="0"/>
+            </sample-position>
+            <description/>
+            <units/>
+            <range max="1085.9651" min="974.23"/>
+            <color>0,0,0</color>
+        </track>
+        <track derivative="0" name="clapper">
+            <property key="detect-range" value="true"/>
+            <sample-position>
+                <pos col="46" row="0"/>
+            </sample-position>
+            <description/>
+            <units/>
+            <range max="386.27722" min="16.30597"/>
+            <color>0,0,0</color>
+        </track>
+        <track derivative="0" name="grip">
+            <property key="detect-range" value="true"/>
+            <sample-position>
+                <pos col="44" row="0"/>
+            </sample-position>
+            <description/>
+            <units/>
+            <range max="131.83403" min="17.628233"/>
+            <color>0,0,0</color>
+        </track>
+    </tracksource>
+</timeseries>
