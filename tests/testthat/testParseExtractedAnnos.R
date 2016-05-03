@@ -22,12 +22,14 @@ test_that("readExportedMocapData matches precomputed action data", {
   # expect_equal(dataToBeTested[["action"]]$stickcm, actionData$stickcm)
   # expect_equal(dataToBeTested[["action"]]$stickcmScaled, actionData$stickcmScaled)
   # expect_equal(dataToBeTested[["action"]]$orientation, actionData$orientation)
-  colsToTest <- c("duration", "maxGrip", "maxGripTime", "condition", "type", "period", "gripType", "obsisSubj", "obsisSession", "obsisTrial", "stick", "stickcm", "stickcmScaled", "orientation")
-  sapply(colsToTest, function(co) expect_equal(dataToBeTested[["action"]][co], actionData[co]))
+  colsToTest <- names(actionData)
+  colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
+  lapply(colsToTest, function(co) expect_equal(dataToBeTested[["action"]][co], actionData[co]))
 })
 
 test_that("readExportedMocapData matches precomputed estimation data", {
   expect_warning(dataToBeTested <- readExportedMocapData(path = "./dataForParsingTests/extractedData/"))
-  colsToTest <- c("duration", "meanGrip", "medianGrip", "condition", "type", "period", "gripType", "obsisSubj", "obsisSession", "obsisTrial", "stick", "stickcm", "stickcmScaled", "orientation")
-  sapply(colsToTest, function(co) expect_equal(dataToBeTested[["estimation"]][co], estimationData[co]))
+  colsToTest <- names(estimationData)
+  colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
+  lapply(colsToTest, function(co) expect_equal(dataToBeTested[["estimation"]][co], estimationData[co]))
 })
