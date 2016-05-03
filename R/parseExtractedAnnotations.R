@@ -48,8 +48,8 @@ process <- function(file, conditionCodesFile, verbose=FALSE){
 
 # grab only grip and time data
 importCols <- function(data){
-  # currently results in note, because of the nonpublic import of one_of (which is special for dplyr)
-  data %>% dplyr::select(-dplyr:::one_of(c("times", "grip")))
+  # return data without the times or grip column
+  data[ , !(names(data) %in% c("times", "grip"))]
 }
 
 
@@ -68,6 +68,7 @@ maxGripProc <- function(data) {
   maxTime <- max(grip$times, na.rm = TRUE)
   # add logic to catch multiple maximums
   maxGripRow <- grip[which.max(grip$grip),]
+
   return(cbind(data.frame(duration=maxTime, maxGrip=maxGripRow$grip, maxGripTime=maxGripRow$times, maxGripTimeRel=maxGripRow$times/maxTime), importCols(maxGripRow)))
 }
 
@@ -135,7 +136,8 @@ moveProc <- function(data) {
 
 actionGripProc <-function(data) {
   # extract the maxmium grip during the grip portion of all action trials
-  data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(maxGripProc("."))
+  filter_criteria <- lazyeval::interp(~ which_column == "ACTION", which_column = as.name("type"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripProc(.))
 }
 
 releaseGripProc <-function(data) {
@@ -178,7 +180,7 @@ readExportedMocapData <- function(path){
   # to be added to main function for oparsing data
   files <- list.files(path, recursive = TRUE, pattern = NULL, full.names=TRUE)
 
-  data <- plyr::ldply(files, process, conditionCodesFile="GRIPMLstimuli.csv", verbose=FALSE)
+  data <- plyr::ldply(files, process, conditionCodesFile=system.file("GRIPMLstimuli.csv", package = "mocapGrip", mustWork=TRUE), verbose=FALSE)
 
   data$stick <- factor(as.character(data$stick), levels = c("five", "seven", "nine", "eleven"))
 
@@ -186,18 +188,19 @@ readExportedMocapData <- function(path){
 
   # action grip
   actionData <- actionGripProc(data)
+
   # write.csv(file="action.csv", actionData)
 
   # release data
-  releaseData <- releaseGripProc(data)
+  # releaseData <- releaseGripProc(data)
   # write.csv(file="action.csv", actionData)
 
   # estimation steady
-  estimationData <- estSteadyProc(data)
+  # estimationData <- estSteadyProc(data)
   # write.csv(file="estimation.csv", estimationData)
 
   # estimation max grip
-  estimationMaxGripData <- estMaxGripProc(data)
+  # estimationMaxGripData <- estMaxGripProc(data)
   # write.csv(file="estimationGrip.csv", estimationMaxGripData)
 
   # gesture max grip
@@ -208,5 +211,6 @@ readExportedMocapData <- function(path){
   # gestMoveData <- gestMoveGripProc(data)
   # write.csv(file="gestureMove.csv", gestMoveData)
 
-  return(list("action"=actionData, "estimation"=estimationData, "maxGripFromEstimation" = estimationMaxGripData))
+  return(list("action"=actionData))
+  # return(list("action"=actionData, "estimation"=estimationData, "maxGripFromEstimation" = estimationMaxGripData))
 }
