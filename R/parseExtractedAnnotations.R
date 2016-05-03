@@ -147,7 +147,8 @@ releaseGripProc <-function(data) {
 
 estSteadyProc <-function(data) {
   # extract the mean and median grip during the steady portion of all estimate trials
-  data %>% dplyr::filter_("type"=="ESTIMATION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(steadyProc("."))
+  filter_criteria <- lazyeval::interp(~ which_column == "ESTIMATION", which_column = as.name("type"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~steadyProc(.))
 }
 
 estMaxGripProc <-function(data) {
@@ -196,7 +197,7 @@ readExportedMocapData <- function(path){
   # write.csv(file="action.csv", actionData)
 
   # estimation steady
-  # estimationData <- estSteadyProc(data)
+  estimationData <- estSteadyProc(data)
   # write.csv(file="estimation.csv", estimationData)
 
   # estimation max grip
@@ -211,6 +212,6 @@ readExportedMocapData <- function(path){
   # gestMoveData <- gestMoveGripProc(data)
   # write.csv(file="gestureMove.csv", gestMoveData)
 
-  return(list("action"=actionData))
+  return(list("action"=actionData, "estimation"=estimationData))
   # return(list("action"=actionData, "estimation"=estimationData, "maxGripFromEstimation" = estimationMaxGripData))
 }

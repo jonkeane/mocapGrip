@@ -25,3 +25,9 @@ test_that("readExportedMocapData matches precomputed action data", {
   colsToTest <- c("duration", "maxGrip", "maxGripTime", "condition", "type", "period", "gripType", "obsisSubj", "obsisSession", "obsisTrial", "stick", "stickcm", "stickcmScaled", "orientation")
   sapply(colsToTest, function(co) expect_equal(dataToBeTested[["action"]][co], actionData[co]))
 })
+
+test_that("readExportedMocapData matches precomputed estimation data", {
+  expect_warning(dataToBeTested <- readExportedMocapData(path = "./dataForParsingTests/extractedData/"))
+  colsToTest <- c("duration", "meanGrip", "medianGrip", "condition", "type", "period", "gripType", "obsisSubj", "obsisSession", "obsisTrial", "stick", "stickcm", "stickcmScaled", "orientation")
+  sapply(colsToTest, function(co) expect_equal(dataToBeTested[["estimation"]][co], estimationData[co]))
+})
