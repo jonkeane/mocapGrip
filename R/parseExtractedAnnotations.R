@@ -141,8 +141,9 @@ actionGripProc <-function(data) {
 }
 
 releaseGripProc <-function(data) {
-  # extract the maxmium grip during the grip portion of all action trials
-  data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(maxReleaseProc("."))
+  # extract the maxmium grip during the release portion of all action trials
+  filter_criteria <- lazyeval::interp(~ which_column == "ACTION", which_column = as.name("type"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxReleaseProc(.))
 }
 
 estSteadyProc <-function(data) {
@@ -153,19 +154,24 @@ estSteadyProc <-function(data) {
 
 estMaxGripProc <-function(data) {
   # extract the maxmium grip during the grip portion of all estimate trials
-  data %>% dplyr::filter_("type"=="ESTIMATION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(maxGripProc("."))
+  filter_criteria <- lazyeval::interp(~ which_column == "ESTIMATION", which_column = as.name("type"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripProc(.))
 }
 
 gestMoveGripProc <-function(data) {
-  actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
   # extract the mean and median grip during the move portion of all gesture trials
-  merge(data %>% dplyr::filter_("type"=="GESTURE") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(moveProc(".")), actionSideDF, all.y=FALSE)
+  # Side information for experiments involving side choices
+  # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
+  filter_criteria <- lazyeval::interp(~ which_column == "GESTURE", which_column = as.name("type"))
+  merge(data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~moveProc(.)), actionSideDF, all.y=FALSE)
 }
 
 gestMaxGripProc <-function(data) {
-  actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
   # extract the maxmium grip during the grip portion of all gesture trials
-  merge(data %>% dplyr::filter_("type"=="GESTURE") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(maxGripProc(".")), actionSideDF, all.y=FALSE)
+  # Side information for experiments involving side choices
+  # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
+  filter_criteria <- lazyeval::interp(~ which_column == "GESTURE", which_column = as.name("type"))
+  merge(data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripProc(.)), actionSideDF, all.y=FALSE)
 }
 
 
@@ -174,10 +180,11 @@ gestMaxGripProc <-function(data) {
 #' Reads in extracted motion capture data from a directory.
 #'
 #' @param path Directory containing motion catpure csv files that were extracted with the \code{\link{extractAnnotations}} function.
+#' @param types A vector of the types of periods to extract. Default: c("action", "estimation") Possible values are: "action", "estimation", "release", "estMaxGrip"
 #' @return Not sure yet.
 #'
 #' @export
-readExportedMocapData <- function(path){
+readExportedMocapData <- function(path, types = c("action", "estimation")){
   # to be added to main function for oparsing data
   files <- list.files(path, recursive = TRUE, pattern = NULL, full.names=TRUE)
 
@@ -187,31 +194,46 @@ readExportedMocapData <- function(path){
 
   data$stickcmScaled <- data$stickcm - 8
 
-  # action grip
-  actionData <- actionGripProc(data)
+  outList <- list()
 
-  # write.csv(file="action.csv", actionData)
+  if("action" %in% types){
+    # action grip
+    outList[["action"]] <- actionGripProc(data)
+    # write.csv(file="action.csv", actionData)
+  }
 
-  # release data
-  # releaseData <- releaseGripProc(data)
-  # write.csv(file="action.csv", actionData)
+  if("release" %in% types){
+    # release data
+    outList[["release"]] <- releaseGripProc(data)
+    # write.csv(file="action.csv", actionData)
+  }
 
-  # estimation steady
-  estimationData <- estSteadyProc(data)
-  # write.csv(file="estimation.csv", estimationData)
+  if("estimation" %in% types){
+    # estimation steady
+    outList[["estimation"]] <- estSteadyProc(data)
+    # write.csv(file="estimation.csv", estimationData)
+  }
 
-  # estimation max grip
-  # estimationMaxGripData <- estMaxGripProc(data)
-  # write.csv(file="estimationGrip.csv", estimationMaxGripData)
+  if("estMaxGrip" %in% types){
+    # estimation max grip
+    outList[["estMaxGrip"]] <- estMaxGripProc(data)
+    # write.csv(file="estimationGrip.csv", estimationMaxGripData)
+  }
 
-  # gesture max grip
-  # gestureMaxGripData <- gestMaxGripProc(data)
-  # write.csv(file="gestureGrip.csv", gestureMaxGripData)
+  if("gestureMaxGrip" %in% types){
+    # gesture max grip
+    # this is untested
+    outList[["gestureMaxGrip"]] <- gestMaxGripProc(data)
+    # write.csv(file="gestureGrip.csv", gestureMaxGripData)
+  }
 
-  #gesture movement
-  # gestMoveData <- gestMoveGripProc(data)
-  # write.csv(file="gestureMove.csv", gestMoveData)
+  if("gestureMovement" %in% types){
+    # gesture movement
+    # this is untested
+    outList[["gestureMovement"]] <- gestMoveGripProc(data)
+    # write.csv(file="gestureMove.csv", gestMoveData)
+  }
 
-  return(list("action"=actionData, "estimation"=estimationData))
-  # return(list("action"=actionData, "estimation"=estimationData, "maxGripFromEstimation" = estimationMaxGripData))
+
+  return(outList)
 }

@@ -4,10 +4,12 @@
 \alias{readExportedMocapData}
 \title{Read extracted motion capture data}
 \usage{
-readExportedMocapData(path)
+readExportedMocapData(path, types = c("action", "estimation"))
 }
 \arguments{
 \item{path}{Directory containing motion catpure csv files that were extracted with the \code{\link{extractAnnotations}} function.}
+
+\item{types}{A vector of the types of periods to extract. Default: c("action", "estimation") Possible values are: "action", "estimation", "release", "estMaxGrip"}
 }
 \value{
 Not sure yet.
