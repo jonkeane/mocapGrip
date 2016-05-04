@@ -44,12 +44,12 @@ An example of this command is: `makeElanFiles(files=c("./Clipped Video/059/GRI_0
 
 The empty elan files are then annotated according to annotation guidelines.
 
-### `extractAnnotations(...)`
+### `extractMocapDataFromAnnotations(...)`
 
-`extractAnnotations(...)` extracts completed annotations from the files specified, and checks to make sure that the format is correct. Currently it will give warnings if the checks it runs don't work, and will suggest possible fixes. Any file that has a warning will not have any annotations extract. You can supply it with a destination directory, which must already exist. An example of this command is: `extractAnnotations(files=c("./Clipped Video/059/GRI_059-SESSION_001-TRIAL_001.mov", "./Clipped Video/059/GRI_059-SESSION_001-TRIAL_002.mov"), destDir="./extractedAnnotations/")` You can also use wildcards with this command: `extractAnnotations(files="./Clipped Video/0??/GRI_0??-SESSION_0??-TRIAL_0??.mov")` which will match any files that have any character in each of the positions with a `?`.
+`extractMocapDataFromAnnotations(...)` extracts completed annotations from the files specified, and checks to make sure that the format is correct. Currently it will give warnings if the checks it runs don't work, and will suggest possible fixes. Any file that has a warning will not have any annotations extract. You can supply it with a destination directory, which must already exist. An example of this command is: `extractMocapDataFromAnnotations(files=c("./Clipped Video/059/GRI_059-SESSION_001-TRIAL_001.mov", "./Clipped Video/059/GRI_059-SESSION_001-TRIAL_002.mov"), destDir="./extractedAnnotations/")` You can also use wildcards with this command: `extractMocapDataFromAnnotations(files="./Clipped Video/0??/GRI_0??-SESSION_0??-TRIAL_0??.mov")` which will match any files that have any character in each of the positions with a `?`.
 
 ### `readExportedMocapData(...)`
-`readExportedMocapData(...)` reads in the extracted motion capture data (that are written by the command `extractAnnotations(...)` above). This function can extract as many or as few types of data for analysis as we want. Possible types include:
+`readExportedMocapData(...)` reads in the extracted motion capture data (that are written by the command `extractMocapDataFromAnnotations(...)` above). This function can extract as many or as few types of data for analysis as we want. Possible types include:
 
 * `action` Extracts the maximum grip from the *grip* period of *action* trials
 * `estimation` Extracts the mean and median grip from the *steady* period of *estimation* trials

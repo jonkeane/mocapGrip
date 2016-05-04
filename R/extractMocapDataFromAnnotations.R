@@ -10,8 +10,8 @@
 #' The \code{files} option can be a single (fully specified) elan file, a vector of fully specific elan files, or it can be a path with wildcards (e.g. \code{./GRI_0??/GRI_0??-SESSION_0??-TRIAL_0??.eaf}) that matches at least one, but potentially many elan files
 #'
 #' @export
-extractAnnotations <- function(files, destDir){
-  pathToExtractScript <- system.file("python","extractAnnotations.py", package = "mocapGrip", mustWork=TRUE)
+extractMocapDataFromAnnotations <- function(files, destDir){
+  pathToExtractScript <- system.file("python","extractMocapDataFromAnnotations.py", package = "mocapGrip", mustWork=TRUE)
 
   arugments <- c(pathToExtractScript, destDir, Sys.glob(files))
   system2("python", args = arugments)
