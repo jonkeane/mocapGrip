@@ -1,0 +1,106 @@
+---
+title: "Grip Project Replication Report"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: html_document
+params: 
+  data: "No Data"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Maximum Grip aperture (on reach to grasp)
+
+The maximmum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system).
+
+We fit a hierarchical (mixed effects) linear regression model. The outcume (dependent) variable is the maximum grip aperture, and the predictor (independent) variables are:
+* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size) 
+* the configuration of the fins (closed, none, open, where closed is the reference level)
+* the interaction between the size of the stick and configuration of fins.
+
+There are varying intercepts by subject, and the effects of all the predictors (including interactions) are also allowed to vary by subject. (These are the mixed effects)
+
+```{r}
+actionCat.fit <- lme4::lmer(maxGrip~stickcmScaled*fins + (1+stickcmScaled*fins|obsisSubj), params$data[["action"]])
+```
+
+
+## Coefficient plot
+
+These are the estimates of the effect sizes for the predictors (and interactions) in the model. The dot is the point estimate, the thick line is the 95% confidence interval, and the thin line the 99% confidence interval. One rule of thumb is: if the confidence intervals do not the effect is statistically significant.
+
+```{r}
+mocapGrip:::CoefficientPlot(list(actionCat.fit))
+```
+
+
+## Model predictions
+
+These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
+
+```{r}
+ggplot(mocapGrip:::pred(actionCat.fit)) + aes(x=stickcmScaled+8, y=maxGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip") 
+```
+
+### Full model output
+```{r}
+summary(actionCat.fit)
+```
+
+### Intercept and slope adjustments 
+
+There are estimates of the intercept and slope adjustments by subject. and 95% confidence intervals around those estimates. This is also reffered to as the mixed effects structure and is one way to see variability between subjects.
+```{r}
+mocapGrip:::ggCaterpillar(lme4::ranef(actionCat.fit, condVar = TRUE))
+```
+
+
+## Size estimation
+
+The mean grip aperture is the mean of the distance measureumetns between the markers on the thumb and index finger during the period when the subject said the word ready (this period is labeled as *steady* in our annotation system).
+
+We fit a hierarchical (mixed effects) linear regression model. The outcume (dependent) variable is the maximum grip aperture, and the predictor (independent) variables are:
+* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size) 
+* the configuration of the fins (closed, none, open, where closed is the reference level)
+* the interaction between the size of the stick and configuration of fins.
+
+There are varying intercepts by subject, and the effects of all the predictors (including interactions) are also allowed to vary by subject. (These are the mixed effects)
+
+```{r}
+estimation.fit <- lme4::lmer(meanGrip~stickcmScaled*fins + (1+stickcmScaled*fins|obsisSubj), params$data[["estimation"]])
+```
+
+## Coefficient plot
+
+These are the estimates of the effect sizes for the predictors (and interactions) in the model. The dot is the point estimate, the thick line is the 95% confidence interval, and the thin line the 99% confidence interval. One rule of thumb is: if the confidence intervals do not the effect is statistically significant.
+
+```{r}
+mocapGrip:::CoefficientPlot(list(estimation.fit))
+```
+
+## Model predictions
+
+These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
+
+```{r}
+ggplot(mocapGrip:::pred(estimation.fit)) + aes(x=stickcmScaled+8, y=meanGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip") 
+
+```
+
+### Full model output
+
+```{r}
+summary(estimation.fit)
+```
+
+### Intercept and slope adjustments 
+
+There are estimates of the intercept and slope adjustments by subject. and 95% confidence intervals around those estimates. This is also reffered to as the mixed effects structure and is one way to see variability between subjects.
+
+```{r}
+mocapGrip:::ggCaterpillar(lme4::ranef(estimation.fit, condVar = TRUE))
+
+```
