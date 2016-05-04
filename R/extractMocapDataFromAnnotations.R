@@ -17,7 +17,7 @@ extractMocapDataFromAnnotations <- function(files, destDir){
   system2("python", args = arugments)
   call
 
-  return()
+  return("extractMocapDataFromAnnotations() has completed. Check the output above for any warnings.")
 }
 
 
