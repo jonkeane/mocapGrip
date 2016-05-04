@@ -47,7 +47,20 @@ ggplot(mocapGrip:::pred(actionCat.fit)) + aes(x=stickcmScaled+8, y=maxGrip, ymin
 
 ### Full model output
 ```{r}
-summary(actionCat.fit)
+texreg::htmlreg(list(actionCat.fit),
+        method = "boot", # only needed for the overriding of pvalues
+        use.se=TRUE, # only needed for the overriding of pvalues
+        #        override.pval = list(lengthLMscaleSum$coefficients[,"Pr(>|t|)"]),
+        float.pos = "p!",
+        single.row=TRUE, 
+        caption="Hierarchical linear regression coefficient estimates and standard errors.", 
+        use.packas=FALSE, 
+        custom.model.names=c("est. (s.e.)"),
+        stars = c(0.001, 0.01, 0.05, 0.1), 
+        fontsize = "scriptsize"
+)
+
+# summary(actionCat.fit)
 ```
 
 ### Intercept and slope adjustments 
