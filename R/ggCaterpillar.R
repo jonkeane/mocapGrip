@@ -16,11 +16,11 @@ ggCaterpillar <- function(re, QQ=FALSE, likeDotplot=TRUE) {
                        ind=gl(ncol(x), nrow(x), labels=names(x)))
 
     if(QQ) {  ## normal QQ-plot
-      p <- ggplot(pDf, aes(nQQ, y))
+      p <- ggplot(pDf, aes_string(x="nQQ", y="y"))
       p <- p + facet_wrap(~ ind, scales="free")
       p <- p + xlab("Standard normal quantiles") + ylab("Random effect quantiles")
     } else {  ## caterpillar dotplot
-      p <- ggplot(pDf, aes(ID, y)) + coord_flip()
+      p <- ggplot(pDf, aes_string(x="ID", y="y")) + coord_flip()
       if(likeDotplot) {  ## imitate dotplot() -> same scales for random effects
         p <- p + facet_wrap(~ ind)
       } else {           ## different scales for random effects
@@ -34,7 +34,7 @@ ggCaterpillar <- function(re, QQ=FALSE, likeDotplot=TRUE) {
     p <- p + theme(legend.position="none")
     p <- p + labs(title= nm)
     p <- p + geom_hline(yintercept=0, lwd = I(7/12), colour = I(hsv(0/12, 7/12, 7/12)), alpha = I(5/12))
-    p <- p + geom_errorbar(aes(ymin=y-ci, ymax=y+ci), width=0, colour="black")
+    p <- p + geom_errorbar(aes_string(ymin="y - ci", ymax="y + ci"), width=0, colour="black")
     p <- p + geom_point(aes())
     return(p)
   }

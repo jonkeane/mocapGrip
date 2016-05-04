@@ -73,17 +73,17 @@ CoefficientPlot <- function(models, modelnames = "", variables = NA, interaction
 
   MatrixofModels[, -c(1, 4)] <- apply(MatrixofModels[, -c(1, 4)], 2, function(x){as.numeric(as.character(x))})
 
-  OutputPlot <- ggplot(MatrixofModels, aes(ymax = max(Estimate + Scalar * StandardError))) # ymax to disable warning message
+  OutputPlot <- ggplot(MatrixofModels, aes_string(ymax = max("Estimate + Scalar * StandardError"))) # ymax to disable warning message
   OutputPlot <- OutputPlot + geom_hline(yintercept = 0, lwd = I(7/12), colour = "black", alpha = I(3/12))
 
   if(numModels>1){
-    OutputPlot <- OutputPlot + geom_linerange(aes(x = Predictors, y = Estimate, ymin = Estimate - Scalar * StandardError, ymax = Estimate + Scalar * StandardError, group = ModelName, color=ModelName, size=-(Scalar)), position = position_dodge(width = dodgeWidth))
-    OutputPlot <- OutputPlot + geom_point(aes(x = Predictors, y = Estimate, group = ModelName, color=ModelName), position = position_dodge(width = dodgeWidth))
+    OutputPlot <- OutputPlot + geom_linerange(aes_string(x = "Predictors", y = "Estimate", ymin = "Estimate - Scalar * StandardError", ymax = "Estimate + Scalar * StandardError", group = "ModelName", color="ModelName", size="-(Scalar)"), position = position_dodge(width = dodgeWidth))
+    OutputPlot <- OutputPlot + geom_point(aes_string(x = "Predictors", y = "Estimate", group = "ModelName", color="ModelName"), position = position_dodge(width = dodgeWidth))
     OutputPlot <- OutputPlot + scale_colour_discrete(name = "Model")
   } else {
     {
-      OutputPlot <- OutputPlot + geom_linerange(aes(x = Predictors, y = Estimate, ymin = Estimate - Scalar * StandardError, ymax = Estimate + Scalar * StandardError, size=-(Scalar)), position = position_dodge(width = dodgeWidth))
-      OutputPlot <- OutputPlot + geom_point(aes(x = Predictors, y = Estimate), position = position_dodge(width = dodgeWidth))
+      OutputPlot <- OutputPlot + geom_linerange(aes_string(x = "Predictors", y = "Estimate", ymin = "Estimate - Scalar * StandardError", ymax = "Estimate + Scalar * StandardError", size="-(Scalar)"), position = position_dodge(width = dodgeWidth))
+      OutputPlot <- OutputPlot + geom_point(aes_string(x = "Predictors", y = "Estimate"), position = position_dodge(width = dodgeWidth))
     }
   }
 
