@@ -1,3 +1,5 @@
+#' @import Matrix
+
 unscale <- function(scaledThing, input = NA){
   cntr <- attributes(scaledThing)[["scaled:center"]]
   sd <- attributes(scaledThing)[["scaled:scale"]]
@@ -51,7 +53,7 @@ pred <- function(fitModel) {
 
   # collapse groups that are irrelevant using ddply(...,summarise,...) (ver_letter removed!)
 
-  eval(parse(text = paste0("data.modeled <- ddply(newdat, predictorVars, summarise, ", outcomeVarName, " = mean(", outcomeVarName,"), plo=mean(plo), phi=mean(phi))")))
+  eval(parse(text = paste0("data.modeled <- plyr::ddply(newdat, predictorVars, plyr::summarise, ", outcomeVarName, " = mean(", outcomeVarName,"), plo=mean(plo), phi=mean(phi))")))
 }
 
 ########## model visualization prep function for simple form lm ##########
@@ -91,5 +93,5 @@ predSimple <- function(fitModel) {
 
   # collapse groups that are irrelevant using ddply(...,summarise,...) (ver_letter removed!)
 
-  eval(parse(text = paste0("data.modeled <- ddply(newdat, predictorVars, summarise, ", outcomeVarName, " = mean(", outcomeVarName,"), plo=mean(plo), phi=mean(phi))")))
+  eval(parse(text = paste0("data.modeled <- plyr::ddply(newdat, predictorVars, plyr::summarise, ", outcomeVarName, " = mean(", outcomeVarName,"), plo=mean(plo), phi=mean(phi))")))
 }

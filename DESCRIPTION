@@ -16,7 +16,8 @@ Imports: dplyr (>= 0.3.0),
         reshape2,
         stringr,
         tidyr
-Depends: ggplot2
+Depends: ggplot2,
+        Matrix
 Suggests: testthat,
           devtools,
           git2r
