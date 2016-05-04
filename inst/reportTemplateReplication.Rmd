@@ -46,7 +46,7 @@ ggplot(mocapGrip:::pred(actionCat.fit)) + aes(x=stickcmScaled+8, y=maxGrip, ymin
 ```
 
 ### Full model output
-```{r}
+```{r, fig.keep='none', results="asis", message=FALSE}
 texreg::htmlreg(list(actionCat.fit),
         method = "boot", # only needed for the overriding of pvalues
         use.se=TRUE, # only needed for the overriding of pvalues
@@ -57,16 +57,15 @@ texreg::htmlreg(list(actionCat.fit),
         use.packas=FALSE, 
         custom.model.names=c("est. (s.e.)"),
         stars = c(0.001, 0.01, 0.05, 0.1), 
-        fontsize = "scriptsize"
+        star.symbol = "\\*"
 )
-
-# summary(actionCat.fit)
 ```
+
 
 ### Intercept and slope adjustments 
 
 There are estimates of the intercept and slope adjustments by subject. and 95% confidence intervals around those estimates. This is also reffered to as the mixed effects structure and is one way to see variability between subjects.
-```{r}
+```{r, results="hide", message=FALSE}
 mocapGrip:::ggCaterpillar(lme4::ranef(actionCat.fit, condVar = TRUE))
 ```
 
@@ -105,15 +104,26 @@ ggplot(mocapGrip:::pred(estimation.fit)) + aes(x=stickcmScaled+8, y=meanGrip, ym
 
 ### Full model output
 
-```{r}
-summary(estimation.fit)
+```{r, fig.keep='none',  results="asis", message=FALSE}
+texreg::htmlreg(list(estimation.fit),
+        method = "boot", # only needed for the overriding of pvalues
+        use.se=TRUE, # only needed for the overriding of pvalues
+        #        override.pval = list(lengthLMscaleSum$coefficients[,"Pr(>|t|)"]),
+        float.pos = "p!",
+        single.row=TRUE, 
+        caption="Hierarchical linear regression coefficient estimates and standard errors.", 
+        use.packas=FALSE, 
+        custom.model.names=c("est. (s.e.)"),
+        stars = c(0.001, 0.01, 0.05, 0.1), 
+        star.symbol = "\\*"
+)
 ```
 
 ### Intercept and slope adjustments 
 
 There are estimates of the intercept and slope adjustments by subject. and 95% confidence intervals around those estimates. This is also reffered to as the mixed effects structure and is one way to see variability between subjects.
 
-```{r}
+```{r, results="hide", message=FALSE}
 mocapGrip:::ggCaterpillar(lme4::ranef(estimation.fit, condVar = TRUE))
 
 ```
