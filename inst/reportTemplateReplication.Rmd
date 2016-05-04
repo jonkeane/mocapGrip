@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = FALSE)
 The maximmum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system).
 
 We fit a hierarchical (mixed effects) linear regression model. The outcume (dependent) variable is the maximum grip aperture, and the predictor (independent) variables are:
+
 * the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size) 
 * the configuration of the fins (closed, none, open, where closed is the reference level)
 * the interaction between the size of the stick and configuration of fins.
@@ -75,6 +76,7 @@ mocapGrip:::ggCaterpillar(lme4::ranef(actionCat.fit, condVar = TRUE))
 The mean grip aperture is the mean of the distance measureumetns between the markers on the thumb and index finger during the period when the subject said the word ready (this period is labeled as *steady* in our annotation system).
 
 We fit a hierarchical (mixed effects) linear regression model. The outcume (dependent) variable is the maximum grip aperture, and the predictor (independent) variables are:
+
 * the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size) 
 * the configuration of the fins (closed, none, open, where closed is the reference level)
 * the interaction between the size of the stick and configuration of fins.
