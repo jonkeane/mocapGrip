@@ -184,7 +184,7 @@ gestMaxGripProc <-function(data) {
 #' @return Not sure yet.
 #'
 #' @export
-readExportedMocapData <- function(path, types = c("action", "estimation")){
+readExtractedMocapData <- function(path, types = c("action", "estimation")){
   # to be added to main function for oparsing data
   files <- list.files(path, recursive = TRUE, pattern = NULL, full.names=TRUE)
 
