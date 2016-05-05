@@ -1,11 +1,10 @@
 
 extractMarkers <- function(data, markers, verbose=FALSE){
   dataNew <- data
-<<<<<<< HEAD
   print(nrow(dataNew))
-=======
-  print(nrow(dataNewdev))
->>>>>>> 9041b887c6444961a5792137928aa5c34df5dd93
+  if(nrow(dataNew)<1){
+    stop("Error, there are not enough rows of data in the (filtered) markers file. Please check that file and possibly reprocess this trial with obsis.")
+  }
   dfOut <- data.frame(times = as.numeric(unlist(dataNew["Time..sec."]))-min(unlist(dataNew["Time..sec."])))
   for(marker in markers){
     if(verbose){
@@ -225,7 +224,7 @@ makeOneElanFile <- function(videoFile){
   baseDir <- dirname(baseDir) # this is the final basename
 
   if( !{grepl("\\d\\d\\d", subjNum)&grepl("Clipped Video", clippedVideo)} ) {
-    stop("Error, path to the video file (",videoFile,") is not what is expected. The video file should be in a folder ./Clipped Video/[subject number]", sep="")
+    stop(paste("Error, path to the video file (",videoFile,") is not what is expected. The video file should be in a folder ./Clipped Video/[subject number]", sep=""))
   }
 
   df <- data.frame(Experiment="GRIP",
