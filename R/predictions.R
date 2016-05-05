@@ -16,9 +16,9 @@ pred <- function(fitModel) {
   # create a data frame with various levels represented
   vars <- stringr::str_split(as.character(fitModel@call$formula), stringr::fixed(" "))
   outcomeVarName <- vars[[2]]
-  allPredictors <- attributes(terms(fitModel@call$formula))$term.labels
-  isInteraction <- stringr::str_detect(attributes(terms(fitModel@call$formula))$term.labels, ":")
-  isLevel <- stringr::str_detect(attributes(terms(fitModel@call$formula))$term.labels, "\\|")
+  allPredictors <- attributes(stats::terms(fitModel@call$formula))$term.labels
+  isInteraction <- stringr::str_detect(attributes(stats::terms(fitModel@call$formula))$term.labels, ":")
+  isLevel <- stringr::str_detect(attributes(stats::terms(fitModel@call$formula))$term.labels, "\\|")
   predictorVars <- subset(allPredictors, !isInteraction & !isLevel)
   levelVars <- subset(allPredictors, isLevel)
   levelVars <- stringr::str_replace(levelVars, ".* \\| ", "") # remove all slope levels
@@ -29,13 +29,13 @@ pred <- function(fitModel) {
   newdat <- unique(newdat)
 
   # generate model values
-  mm<-model.matrix(terms(fitModel),newdat)
+  mm<-stats::model.matrix(stats::terms(fitModel),newdat)
 
   # generate predictions
   newdat[,outcomeVarName] <- (mm %*% lme4::fixef(fitModel))
 
   # generate variance from the fixed effects (add in random effects?)
-  newdat$pvar1 <- diag(mm %*% tcrossprod(vcov(fitModel),mm))
+  newdat$pvar1 <- diag(mm %*% tcrossprod(stats::vcov(fitModel),mm))
 
   # add the random effects into the estimate
   for(var in levelVars){
@@ -62,9 +62,9 @@ predSimple <- function(fitModel) {
   # create a data frame with various levels represented
   vars <- stringr::str_split(as.character(fitModel$call$formula), stringr::fixed(" "))
   outcomeVarName <- vars[[2]]
-  allPredictors <- attributes(terms(fitModel))$term.labels
-  isInteraction <- stringr::str_detect(attributes(terms(fitModel))$term.labels, ":")
-  isLevel <- stringr::str_detect(attributes(terms(fitModel))$term.labels, "\\|")
+  allPredictors <- attributes(stats::terms(fitModel))$term.labels
+  isInteraction <- stringr::str_detect(attributes(stats::terms(fitModel))$term.labels, ":")
+  isLevel <- stringr::str_detect(attributes(stats::terms(fitModel))$term.labels, "\\|")
   predictorVars <- subset(allPredictors, !isInteraction & !isLevel)
   levelVars <- subset(allPredictors, isLevel)
   levelVars <- stringr::str_replace(levelVars, ".* \\| ", "") # remove all slope levels
@@ -76,13 +76,13 @@ predSimple <- function(fitModel) {
   newdat <- unique(newdat)
 
   # generate model values
-  mm<-model.matrix(terms(fitModel),newdat)
+  mm<-stats::model.matrix(stats::terms(fitModel),newdat)
 
   # generate predictions
-  newdat[,outcomeVarName] <- (mm %*% coefficients(fitModel))
+  newdat[,outcomeVarName] <- (mm %*% stats::coefficients(fitModel))
 
   # generate variance from the fixed effects (add in random effects?)
-  newdat$pvar1 <- diag(mm %*% tcrossprod(vcov(fitModel),mm))
+  newdat$pvar1 <- diag(mm %*% tcrossprod(stats::vcov(fitModel),mm))
 
   # make high and low estimates
   newdat <- data.frame(

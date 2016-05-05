@@ -1,6 +1,6 @@
 process <- function(file, conditionCodesFile, verbose=FALSE){
   # read in csvs as strings including NA (which indicates occlusion) as a string (and empty as a true NA)
-  data <- read.csv(file=file, na.strings = "", stringsAsFactors=FALSE)
+  data <- utils::read.csv(file=file, na.strings = "", stringsAsFactors=FALSE)
   data$times <- seq(from = 0, to = (1/120)*(nrow(data)-1), length.out= nrow(data))
   # melt ignoring true NAs
   meltedData <- reshape2::melt(data, id=c("times"), na.rm = TRUE, value.name = "grip")
@@ -38,7 +38,7 @@ process <- function(file, conditionCodesFile, verbose=FALSE){
 
   meltedData$file <- as.factor(meltedData$file)
 
-  condCodes <- read.csv(conditionCodesFile)
+  condCodes <- utils::read.csv(conditionCodesFile)
 
   # change to dplyr inner_join?
   meltedData <- plyr::join(meltedData, condCodes)
@@ -88,7 +88,7 @@ steadyProc <- function(data) {
 
   maxTime <- max(subData$times, na.rm=TRUE)
   meanGrip <- mean(subData$grip, na.rm=TRUE)
-  medianGrip <- median(subData$grip, na.rm=TRUE)
+  medianGrip <- stats::median(subData$grip, na.rm=TRUE)
   cbind(data.frame(duration=maxTime, meanGrip=meanGrip, medianGrip=medianGrip), importCols(subData[1,]))
 }
 
@@ -128,7 +128,7 @@ moveProc <- function(data) {
 
   maxTime <- max(subData$times, na.rm=TRUE)
   meanGrip <- mean(subData$grip, na.rm=TRUE)
-  medianGrip <- median(subData$grip, na.rm=TRUE)
+  medianGrip <- stats::median(subData$grip, na.rm=TRUE)
   cbind(data.frame(duration=maxTime, meanGrip=meanGrip, medianGrip=medianGrip), importCols(subData[1,]))
 }
 

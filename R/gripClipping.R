@@ -32,7 +32,7 @@ calculateDistances <- function(data, markers){
 
   dfOut <- data %>%
     dplyr::rowwise() %>%
-    dplyr::mutate_(.dots = setNames(list(distanceValue), label))
+    dplyr::mutate_(.dots = stats::setNames(list(distanceValue), label))
 
   dfOut
 }
@@ -88,7 +88,7 @@ minThresh <- function(distances, times, start, direction="backward", windowWidth
     times <- times[times>=start]
   }
   if(verbose){
-    plot(distances, type="l")
+    graphics::plot(distances, type="l")
   }
 
   allInc <- FALSE
@@ -108,7 +108,7 @@ minThresh <- function(distances, times, start, direction="backward", windowWidth
     stop("Error, no minimum found, try adjusting the size of the window unit.")
   }
   if(verbose){
-    points(x=n, distances[n])
+    graphics::points(x=n, distances[n])
   }
   times[n]
 }
@@ -148,9 +148,9 @@ align <- function(data, windowWidth=10, verbose=TRUE, offset=0){
   }
 
   if(verbose){
-    plot(data$times, data$clapperState, type="l")
-    points(x=minTime, data$clapperState[data$times==minTime])
-    points(x=maxTime, data$clapperState[data$times==maxTime])
+    graphics::plot(data$times, data$clapperState, type="l")
+    graphics::points(x=minTime, data$clapperState[data$times==minTime])
+    graphics::points(x=maxTime, data$clapperState[data$times==maxTime])
   }
   out <- subset(data, times >= minTime+offset & times <=maxTime+offset)
   out$times <- out$times-min(out$times)
@@ -190,7 +190,7 @@ clipWriter <- function(data, subjDir) {
   alignedMarkers <- clipper(data)
 
   outFilename <- paste(subjDir, "/", paste(subj, session, trial,sep="-"),".csv", sep="")
-  write.csv(alignedMarkers, file = outFilename, row.names = FALSE)
+  utils::write.csv(alignedMarkers, file = outFilename, row.names = FALSE)
 
   message(paste("Finished with:",paste(exp,subj,session,trial,sep="-"),sep=" "))
 

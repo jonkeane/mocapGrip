@@ -24,7 +24,7 @@ timecodeBegEnd <- function(trial) {
 
 csvWithNames <- function(file){
   # read a csv and add a column for the filename
-  out <- read.csv(file,sep="\t", header=TRUE)
+  out <- utils::read.csv(file,sep="\t", header=TRUE)
   out$file <- file
   return(out)
 }
@@ -44,7 +44,7 @@ markerRead <- function(file,beginTime=0,endTime=600,verbose=FALSE) {
     print(beginTime)
     print(endTime)
   }
-  file <- read.csv(file, sep="\t", na.strings = c("NA","NaN"))
+  file <- utils::read.csv(file, sep="\t", na.strings = c("NA","NaN"))
   out <- subset(file, Time..sec. >=beginTime & Time..sec. <=endTime )
   return(out)
 }

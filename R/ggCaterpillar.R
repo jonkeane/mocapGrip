@@ -11,7 +11,7 @@ ggCaterpillar <- function(re, QQ=FALSE, likeDotplot=TRUE) {
     ord  <- unlist(lapply(x, order)) + rep((0:(ncol(x) - 1)) * nrow(x), each=nrow(x))
     pDf  <- data.frame(y=unlist(x)[ord],
                        ci=1.96*se[ord],
-                       nQQ=rep(qnorm(ppoints(nrow(x))), ncol(x)),
+                       nQQ=rep(stats::qnorm(stats::ppoints(nrow(x))), ncol(x)),
                        ID=factor(rep(rownames(x), ncol(x))[ord], levels=rownames(x)[ord]),
                        ind=gl(ncol(x), nrow(x), labels=names(x)))
 
@@ -33,7 +33,7 @@ ggCaterpillar <- function(re, QQ=FALSE, likeDotplot=TRUE) {
 
     p <- p + theme(legend.position="none")
     p <- p + labs(title= nm)
-    p <- p + geom_hline(yintercept=0, lwd = I(7/12), colour = I(hsv(0/12, 7/12, 7/12)), alpha = I(5/12))
+    p <- p + geom_hline(yintercept=0, lwd = I(7/12), colour = I(grDevices::hsv(0/12, 7/12, 7/12)), alpha = I(5/12))
     p <- p + geom_errorbar(aes_string(ymin="y - ci", ymax="y + ci"), width=0, colour="black")
     p <- p + geom_point(aes())
     return(p)

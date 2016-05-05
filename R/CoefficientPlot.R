@@ -6,7 +6,7 @@ CoefficientPlot <- function(models, modelnames = "", variables = NA, interaction
   # models must be a list()
 
   Alphas <- c(1,5) / 100
-  Multiplier <- qnorm(1 - Alphas / 2)
+  Multiplier <- stats::qnorm(1 - Alphas / 2)
 
   # This should be adjusted to accept both S3 and S4 classes.
   CoefficientTables <- lapply(models, function(x){summary(x)$coef})
