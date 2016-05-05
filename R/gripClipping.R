@@ -1,6 +1,7 @@
 
 extractMarkers <- function(data, markers, verbose=FALSE){
   dataNew <- data
+  print(length(dataNew))
   dfOut <- data.frame(times = as.numeric(unlist(dataNew["Time..sec."]))-min(unlist(dataNew["Time..sec."])))
   for(marker in markers){
     if(verbose){
