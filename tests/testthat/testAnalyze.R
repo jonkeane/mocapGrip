@@ -15,4 +15,10 @@ test_that("fitting lmer function returns the right shape, and handles warnings",
   expect_equal(models$`maxGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)`$converged, FALSE)
   expect_equal(models$`maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
 
+
+  expect_silent(models <- mocapGrip:::fitLMER(mocapGrip:::eqsGen2preds(outcome="meanGrip", predictor1="stickcmScaled", predictor2="fins"), data=pureReplication[["estimation"]]))
+  # these might change if optimizers change in lme
+  expect_equal(models$`meanGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)`$converged, TRUE)
+  expect_equal(models$`meanGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
+  expect_equal(models$`meanGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
 })
