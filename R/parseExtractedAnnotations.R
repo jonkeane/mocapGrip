@@ -41,7 +41,7 @@ process <- function(file, conditionCodesFile, verbose=FALSE){
   condCodes <- utils::read.csv(conditionCodesFile)
 
   # change to dplyr inner_join?
-  meltedData <- plyr::join(meltedData, condCodes)
+  meltedData <- plyr::join(meltedData, condCodes, by="condition")
 
   meltedData
 }
@@ -58,11 +58,11 @@ maxGripProc <- function(data) {
   # grip <- subset(data, period == "GRIP")
   grip <- data[data$period == "GRIP", ]
   if(nrow(grip) == 0 ){
-    warning(paste("There was no GRIP period found for: obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
+    warning(paste("There was no GRIP period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
     return(data.frame())
   }
   if(sum(is.na(grip$grip))/nrow(grip) > 0.05 ){
-    warning(paste("There is ", as.character(round(sum(is.na(grip$grip))/nrow(grip)*100, digits=4)), "% occlusion for: obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition ", unique(data$condition), " trial type: ", unique(data$type),  sep =""))
+    warning(paste("There is ", as.character(round(sum(is.na(grip$grip))/nrow(grip)*100, digits=4)), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(grip$condition), " period: ", unique(grip$period),  " trial type: ", unique(grip$type),  sep =""))
     return(data.frame())
   }
   maxTime <- max(grip$times, na.rm = TRUE)
@@ -78,11 +78,11 @@ steadyProc <- function(data) {
   subData <- data[data$period == "STEADY",]
 
   if(nrow(subData) == 0 ){
-    warning(paste("There was no STEADY period found for: obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
+    warning(paste("There was no STEADY period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
     return(data.frame())
   }
   if(sum(is.na(subData$grip))/nrow(subData) > 0.05 ){
-    warning(paste("There is ", as.character(round(sum(is.na(subData$grip))/nrow(subData)*100), digits=4), "% occlusion for: obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition ", unique(data$condition), " trial type: ", unique(data$type),  sep =""))
+    warning(paste("There is ", as.character(round(sum(is.na(subData$grip))/nrow(subData)*100), digits=4), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(subData$condition), " period: ", unique(subData$period), " trial type: ", unique(subData$type),  sep =""))
     return(data.frame())
   }
 
@@ -98,11 +98,11 @@ maxReleaseProc <- function(data) {
   # grip <- subset(data, period == "RELEASE")
   grip <- data[data$period == "RELEASE", ]
   if(nrow(grip) == 0 ){
-    warning(paste("There was no RELEASE period found for: obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
+    warning(paste("There was no RELEASE period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
     return(data.frame())
   }
   if(sum(is.na(grip$grip))/nrow(grip) > 0.05 ){
-    warning(paste("There is ", as.character(round(sum(is.na(grip$grip))/nrow(grip)*100, digits=4)), "% occlusion for: obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition ", unique(data$condition), " trial type: ", unique(data$type),  sep =""))
+    warning(paste("There is ", as.character(round(sum(is.na(grip$grip))/nrow(grip)*100, digits=4)), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(grip$condition), " period: ", unique(grip$period), " trial type: ", unique(grip$type),  sep =""))
     return(data.frame())
   }
   maxTime <- max(grip$times, na.rm = TRUE)
@@ -118,11 +118,11 @@ moveProc <- function(data) {
   subData <- data[data$period == "MOVEMENT", ]
 
   if(nrow(subData) == 0 ){
-    warning(paste("There was no MOVEMENT period found for: obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
+    warning(paste("There was no MOVEMENT period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
     return(data.frame())
   }
   if(sum(is.na(subData$grip))/nrow(subData) > 0.05 ){
-    warning(paste("There is ", as.character(round(sum(is.na(subData$grip))/nrow(subData)*100), digits=4), "% occlusion for: obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition ", unique(data$condition), " trial type: ", unique(data$type),  sep =""))
+    warning(paste("There is ", as.character(round(sum(is.na(subData$grip))/nrow(subData)*100), digits=4), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(subData$condition), " period: ", unique(subData$period),  " trial type: ", unique(data$type),  sep =""))
     return(data.frame())
   }
 
@@ -181,59 +181,109 @@ gestMaxGripProc <-function(data) {
 #'
 #' @param path Directory containing motion catpure csv files that were extracted with the \code{\link{extractMocapDataFromAnnotations}} function.
 #' @param types A vector of the types of periods to extract. Default: c("action", "estimation") Possible values are: "action", "estimation", "release", "estMaxGrip"
+#' @param includeFullData A logical, should the output include the full data? default:\code{FALSE}
 #' @return Not sure yet.
 #'
 #' @export
-readExtractedMocapData <- function(path, types = c("action", "estimation")){
+readExtractedMocapData <- function(path, types = c("action", "estimation"), includeFullData=FALSE){
   # to be added to main function for oparsing data
   files <- list.files(path, recursive = TRUE, pattern = NULL, full.names=TRUE)
 
-  data <- plyr::ldply(files, process, conditionCodesFile=system.file("GRIPMLstimuli.csv", package = "mocapGrip", mustWork=TRUE), verbose=FALSE)
+  data <- plyr::ldply(files, process, conditionCodesFile=system.file("GRIPMLstimuli.csv", package = "mocapGrip", mustWork=TRUE), verbose=FALSE, .progress = "text" )
 
   data$stick <- factor(as.character(data$stick), levels = c("five", "seven", "nine", "eleven"))
 
   data$stickcmScaled <- data$stickcm - 8
 
-  outList <- list()
+  periodData <- list()
 
   if("action" %in% types){
     # action grip
-    outList[["action"]] <- actionGripProc(data)
+    periodData[["action"]] <- list()
+    warns <- list()
+    periodData[["action"]][["data"]] <- withCallingHandlers({actionGripProc(data)},
+                                                 warning = function(w) {
+                                                   warns <<- append(warns,w$message)
+                                                   invokeRestart("muffleWarning")
+                                                 }
+    )
+    periodData[["action"]][["warnings"]] <- warns
     # write.csv(file="action.csv", actionData)
   }
 
   if("release" %in% types){
-    # release data
-    outList[["release"]] <- releaseGripProc(data)
-    # write.csv(file="action.csv", actionData)
+    # release max grip
+    periodData[["release"]] <- list()
+    warns <- list()
+    periodData[["release"]][["data"]] <- withCallingHandlers({releaseGripProc(data)},
+                                                             warning = function(w) {
+                                                               warns <<- append(warns,w$message)
+                                                               invokeRestart("muffleWarning")
+                                                             }
+    )
+    periodData[["release"]][["warnings"]] <- warns
+    # write.csv(file="release.csv", releaseData)
   }
 
   if("estimation" %in% types){
-    # estimation steady
-    outList[["estimation"]] <- estSteadyProc(data)
+    # estimation
+    periodData[["estimation"]] <- list()
+    warns <- list()
+    periodData[["estimation"]][["data"]] <- withCallingHandlers({estSteadyProc(data)},
+                                                                warning = function(w) {
+                                                                  warns <<- append(warns,w$message)
+                                                                  invokeRestart("muffleWarning")
+                                                                }
+    )
+    periodData[["estimation"]][["warnings"]] <- warns
     # write.csv(file="estimation.csv", estimationData)
   }
 
   if("estMaxGrip" %in% types){
     # estimation max grip
-    outList[["estMaxGrip"]] <- estMaxGripProc(data)
-    # write.csv(file="estimationGrip.csv", estimationMaxGripData)
+    periodData[["estMaxGrip"]] <- list()
+    warns <- list()
+    periodData[["estMaxGrip"]][["data"]] <- withCallingHandlers({estMaxGripProc(data)},
+                                                                warning = function(w) {
+                                                                  warns <<- append(warns$message,w)
+                                                                  invokeRestart("muffleWarning")
+                                                                }
+    )
+    periodData[["estMaxGrip"]][["warnings"]] <- warns
+    # write.csv(file="estMaxGrip.csv", estMaxGripData)
   }
 
   if("gestureMaxGrip" %in% types){
-    # gesture max grip
-    # this is untested
-    outList[["gestureMaxGrip"]] <- gestMaxGripProc(data)
-    # write.csv(file="gestureGrip.csv", gestureMaxGripData)
+    # gestureMaxGrip grip
+    periodData[["gestureMaxGrip"]] <- list()
+    warns <- list()
+    periodData[["gestureMaxGrip"]][["data"]] <- withCallingHandlers({gestMaxGripProc(data)},
+                                                                    warning = function(w) {
+                                                                      warns <<- append(warns$message,w)
+                                                                      invokeRestart("muffleWarning")
+                                                                    }
+    )
+    periodData[["gestureMaxGrip"]][["warnings"]] <- warns
+    # write.csv(file="gestureMaxGrip.csv", gestureMaxGripData)
   }
 
   if("gestureMovement" %in% types){
-    # gesture movement
-    # this is untested
-    outList[["gestureMovement"]] <- gestMoveGripProc(data)
-    # write.csv(file="gestureMove.csv", gestMoveData)
+    # gestureMovement grip
+    periodData[["gestureMovement"]] <- list()
+    warns <- list()
+    periodData[["gestureMovement"]][["data"]] <- withCallingHandlers({gestMoveGripProc(data)},
+                                                                     warning = function(w) {
+                                                                       warns <<- append(warns$message,w)
+                                                                       invokeRestart("muffleWarning")
+                                                                     }
+    )
+    periodData[["gestureMovement"]][["warnings"]] <- warns
+    # write.csv(file="gestureMovement.csv", gestureMovementData)
   }
 
+  if(includeFullData==TRUE){
+    periodData[["fullData"]] <- data
+  }
 
-  return(outList)
+  return(periodData)
 }
