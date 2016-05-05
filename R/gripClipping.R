@@ -1,7 +1,11 @@
 
 extractMarkers <- function(data, markers, verbose=FALSE){
   dataNew <- data
+<<<<<<< HEAD
   print(nrow(dataNew))
+=======
+  print(nrow(dataNewdev))
+>>>>>>> 9041b887c6444961a5792137928aa5c34df5dd93
   dfOut <- data.frame(times = as.numeric(unlist(dataNew["Time..sec."]))-min(unlist(dataNew["Time..sec."])))
   for(marker in markers){
     if(verbose){
