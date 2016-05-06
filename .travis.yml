@@ -6,6 +6,7 @@ r:
     - devel
 os:
     - linux
+    - osx
 
 cache: packages
 
@@ -14,9 +15,9 @@ warnings_are_errors: true
 # Handle git submodules yourself from http://stackoverflow.com/questions/15674064/github-submodule-access-rights-travis-ci
 git:
     submodules: false
-# Use sed to replace the SSH URL with the public URL, then initialize submodules
+# Use sed to replace the SSH URL with the public URL, then initialize submodules, doesn't work on osx
 before_install:
-    - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+    - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
     - git submodule update --init --recursive
 
 # for code coverage
