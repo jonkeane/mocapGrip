@@ -1,6 +1,9 @@
 
 extractMarkers <- function(data, markers, verbose=FALSE){
   dataNew <- data
+  if(nrow(dataNew)<2){
+    stop("Error, there are not enough rows of data in the (filtered) markers file. Please check that file and possibly reprocess this trial with obsis.")
+  }
   dfOut <- data.frame(times = as.numeric(unlist(dataNew["Time..sec."]))-min(unlist(dataNew["Time..sec."])))
   for(marker in markers){
     if(verbose){
