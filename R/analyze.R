@@ -115,7 +115,3 @@ modelAllData <- function(data, ...){
   return(data)
 }
 
-
-# mods <- fitModels(type = "estimation", data=pureReplication)
-# findTheBestModel(mods, last = TRUE) -> chosenModels
-# modelAllData(pureReplication) -> test
