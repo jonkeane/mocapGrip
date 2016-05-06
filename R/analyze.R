@@ -35,3 +35,32 @@ eqsGen2preds <- function(outcome, predictor1, predictor2, grouping1 = "obsisSubj
   return(eqs)
 }
 
+
+# fit the right models for the data.
+fitTheRightModels <- function(type, data, additionalModelTypes=list()){
+
+  # should these be stored as json for possible external editing?
+  modelsByType <- list(
+    "action" = list("outcome" = "maxGrip",
+                      "predictor1" = "stickcmScaled",
+                      "predictor2" = "fins"),
+    "estimation" = list("outcome" = "meanGrip",
+                    "predictor1" = "stickcmScaled",
+                    "predictor2" = "fins")
+  )
+
+  # add additional models, a bit of a hack for expansion?
+  if(length(additionalModelTypes)>0){
+    modelsByType <- c(modelsByType, additionalModelTypes)
+  }
+
+  # check if the type of analysis is one of the known ones.
+  # update this message if the models by type is moved elsewhere.
+  if(!{type %in% names(modelsByType)}){
+    stop("Error, the type ", type, " can't be found in the models by type specification for what variables to use. Please update the modelsByType to include this model type.", sep="")
+  }
+
+  modelsOut <- fitLMER(eqsGen2preds(outcome=modelsByType[[type]]$outcome, predictor1=modelsByType[[type]]$predictor1, predictor2=modelsByType[[type]]$predictor2), data=data[[type]]$data)
+
+  return(modelsOut)
+}

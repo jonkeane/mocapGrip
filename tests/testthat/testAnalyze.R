@@ -22,3 +22,7 @@ test_that("fitting lmer function returns the right shape, and handles warnings",
   expect_equal(models$`meanGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
   expect_equal(models$`meanGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
 })
+
+test_that("fitting lmer function returns the right shape, and handles warnings", {
+  expect_error(mocapGrip:::fitTheRightModels(type="this is not a type", data=list()))
+})
