@@ -20,5 +20,5 @@ test_that("fitting lmer function returns the right shape, and handles warnings",
   # these might change if optimizers change in lme
   expect_equal(models$`meanGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)`$converged, TRUE)
   expect_equal(models$`meanGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
-  expect_equal(models$`meanGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)`$converged, FALSE)
+  expect_equal(models$`meanGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
 })
