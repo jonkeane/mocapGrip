@@ -6,7 +6,7 @@ r:
     - devel
 os:
     - linux
-    - osx
+
 cache: packages
 
 warnings_are_errors: true
