@@ -1,8 +1,15 @@
 
 language: r
-warnings_are_errors: true
-sudo: required
+r:
+    - oldrel
+    - release
+    - devel
+os:
+    - linux
+    - osx
 cache: packages
+
+warnings_are_errors: true
 
 # Handle git submodules yourself from http://stackoverflow.com/questions/15674064/github-submodule-access-rights-travis-ci
 git:
