@@ -1,4 +1,5 @@
 # Mocap-Grip project at the Center for Gesture, Sign, and Language at the University of Chicago
+Devel test.
 
 [![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=master)](https://travis-ci.org/jonkeane/mocapGrip)
 
