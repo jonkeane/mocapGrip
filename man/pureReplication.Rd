@@ -4,9 +4,18 @@
 \name{pureReplication}
 \alias{pureReplication}
 \title{Pure replication data for reach to grasp and estimation of sticks inside of a Mueller-Lyer illusion}
-\format{A list of data frames. There are two lists \emph{action} and \emph{estimation}
-\describe{
-  \item{action}{Maximum grip aperture data from the reach to grasp period of the \emph{action} trials}
+\format{A list of data frames. There are two lists \emph{action} and \emph{estimation}}
+\usage{
+pureReplication
+}
+\description{
+A dataset that contains 11 subjects reaching to grasp or estimating the size of 5, 7, 9, and 11 cm sticks. The sticks are sometimes placed in a Mueller-Lyer illusion.
+}
+\section{Action}{
+
+
+ Maximum grip aperture data from the reach to grasp period of the \emph{action} trials
+
    \describe{
      \item{duration}{duration of the grip period}
      \item{maxGrip}{maximum grip aperture (in mm)}
@@ -27,7 +36,13 @@
      \item{orientation}{orientation of the presentation (all are \emph{horizontal})}
      \item{stickcmScaled}{stick size centered at 8cm (the middle of our stick sizes), in cm}
    }
-  \item{estimation}{Grip aperture data from the steady portion of the \emph{estimation} trials}
+}
+
+\section{Estimation}{
+
+
+Grip aperture data from the steady portion of the \emph{estimation} trials
+
    \describe{
      \item{duration}{duration of the grip period}
      \item{meanGrip}{mean grip aperture (in mm)}
@@ -47,12 +62,6 @@
      \item{orientation}{orientation of the presentation (all are \emph{horizontal})}
      \item{stickcmScaled}{stick size centered at 8cm (the middle of our stick sizes), in cm}
    }
-}}
-\usage{
-pureReplication
-}
-\description{
-A dataset that contains 11 subjects reaching to grasp or estimating the size of 5, 7, 9, and 11 cm sticks. The sticks are sometimes placed in a Mueller-Lyer illusion.
 }
 \keyword{datasets}
 
