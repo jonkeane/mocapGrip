@@ -12,7 +12,7 @@ makeReport <- function(data){
 
   # render
   # change path
-  rmarkdown::render("./inst/reportTemplateReplication.Rmd", params = list(data=pureReplication))
+  rmarkdown::render("./inst/reportTemplateReplication.Rmd", params = list(data=mocapGrip::pureReplication))
 
 }
 
