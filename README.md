@@ -1,7 +1,6 @@
 # Mocap-Grip project at the Center for Gesture, Sign, and Language at the University of Chicago
-Devel test.
 
-[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=master)](https://travis-ci.org/jonkeane/mocapGrip)
+[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=devel)](https://travis-ci.org/jonkeane/mocapGrip)
 
 This package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
 
