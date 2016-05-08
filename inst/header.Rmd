@@ -1,0 +1,12 @@
+---
+title: "Grip Project Replication Report"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: html_document
+params: 
+  data: "No Data"
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
