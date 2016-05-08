@@ -4,7 +4,7 @@ makeReport <- function(data){
   # parse data?
 
   # fit models from analyze
-  models <- fitLMER(eqsGen2preds(outcome="maxGrip", predictor1="stickcmScaled", predictor2="fins"), data=mocapGrip::pureReplication$action$data)
+  models <- fitLMER(eqsGen2preds(outcome="maxGrip", predictor1="stickcmScaled", predictor2="fins"), data=pureReplication$action$data)
 
   # pick the best model (add warnings here?)
 
@@ -12,32 +12,27 @@ makeReport <- function(data){
 
   # render
   # change path
-  rmarkdown::render("./inst/reportTemplateReplication.Rmd", params = list(data=mocapGrip::pureReplication))
+  rmarkdown::render("./inst/reportTemplateReplication.Rmd", params = list(data=pureReplication))
 
 }
 
 # split the text, then join
-cleanText <- function(text, reps){
+cleanText <- Vectorize(function(text, reps){
   # split on the special sequence of characters.
   text <- strsplit(text, split="<>")[[1]]
-  paste0(replaceText(text, reps = reps))
-}
+  paste0(replaceText(text, reps = reps), collapse = "")
+}, vectorize.args = "text", USE.NAMES = FALSE)
 
 # replace the text with text from replacements
 replaceText <- Vectorize(function(text, reps){
-  print(text)
-  if(!grepl("\\$.*", text)){
+  if(!grepl("^\\$.*", text)){
     # if the variable character is not there, return the text.
     return(text)
   }
   replText <- reps[[substring(text, 2)]]
   if(length(replText)>1){
-    return(paste0("\n* ", replText,collapse = "\n* "))
+    return(paste0("\n* ", replText, collapse = ""))
   }
   return(replText)
 }, vectorize.args = "text", USE.NAMES = FALSE)
-#
-# modelStructure <- jsonlite::fromJSON("./inst/modelStructure.json")
-# analysisSkel <- readLines("./inst/analysisSkeleton.rmd")
-#
-# cleanText(analysisSkel[7], modelStructure$action)
+
