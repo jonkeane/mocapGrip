@@ -1,5 +1,16 @@
+#' Make a full report from data
+#'
+#' takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelStructure.
+#'
+#' @param data A list conforming to the structure of data for the project from \code{\link{extractMocapDataFromAnnotations}} (an example of this is the \code{\link{pureReplication}} object)
+#' @param reportPath a string with the path and name of the report to be made (this should end in \code{".Rmd"}), by default it is: \code{"./report.Rmd}
+#' @param ... options to pass to \code{\link{modelAllData}}, (e.g. \code{last=TRUE} if the last model that converged should be selected rather than the default (\code{last=FALSE}) first).
+#'
+#' @return An object that is a code of \code{data}, but with the models appened to each analysis present. This is useful if you need to inspect the models or use this for further analysis or reporting.
+#'
+#' @export
 # add kinds of models?
-# export(!)
+# add in different analysis skeletons?
 makeReport <- function(data, reportPath="./report.Rmd", ...){
   # parse data? this should be an option
   # data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", types)
