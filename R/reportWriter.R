@@ -4,6 +4,7 @@
 #'
 #' @param data A list conforming to the structure of data for the project from \code{\link{extractMocapDataFromAnnotations}} (an example of this is the \code{\link{pureReplication}} object)
 #' @param reportPath a string with the path and name of the report to be made (this should end in \code{.Rmd}), by default it is: \code{"./report.Rmd"}
+#' @param title a string for the title of the report, the default is "Grip Project Report"
 #' @param ... options to pass to \code{\link{modelAllData}}, (e.g. \code{last=TRUE} if the last model that converged should be selected rather than the default (\code{last=FALSE}) first).
 #'
 #' @return An object that is a code of \code{data}, but with the models appened to each analysis present. This is useful if you need to inspect the models or use this for further analysis or reporting.
@@ -11,7 +12,7 @@
 #' @export
 # add kinds of models?
 # add in different analysis skeletons?
-makeReport <- function(data, reportPath="./report.Rmd", ...){
+makeReport <- function(data, reportPath="./report.Rmd", title = "Grip Project Report", ...){
   # parse data? this should be an option
   # data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", types)
 
@@ -25,7 +26,7 @@ makeReport <- function(data, reportPath="./report.Rmd", ...){
   writeMarkdown(dataModeled, markdownPath = reportPath)
 
   # render
-  reportOut <- rmarkdown::render(reportPath, params = list(data=dataModeled))
+  reportOut <- rmarkdown::render(reportPath, params = list(data = dataModeled, title = title))
   # change path
 
   message("Success, the report was written to ", reportOut, sep="")

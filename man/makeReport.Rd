@@ -4,12 +4,15 @@
 \alias{makeReport}
 \title{Make a full report from data}
 \usage{
-makeReport(data, reportPath = "./report.Rmd", ...)
+makeReport(data, reportPath = "./report.Rmd", title = "Grip Project Report",
+  ...)
 }
 \arguments{
 \item{data}{A list conforming to the structure of data for the project from \code{\link{extractMocapDataFromAnnotations}} (an example of this is the \code{\link{pureReplication}} object)}
 
 \item{reportPath}{a string with the path and name of the report to be made (this should end in \code{.Rmd}), by default it is: \code{"./report.Rmd"}}
+
+\item{title}{a string for the title of the report, the default is "Grip Project Report"}
 
 \item{...}{options to pass to \code{\link{modelAllData}}, (e.g. \code{last=TRUE} if the last model that converged should be selected rather than the default (\code{last=FALSE}) first).}
 }
