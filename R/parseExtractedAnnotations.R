@@ -197,6 +197,8 @@ readExtractedMocapData <- function(path, types = c("action", "estimation"), incl
 
   periodData <- list()
 
+  # any way to offload this repitition?
+  # add check if there are not types found.
   if("action" %in% types){
     # action grip
     periodData[["action"]] <- list()
