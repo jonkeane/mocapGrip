@@ -1,6 +1,12 @@
 # data <- readExtractedMocapData(path="~/Dropbox/mocap/gripStudy/analysis/extractedData/")
 
-# take a string of formulas to try, and iterate over them. (does lapply work sequentially?)
+#' model analysis structure, and explanation information
+#'
+#' This is read from modelStructure.json, and different structures can be read by \code{readModelStructure()}
+#'
+#'
+#' @export
+modelStructure <- jsonlite::fromJSON(system.file("modelStructure.json", package = "mocapGrip", mustWork = TRUE))
 
 # Fit an lmer model with an equation and data, return list of the model, and convergence diagnostics (with the equation as the name)
 fitLMERsingle <- function(eq, data){
@@ -27,6 +33,7 @@ fitLMERsingle <- function(eq, data){
 fitLMER <- Vectorize(fitLMERsingle, vectorize.args = "eq", SIMPLIFY = FALSE)
 
 # generate equations (formulas) with two predictors from maximal to simpler
+# this is depricated, because eqsGen is a better use of modelStructure.json
 eqsGen2preds <- function(outcome, predictor1, predictor2, grouping1 = "obsisSubj"){
   eqs <- character()
   eqs <- append(eqs, paste0(outcome, "~", predictor1, "*", predictor2, "+", "(", "1+", predictor1, "*", predictor2, "|", grouping1, ")"))
@@ -34,6 +41,11 @@ eqsGen2preds <- function(outcome, predictor1, predictor2, grouping1 = "obsisSubj
   eqs <- append(eqs, paste0(outcome, "~", predictor1, "+", predictor2, "+", "(", "1+", predictor1, "+", predictor2, "|", grouping1, ")"))
   return(eqs)
 }
+
+# generate equations from variables to use and formulas (both of which come from modelStructure.json)
+eqsGen <- Vectorize(function(variablesToUse, formula){
+  with(variablesToUse, eval(parse(text=formula)))
+}, vectorize.args = "formula", USE.NAMES = TRUE)
 
 
 #' Fit the right models based on the name of the dataset being passed
@@ -65,9 +77,8 @@ fitModels <- function(type, data, additionalModelTypes=list()){
     stop("Error, the type ", type, " can't be found in the models by type specification for what variables to use. Please update the modelsByType to include this model type.", sep="")
   }
 
-  modelsOut <- fitLMER(eqsGen2preds(outcome=modelsByType[[type]]$outcome,
-                                    predictor1=modelsByType[[type]]$predictor1,
-                                    predictor2=modelsByType[[type]]$predictor2)
+  modelsOut <- fitLMER(eqsGen(modelStructure$models$analyses[[type]]$variablesToUse,
+                                    modelStructure$models$modelStructures)
                        , data=data[[type]]$data)
 
   return(modelsOut)

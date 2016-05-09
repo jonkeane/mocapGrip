@@ -8,6 +8,14 @@ test_that("equation (formula) generation works", {
                  "maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)"))
 })
 
+test_that("equation (formula) generation works", {
+  expect_equal(mocapGrip:::eqsGen(modelStructure$models$analyses$action$variablesToUse, modelStructure$models$modelStructures),
+               c("interactionInPredAndGroup" = "maxGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)",
+                    "interactionInPred" = "maxGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)",
+                    "noInteraction" = "maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)"))
+})
+
+
 modelsAction <- mocapGrip:::fitLMER(mocapGrip:::eqsGen2preds(outcome="maxGrip", predictor1="stickcmScaled", predictor2="fins"), data=pureReplication$action$data)
 test_that("fitting lmer function returns the right shape, and handles warnings", {
   # these might change if optimizers change in lme
