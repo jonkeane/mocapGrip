@@ -25,7 +25,7 @@ mocapGrip:::CoefficientPlot(list(params$data[["<>$analysis<>"]]$models$bestModel
 These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
 
 ```{r}
-ggplot(mocapGrip:::pred(params$data[["<>$analysis<>"]]$models$bestModel[[1]]$modelObject)) + aes(x=stickcmScaled+8, y=<>$plotOutcome<>, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="<>$outcomeVariable<>")
+ggplot(mocapGrip:::pred(params$data[["<>$analysis<>"]]$models$bestModel[[1]]$modelObject)) + aes(x=<>$plotPredictor1<>, y=<>$plotOutcome<>, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="<>$outcomeVariable<>")
 ```
 
 ### Full model output
