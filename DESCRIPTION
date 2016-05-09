@@ -24,9 +24,11 @@ Depends: R (>= 2.10),
         Matrix
 Suggests: testthat,
           devtools,
-          git2r
+          git2r,
+    knitr,
+    rmarkdown
 SystemRequirements: python
 License: GPL-2
 LazyData: TRUE
 RoxygenNote: 5.0.1
-
+VignetteBuilder: knitr
