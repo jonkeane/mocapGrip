@@ -62,6 +62,18 @@
 					"predictor2" : "fins",
 					"grouping1" : "obsisSubj"
 				}
+			},
+			"estMaxGrip" :	{
+				"narrative" : {
+					"title" : "Maximum Grip aperture (on reach to grasp) after estimation",
+					"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
+				},
+				"variablesToUse" : {
+					"outcome" : "maxGrip",
+					"predictor1" : "stickcmScaled",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
 			}
 		}
 	}
