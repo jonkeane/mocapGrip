@@ -15,39 +15,8 @@ makeReport <- function(data){
 
 }
 
-# split the text, then join
-cleanText <- Vectorize(function(text, reps){
-  # split on the special sequence of characters.
-  text <- strsplit(text, split="<>")[[1]]
-  paste0(replaceText(text, reps = reps), collapse = "")
-}, vectorize.args = "text", USE.NAMES = FALSE)
 
-# replace the text with text from replacements
-replaceText <- Vectorize(function(text, reps){
-  if(!grepl("^\\$.*", text)){
-    # if the variable character is not there, return the text.
-    return(text)
-  }
-  replText <- reps[[substring(text, 2)]]
-
-  return(replText)
-}, vectorize.args = "text", USE.NAMES = FALSE)
-
-
-writeMarkdown <- function(modeledData,
-                          markdownPath = "./report.Rmd",
-                          modelStructure = system.file("modelStructure.json", package = "mocapGrip", mustWork=TRUE)
-                          ){
-  modelStructure
-  analysisSkel <- readLines("./inst/analysisSkeleton.Rmd")
-  header <- readLines("./inst/header.Rmd")
-
-  tmpFile <- "./test.Rmd"
-  con <- file(tmpFile)
-  on.exit(close(con))
-  writeLines(c(header, cleanText(analysisSkel, modelStructure$action)), con)
-}
-
+# takes an analysis specification and (all of the) modeled data and then returns a (named) list of replacements to be used by replaceText()
 formatGatherReplacements = function(analysis, modeledData) {
   # grab variables from the analyses structure
   outcome <- modelStructure$models$analyses[[analysis]]$variablesToUse$outcome
@@ -75,14 +44,55 @@ formatGatherReplacements = function(analysis, modeledData) {
     includeInteractionInGroup <- "(including interactions)"
   }
 
-  c(modelStructure$models$analyses[[analysis]]$narrative, # gather narratives
-    "outcome" = modelStructure$variableExplanations[[outcome]],
+  c("analysis" = analysis,
+    modelStructure$models$analyses[[analysis]]$narrative, # gather narratives
+    "outcomeVariable" = modelStructure$variableExplanations[[outcome]],
     "predictorVariables" = predictorVariables,
     "includeInteractionInGroup" = includeInteractionInGroup,
-    "groupingVariable" = modelStructure$variableExplanations[[grouping1]]) # outcomeVariable
+    "groupingVariable" = modelStructure$variableExplanations[[grouping1]],
+    "plotOutcome" = outcome, # for plotting
+    "plotPredictor1" = predictor1, # for plotting, not used now
+    "plotPredictor2" = predictor2 # for plotting, not used now
+    )
 }
 
-# rmarkdown::render(tmpFile, params = list(data=dataModelled$action))
+# split the text, then join
+cleanText <- Vectorize(function(text, reps){
+  # split on the special sequence of characters.
+  text <- strsplit(text, split="<>")[[1]]
+  paste0(replaceText(text, reps = reps), collapse = "")
+}, vectorize.args = "text", USE.NAMES = FALSE)
+
+# replace the text with text from replacements
+replaceText <- Vectorize(function(text, reps){
+  if(!grepl("^\\$.*", text)){
+    # if the variable character is not there, return the text.
+    return(text)
+  }
+  replText <- reps[[substring(text, 2)]]
+
+  return(replText)
+}, vectorize.args = "text", USE.NAMES = FALSE)
+
+
+writeMarkdown <- function(modeledData,
+                          markdownPath = "./report.Rmd"
+){
+
+  analysisSkel <- readLines(system.file("markdown", "analysisSkeleton.Rmd", package = "mocapGrip", mustWork = TRUE))
+  header <- readLines(system.file("markdown", "header.Rmd", package = "mocapGrip", mustWork = TRUE))
+
+  content <- sapply(names(modeledData),
+                    function(analysis) {
+                      mocapGrip:::cleanText(analysisSkel, mocapGrip:::formatGatherReplacements(analysis, modeledData))},
+                    simplify = TRUE, USE.NAMES = TRUE)
+  markdownOut <- c(header, content)
+
+  con <- file(markdownPath)
+  on.exit(close(con))
+  writeLines(markdownOut, con)
+}
+
 
 
 
