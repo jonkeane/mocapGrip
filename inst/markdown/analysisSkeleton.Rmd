@@ -6,7 +6,7 @@ We fit a hierarchical (mixed effects) linear regression model. The outcome (depe
 
 <>$predictorVariables<>
 
-There are varying intercepts by subject, and the effects of all the predictors <>$includeInteractionInGroup<> are also allowed to vary by subject (These are the mixed effects).
+There are varying intercepts by subject, and the effects of all the predictors <>$includeInteractionInGroup<> are also allowed to vary <>$groupingVariable<> (These are the mixed effects).
 
 ### Coefficient plot
 

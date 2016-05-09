@@ -1,7 +1,7 @@
 { "variableExplanations" : {
 		"stickcmScaled" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)",
 		"fins" : "the configuration of the fins (closed, none, open, where closed is the reference level)",
-		"stickXfins" : "the interaction between the size of the stick and configuration of fins",
+		"stickcmScaledXfins" : "the interaction between the size of the stick and configuration of fins",
 		"maxGrip" : "maximum grip aperture (in mm)",
 		"meanGrip" : "mean grip aperture (in mm)",
 		"medianGrip" : "median grip aperture (in mm)",
