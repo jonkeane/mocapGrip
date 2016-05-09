@@ -3,7 +3,7 @@
 
 # from http://stackoverflow.com/questions/13847936/in-r-plotting-random-effects-from-lmer-lme4-package-using-qqmath-or-dotplot
 # re = object of class ranef.mer
-ggCaterpillar <- function(re, QQ=FALSE, likeDotplot=TRUE) {
+ggCaterpillar <- function(re, QQ=FALSE, likeDotplot=TRUE, detailedFacetLabs = TRUE) {
   f <- function(x, nm = "ranef plot") {
     pv   <- attr(x, "postVar")
     cols <- 1:(dim(pv)[1])
@@ -14,6 +14,10 @@ ggCaterpillar <- function(re, QQ=FALSE, likeDotplot=TRUE) {
                        nQQ=rep(stats::qnorm(stats::ppoints(nrow(x))), ncol(x)),
                        ID=factor(rep(rownames(x), ncol(x))[ord], levels=rownames(x)[ord]),
                        ind=gl(ncol(x), nrow(x), labels=names(x)))
+
+    if(detailedFacetLabs){
+      pDf$ind <- ifelse(grepl("(Intercept)", pDf$ind), "intercept adjustment", paste0("slope adj: ", pDf$ind))
+    }
 
     if(QQ) {  ## normal QQ-plot
       p <- ggplot(pDf, aes_string(x="nQQ", y="y"))
@@ -26,13 +30,13 @@ ggCaterpillar <- function(re, QQ=FALSE, likeDotplot=TRUE) {
       } else {           ## different scales for random effects
         p <- p + facet_grid(ind ~ ., scales="free_y")
       }
-      p <- p + xlab("Levels") + ylab("Random effects")
+      p <- p + xlab(nm) + ylab("Random effects")
       scale <- 12-log(length(levels(pDf$ID)),2)
       p <- p + theme(axis.text.y = element_text(size=scale))
     }
 
     p <- p + theme(legend.position="none")
-    p <- p + labs(title= nm)
+    # p <- p + labs(title= nm)
     p <- p + geom_hline(yintercept=0, lwd = I(7/12), colour = I(grDevices::hsv(0/12, 7/12, 7/12)), alpha = I(5/12))
     p <- p + geom_errorbar(aes_string(ymin="y - ci", ymax="y + ci"), width=0, colour="black")
     p <- p + geom_point(aes())
