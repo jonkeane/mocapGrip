@@ -25,3 +25,9 @@ dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/"
 dataModeled <- makeReport(dataNew, reportPath="./reportActionExtimationFromGestureTrials.Rmd")
 ```
 
+```{r, eval=FALSE, echo=FALSE}
+# run the report on new gesture data.
+dataNewGest <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation", "gestMaxGrip", "gestMove"), includeFullData = FALSE)
+
+dataNewGestModeled <- makeReport(dataNewGest, reportPath="./reportGesture.Rmd")
+```
