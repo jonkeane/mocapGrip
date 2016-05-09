@@ -79,6 +79,8 @@ fitModels <- function(type, data){
 #'
 findTheBestModel <- function(models, last = FALSE){
 
+  # check that at least one model converged?
+
   if(last){
     modName <- names(which.max(which(unlist(lapply(models, function(x) x$converged)))))
   } else {
@@ -101,7 +103,10 @@ findTheBestModel <- function(models, last = FALSE){
 #'
 #' @export
 modelAllData <- function(data, ...){
-  analyses<- names(data)
+  analyses <- names(data)
+
+  # exclude full data if present
+  analyses <- analyses[analyses!="fullData"]
 
   for (analysis in analyses){
     models <- fitModels(analysis, data)
