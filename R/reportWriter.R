@@ -1,8 +1,10 @@
 # add kinds of models?
 # export(!)
-makeReport <- function(data, types, reportPath="./report.Rmd", ...){
-  # parse data?
-  data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", c("release"))
+makeReport <- function(data, reportPath="./report.Rmd", ...){
+  # parse data? this should be an option
+  # data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", types)
+
+  # check wellformedness of the data object.
 
   # fit models from analyze
   # pick the best model (add warnings here?)
@@ -32,7 +34,7 @@ formatGatherReplacements = function(analysis, modeledData) {
   if(names(modeledData[[analysis]]$models$bestModel) %in% c("interactionInPredAndGroup", "interactionInPred")){
     interaction <- modelStructure$variableExplanations[[paste(predictor1, predictor2, sep = "X")]]
   } else {
-    interaction <- NULL
+    interaction <-  NULL # NULL so that no extra bullet is added.
   }
 
   # make and format $predictorVariables
@@ -47,7 +49,7 @@ formatGatherReplacements = function(analysis, modeledData) {
   if(names(modeledData[[analysis]]$models$bestModel)=="interactionInPredAndGroup"){
     includeInteractionInGroup <- "(including interactions)"
   } else {
-    includeInteractionInGroup <- NULL
+    includeInteractionInGroup <- "" # empty string so that nothing is printed.
   }
 
   c("analysis" = analysis,
