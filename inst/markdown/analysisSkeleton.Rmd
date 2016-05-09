@@ -57,8 +57,16 @@ mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["<>$analysis<>"]]$models$best
 
 ```{r, results='asis'}
 knitr::kable(
-  tableData <- params$data[["<>$analysis<>"]]$data %>% dplyr::group_by(stick, fins) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+  params$data[["<>$analysis<>"]]$data %>% dplyr::group_by(stick, fins) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
 )
+
+cat("#### Observations with gripType included *this is temporary*  \n The vast majority of the movements are open, with very few being open/closed. Currently, all of these (including the closed grips) are included in the analysis. We probably should exclude the closed, and possibly even the open.closed ones in the future. Thoughts?")
+
+if("<>$analysis<>" %in% c("gestMove")){
+knitr::kable(
+  params$data[["<>$analysis<>"]]$data %>% dplyr::group_by(stick, fins, gripType) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+}
 ```
 
 There were `r length(params$data[["<>$analysis<>"]]$warnings)` trials that were excluded because there was occlusion.
