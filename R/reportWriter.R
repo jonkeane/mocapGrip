@@ -84,7 +84,7 @@ writeMarkdown <- function(modeledData,
 
   content <- sapply(names(modeledData),
                     function(analysis) {
-                      mocapGrip:::cleanText(analysisSkel, mocapGrip:::formatGatherReplacements(analysis, modeledData))},
+                      cleanText(analysisSkel, formatGatherReplacements(analysis, modeledData))},
                     simplify = TRUE, USE.NAMES = TRUE)
   markdownOut <- c(header, content)
 
