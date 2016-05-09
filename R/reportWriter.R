@@ -1,18 +1,22 @@
 # add kinds of models?
 # export(!)
-makeReport <- function(data){
+makeReport <- function(data, types, reportPath="./report.Rmd"){
   # parse data?
+  data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", c("release"))
 
   # fit models from analyze
-  # models <- fitLMER(eqsGen2preds(outcome="maxGrip", predictor1="stickcmScaled", predictor2="fins"), data=pureReplication$action$data)
-
   # pick the best model (add warnings here?)
+  dataModeled <- modelAllData(data)
 
   # read/write template
+  writeMarkdown(dataModeled)
 
   # render
+  reportOut <- rmarkdown::render(reportPath, params = list(data=dataModeled))
   # change path
 
+  message("Success, the report was written to ", reportOut, sep="")
+  return(dataModeled)
 }
 
 
