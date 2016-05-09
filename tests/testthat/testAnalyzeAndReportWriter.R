@@ -64,9 +64,14 @@ test_that("replaceText works with a selection of texts", {
   expect_equal(mocapGrip:::replaceText(list("##", "$title", "$intro"), modelStructure$models$analyses$action$narrative),c("##", "Maximum Grip aperture (on reach to grasp)", "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
 })
 
-# test_that("reaplceText works with lists in the replacements", {
-#   expect_equal(mocapGrip:::replaceText(list("$predictorVariables"), modelStructure$action),c("\n* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)\n* the configuration of the fins (closed, none, open, where closed is the reference level)\n* the interaction between the size of the stick and configuration of fins."))
-# })
+test_that("replaceText works with formatGatherReplacements", {
+  expect_equal(mocapGrip:::replaceText(list("$title"), formatGatherReplacements("action", dataModeled)),c("Maximum Grip aperture (on reach to grasp)"))
+  expect_equal(mocapGrip:::replaceText(list("$intro"), formatGatherReplacements("action", dataModeled)),c("The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
+  expect_equal(mocapGrip:::replaceText(list("$outcome"), formatGatherReplacements("action", dataModeled)),c("maximum grip aperture (in mm)"))
+  expect_equal(mocapGrip:::replaceText(list("$predictorVariables"), formatGatherReplacements("action", dataModeled)),c("\n* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)\n* the configuration of the fins (closed, none, open, where closed is the reference level)\n* the interaction between the size of the stick and configuration of fins"))
+  expect_equal(mocapGrip:::replaceText(list("$includeInteractionInGroup"), formatGatherReplacements("action", dataModeled)),c("(including interactions)"))
+  expect_equal(mocapGrip:::replaceText(list("$groupingVariable"), formatGatherReplacements("action", dataModeled)),c("by subject"))
+})
 
 test_that("", {
   expect_equal(mocapGrip:::formatGatherReplacements("action", dataModeled), list("title" = "Maximum Grip aperture (on reach to grasp)",
