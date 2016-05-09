@@ -20,7 +20,7 @@ See the project's readme file for information about this.
 In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()` after that, you can use the `makeReport()` function to write the report for all of the types of analyses (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. the `makeReport()` function returns the data obejct with models included if it is needed for other uses.  A full example is below: 
 
 ```{r, fig.show='hold', eval=FALSE}
-dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "release", "estMaxGrip"), includeFullData = TRUE)
+dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "release", "estMaxGrip"), includeFullData = FALSE)
 
 dataModeled <- makeReport(dataNew, reportPath="./reportActionExtimationFromGestureTrials.Rmd")
 ```
