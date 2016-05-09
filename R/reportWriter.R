@@ -95,6 +95,9 @@ formatGatherReplacements = function(analysis, modeledData) {
     includeInteractionInGroup <- "" # empty string so that nothing is printed.
   }
 
+  # adjust predictor one (which is usually sticks) if it is scaled to the unscaled version.
+  plotPredictor1 <- ifelse(predictor1 == "stickcmScaled", "stickcmScaled+8", predictor1)
+
   c("analysis" = analysis,
     modelStructure$models$analyses[[analysis]]$narrative, # gather narratives
     "outcomeVariable" = modelStructure$variableExplanations[[outcome]],
@@ -102,7 +105,7 @@ formatGatherReplacements = function(analysis, modeledData) {
     "includeInteractionInGroup" = includeInteractionInGroup,
     "groupingVariable" = modelStructure$variableExplanations[[grouping1]],
     "plotOutcome" = outcome, # for plotting
-    "plotPredictor1" = predictor1, # for plotting, not used now
+    "plotPredictor1" = plotPredictor1, # for plotting, not used now
     "plotPredictor2" = predictor2, # for plotting, not used now
     "formula" = deparse(formula, width.cutoff = 500) # for plotting, not used now
   )
