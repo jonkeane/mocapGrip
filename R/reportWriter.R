@@ -11,7 +11,7 @@ makeReport <- function(data, reportPath="./report.Rmd", ...){
   dataModeled <- modelAllData(data, ...)
 
   # read/write template
-  writeMarkdown(dataModeled)
+  writeMarkdown(dataModeled, markdownPath = reportPath)
 
   # render
   reportOut <- rmarkdown::render(reportPath, params = list(data=dataModeled))
@@ -19,6 +19,25 @@ makeReport <- function(data, reportPath="./report.Rmd", ...){
 
   message("Success, the report was written to ", reportOut, sep="")
   return(dataModeled)
+}
+
+
+writeMarkdown <- function(modeledData,
+                          markdownPath = "./report.Rmd"
+){
+
+  analysisSkel <- readLines(system.file("markdown", "analysisSkeleton.Rmd", package = "mocapGrip", mustWork = TRUE))
+  header <- readLines(system.file("markdown", "header.Rmd", package = "mocapGrip", mustWork = TRUE))
+
+  content <- sapply(names(modeledData),
+                    function(analysis) {
+                      cleanText(analysisSkel, formatGatherReplacements(analysis, modeledData))},
+                    simplify = TRUE, USE.NAMES = TRUE)
+  markdownOut <- c(header, content)
+
+  con <- file(markdownPath)
+  on.exit(close(con))
+  writeLines(markdownOut, con)
 }
 
 
@@ -84,26 +103,3 @@ replaceText <- Vectorize(function(text, reps){
 
   return(replText)
 }, vectorize.args = "text", USE.NAMES = FALSE)
-
-
-writeMarkdown <- function(modeledData,
-                          markdownPath = "./report.Rmd"
-){
-
-  analysisSkel <- readLines(system.file("markdown", "analysisSkeleton.Rmd", package = "mocapGrip", mustWork = TRUE))
-  header <- readLines(system.file("markdown", "header.Rmd", package = "mocapGrip", mustWork = TRUE))
-
-  content <- sapply(names(modeledData),
-                    function(analysis) {
-                      cleanText(analysisSkel, formatGatherReplacements(analysis, modeledData))},
-                    simplify = TRUE, USE.NAMES = TRUE)
-  markdownOut <- c(header, content)
-
-  con <- file(markdownPath)
-  on.exit(close(con))
-  writeLines(markdownOut, con)
-}
-
-
-
-
