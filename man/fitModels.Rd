@@ -4,7 +4,7 @@
 \alias{fitModels}
 \title{Fit the right models based on the name of the dataset being passed}
 \usage{
-fitModels(type, data, additionalModelTypes = list())
+fitModels(type, data)
 }
 \arguments{
 \item{type}{this is the type of data that is going to be analyzed from \code{data}. Examples: "action", "estimation" The name of this option determines which model will be fit.}

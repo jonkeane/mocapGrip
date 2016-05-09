@@ -55,26 +55,12 @@ eqsGen <- Vectorize(function(variablesToUse, formula){
 #' @param additionalModelTypes additional types of models that are not currently programed (this may change.)
 #' @return a list of fit models
 #'
-fitModels <- function(type, data, additionalModelTypes=list()){
-
-  # should these be stored as json for possible external editing?
-  modelsByType <- list(
-    "action" = list("outcome" = "maxGrip",
-                      "predictor1" = "stickcmScaled",
-                      "predictor2" = "fins"),
-    "estimation" = list("outcome" = "meanGrip",
-                    "predictor1" = "stickcmScaled",
-                    "predictor2" = "fins")
-  )
-  # add additional models, a bit of a hack for expansion?
-  if(length(additionalModelTypes)>0){
-    modelsByType <- c(modelsByType, additionalModelTypes)
-  }
+fitModels <- function(type, data){
 
   # check if the type of analysis is one of the known ones.
   # update this message if the models by type is moved elsewhere.
-  if(!{type %in% names(modelsByType)}){
-    stop("Error, the type ", type, " can't be found in the models by type specification for what variables to use. Please update the modelsByType to include this model type.", sep="")
+  if(!{type %in% names(modelStructure$models$analyses)}){
+    stop("Error, the type ", type, " can't be found in the models by type specification for what variables to use. Please update the modelStructure object or modelStructure.json", sep="")
   }
 
   modelsOut <- fitLMER(eqsGen(modelStructure$models$analyses[[type]]$variablesToUse,
