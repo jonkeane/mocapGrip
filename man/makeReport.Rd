@@ -9,7 +9,7 @@ makeReport(data, reportPath = "./report.Rmd", ...)
 \arguments{
 \item{data}{A list conforming to the structure of data for the project from \code{\link{extractMocapDataFromAnnotations}} (an example of this is the \code{\link{pureReplication}} object)}
 
-\item{reportPath}{a string with the path and name of the report to be made (this should end in \code{".Rmd"}), by default it is: \code{"./report.Rmd"}}
+\item{reportPath}{a string with the path and name of the report to be made (this should end in \code{.Rmd}), by default it is: \code{"./report.Rmd"}}
 
 \item{...}{options to pass to \code{\link{modelAllData}}, (e.g. \code{last=TRUE} if the last model that converged should be selected rather than the default (\code{last=FALSE}) first).}
 }

@@ -3,7 +3,7 @@
 #' takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelStructure.
 #'
 #' @param data A list conforming to the structure of data for the project from \code{\link{extractMocapDataFromAnnotations}} (an example of this is the \code{\link{pureReplication}} object)
-#' @param reportPath a string with the path and name of the report to be made (this should end in \code{".Rmd"}), by default it is: \code{"./report.Rmd"}
+#' @param reportPath a string with the path and name of the report to be made (this should end in \code{.Rmd}), by default it is: \code{"./report.Rmd"}
 #' @param ... options to pass to \code{\link{modelAllData}}, (e.g. \code{last=TRUE} if the last model that converged should be selected rather than the default (\code{last=FALSE}) first).
 #'
 #' @return An object that is a code of \code{data}, but with the models appened to each analysis present. This is useful if you need to inspect the models or use this for further analysis or reporting.
@@ -32,13 +32,21 @@ makeReport <- function(data, reportPath="./report.Rmd", ...){
   return(dataModeled)
 }
 
-
+#' Write markdown based on modeled data
+#'
+#' @param modeledData a list of modeled data of the format from \code{\link{modelAllData}}
+#' @param markdownPath a string of the path to store the report markdown file. By default is is \code{"./report.Rmd"}
+#' @param analysisSkel an R Markdown (\code{.Rmd}) file that has the skeleton for the analysis. This skeleton is the output for a single analysis. It will be repeated if multiple analysis types are in \code{modeledData}. It includes special variables which will be replaced with information from \code{modelStructure}. These special variables look like \code{<>$intro<>}, which would be replaced with the text marked \code{intro} in \code{modelStructure} for the specific analysis in modeledData.
+#' @param header an R Markdown file that has header information so that the report can be generated.
+# @param modelStructure ??
+#'
+#' @return None
+#' @export
 writeMarkdown <- function(modeledData,
-                          markdownPath = "./report.Rmd"
-){
-
-  analysisSkel <- readLines(system.file("markdown", "analysisSkeleton.Rmd", package = "mocapGrip", mustWork = TRUE))
-  header <- readLines(system.file("markdown", "header.Rmd", package = "mocapGrip", mustWork = TRUE))
+                          markdownPath = "./report.Rmd",
+                          analysisSkel = readLines(system.file("markdown", "analysisSkeleton.Rmd", package = "mocapGrip", mustWork = TRUE)),
+                          header = readLines(system.file("markdown", "header.Rmd", package = "mocapGrip", mustWork = TRUE))
+                          ){
 
   content <- sapply(names(modeledData),
                     function(analysis) {
