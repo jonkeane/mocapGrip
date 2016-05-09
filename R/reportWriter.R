@@ -29,6 +29,8 @@ formatGatherReplacements = function(analysis, modeledData) {
   predictor1 <- modelStructure$models$analyses[[analysis]]$variablesToUse$predictor1
   predictor2 <- modelStructure$models$analyses[[analysis]]$variablesToUse$predictor2
   grouping1 <- modelStructure$models$analyses[[analysis]]$variablesToUse$grouping1
+  # grab the formula from the best model.
+  formula <- stats::formula(modeledData[[analysis]]$models$bestModel[[1]]$modelObject)
 
   # check if there is an interaction in the predictors.
   if(names(modeledData[[analysis]]$models$bestModel) %in% c("interactionInPredAndGroup", "interactionInPred")){
@@ -60,8 +62,9 @@ formatGatherReplacements = function(analysis, modeledData) {
     "groupingVariable" = modelStructure$variableExplanations[[grouping1]],
     "plotOutcome" = outcome, # for plotting
     "plotPredictor1" = predictor1, # for plotting, not used now
-    "plotPredictor2" = predictor2 # for plotting, not used now
-    )
+    "plotPredictor2" = predictor2, # for plotting, not used now
+    "formula" = deparse(formula, width.cutoff = 500) # for plotting, not used now
+  )
 }
 
 # split the text, then join
