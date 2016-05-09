@@ -1,12 +1,12 @@
 # add kinds of models?
 # export(!)
-makeReport <- function(data, types, reportPath="./report.Rmd"){
+makeReport <- function(data, types, reportPath="./report.Rmd", ...){
   # parse data?
   data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", c("release"))
 
   # fit models from analyze
   # pick the best model (add warnings here?)
-  dataModeled <- modelAllData(data)
+  dataModeled <- modelAllData(data, ...)
 
   # read/write template
   writeMarkdown(dataModeled)
@@ -46,6 +46,8 @@ formatGatherReplacements = function(analysis, modeledData) {
   # add interaction text if  the selected model is $includeInteractionInGroup
   if(names(modeledData[[analysis]]$models$bestModel)=="interactionInPredAndGroup"){
     includeInteractionInGroup <- "(including interactions)"
+  } else {
+    includeInteractionInGroup <- NULL
   }
 
   c("analysis" = analysis,
