@@ -29,11 +29,11 @@ dataModeled <- makeReport(dataNew, reportPath="./reportActionExtimationFromGestu
 # run the report on new gesture data.
 dataNewGest <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation", "gestMaxGrip", "gestMove"), includeFullData = FALSE)
 
-dataNewGestModeled <- makeReport(dataNewGest, reportPath="./reportGesture.Rmd")
+dataNewGestModeled <- makeReport(dataNewGest, title="Gesture data report", reportPath="./reportGesture.Rmd")
 
 
 # replication
-pureReplicationModeled <- makeReport(pureReplication, reportPath="./reportReplication.Rmd")
+pureReplicationModeled <- makeReport(pureReplication, title="Pure replication report", reportPath="./reportReplication.Rmd")
 
 
 ```
