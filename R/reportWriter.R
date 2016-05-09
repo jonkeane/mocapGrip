@@ -47,8 +47,11 @@ writeMarkdown <- function(modeledData,
                           analysisSkel = readLines(system.file("markdown", "analysisSkeleton.Rmd", package = "mocapGrip", mustWork = TRUE)),
                           header = readLines(system.file("markdown", "header.Rmd", package = "mocapGrip", mustWork = TRUE))
                           ){
+  # grab names, and exclude fullData
+  analyses <- names(modeledData)
+  analyses <- analyses[analyses!="fullData"]
 
-  content <- sapply(names(modeledData),
+  content <- sapply(analyses,
                     function(analysis) {
                       cleanText(analysisSkel, formatGatherReplacements(analysis, modeledData))},
                     simplify = TRUE, USE.NAMES = TRUE)
