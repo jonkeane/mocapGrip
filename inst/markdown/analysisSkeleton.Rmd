@@ -1,3 +1,5 @@
+
+
 ## <>$title<>
 
 <>$intro<>
@@ -6,7 +8,7 @@ We fit a hierarchical (mixed effects) linear regression model. The outcome (depe
 
 <>$predictorVariables<>
 
-There are varying intercepts by subject, and the effects of all the predictors <>$includeInteractionInGroup<> are also allowed to vary <>$groupingVariable<> (these are the mixed effects). The full formula for this model is <>$formula<>
+There are varying intercepts by subject, and the effects of all the predictors <>$includeInteractionInGroup<> are also allowed to vary <>$groupingVariable<> (these are the mixed effects). The full formula for this model is <>$formula<> See [the lme4 documentation](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf) (especially section 2) for explanation of the formula format.
 
 ### Coefficient plot
 
