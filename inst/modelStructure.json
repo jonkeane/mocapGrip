@@ -27,6 +27,18 @@
 					"grouping1" : "obsisSubj"
 				}
 			},
+			"release" :	{
+				"narrative" : {
+					"title" : "Maximum Grip aperture (on release of object)",
+					"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand is releasing the object. (this period is labeled as *release* in our annotation system)."
+				},
+				"variablesToUse" : {
+					"outcome" : "maxGrip",
+					"predictor1" : "stickcmScaled",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
+			},
 			"estimation" :	{
 				"narrative" : {
 					"title" : "Size estimation",
