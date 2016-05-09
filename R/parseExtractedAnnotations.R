@@ -53,24 +53,7 @@ importCols <- function(data){
 }
 
 
-# processing function for maximum grip period
-maxGripProc <- function(data) {
-  # grip <- subset(data, period == "GRIP")
-  grip <- data[data$period == "GRIP", ]
-  if(nrow(grip) == 0 ){
-    warning(paste("There was no GRIP period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
-    return(data.frame())
-  }
-  if(sum(is.na(grip$grip))/nrow(grip) > 0.05 ){
-    warning(paste("There is ", as.character(round(sum(is.na(grip$grip))/nrow(grip)*100, digits=4)), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(grip$condition), " period: ", unique(grip$period),  " trial type: ", unique(grip$type),  sep =""))
-    return(data.frame())
-  }
-  maxTime <- max(grip$times, na.rm = TRUE)
-  # add logic to catch multiple maximums
-  maxGripRow <- grip[which.max(grip$grip),]
 
-  return(cbind(data.frame(duration=maxTime, maxGrip=maxGripRow$grip, maxGripTime=maxGripRow$times, maxGripTimeRel=maxGripRow$times/maxTime), importCols(maxGripRow)))
-}
 
 # processing function for steady period
 steadyProc <- function(data) {
@@ -91,26 +74,6 @@ steadyProc <- function(data) {
   medianGrip <- stats::median(subData$grip, na.rm=TRUE)
   cbind(data.frame(duration=maxTime, meanGrip=meanGrip, medianGrip=medianGrip), importCols(subData[1,]))
 }
-
-
-# processing function for maximum release period
-maxReleaseProc <- function(data) {
-  # grip <- subset(data, period == "RELEASE")
-  grip <- data[data$period == "RELEASE", ]
-  if(nrow(grip) == 0 ){
-    warning(paste("There was no RELEASE period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
-    return(data.frame())
-  }
-  if(sum(is.na(grip$grip))/nrow(grip) > 0.05 ){
-    warning(paste("There is ", as.character(round(sum(is.na(grip$grip))/nrow(grip)*100, digits=4)), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(grip$condition), " period: ", unique(grip$period), " trial type: ", unique(grip$type),  sep =""))
-    return(data.frame())
-  }
-  maxTime <- max(grip$times, na.rm = TRUE)
-  # add logic to catch multiple maximums
-  maxGripRow <- grip[which.max(grip$grip),]
-  return(cbind(data.frame(duration=maxTime, maxGrip=maxGripRow$grip, maxGripTime=maxGripRow$times, maxGripTimeRel=maxGripRow$times/maxTime), importCols(maxGripRow)))
-}
-
 
 # processing function for movement period
 moveProc <- function(data) {
@@ -134,45 +97,88 @@ moveProc <- function(data) {
 
 
 
-actionGripProc <-function(data) {
+
+
+# processing function for maximum grip period
+# the percOcclusion variable sets the maximum allowable occlusion, the default is 0.05
+maxGripFinder <- function(data, percOcclusion = 0.05) {
+  if(nrow(data) == 0 ){
+    warning(paste("There was no GRIP period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
+    return(data.frame())
+  }
+  if(sum(is.na(data$grip))/nrow(data) > percOcclusion ){
+    warning(paste("There is ", as.character(round(sum(is.na(data$grip))/nrow(data)*100, digits=4)), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(data$condition), " period: ", unique(data$period),  " trial type: ", unique(data$type),  sep =""))
+    return(data.frame())
+  }
+  maxTime <- max(data$times, na.rm = TRUE)
+  # add logic to catch multiple maximums
+  maxGripRow <- data[which.max(data$grip),]
+
+  return(cbind(data.frame(duration=maxTime, maxGrip=maxGripRow$grip, maxGripTime=maxGripRow$times, maxGripTimeRel=maxGripRow$times/maxTime), importCols(maxGripRow)))
+}
+
+actionGripProc <-function(data, ...) {
   # extract the maxmium grip during the grip portion of all action trials
-  filter_criteria <- lazyeval::interp(~ which_column == "ACTION", which_column = as.name("type"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripProc(.))
+  filter_criteria <- lazyeval::interp(~ type == "ACTION" & period == "GRIP", type = as.name("type"), period = as.name("period"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
 }
 
-releaseGripProc <-function(data) {
+releaseGripProc <-function(data, ...) {
   # extract the maxmium grip during the release portion of all action trials
-  filter_criteria <- lazyeval::interp(~ which_column == "ACTION", which_column = as.name("type"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxReleaseProc(.))
+  filter_criteria <- lazyeval::interp(~ type == "ACTION" & period == "RELEASE", type = as.name("type"), period = as.name("period"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
 }
 
-estimationGripProc <-function(data) {
-  # extract the mean and median grip during the steady portion of all estimate trials
-  filter_criteria <- lazyeval::interp(~ which_column == "ESTIMATION", which_column = as.name("type"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~steadyProc(.))
-}
-
-estMaxGripGripProc <-function(data) {
+estMaxGripGripProc <-function(data, ...) {
   # extract the maxmium grip during the grip portion of all estimate trials
-  filter_criteria <- lazyeval::interp(~ which_column == "ESTIMATION", which_column = as.name("type"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripProc(.))
+  filter_criteria <- lazyeval::interp(~ type == "ESTIMATION" & period == "GRIP", type = as.name("type"), period = as.name("period"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
 }
 
-gestMoveGripProc <-function(data) {
-  # extract the mean and median grip during the move portion of all gesture trials
-  # Side information for experiments involving side choices
-  # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
-  filter_criteria <- lazyeval::interp(~ which_column == "GESTURE", which_column = as.name("type"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~moveProc(.))
-}
-
-gestMaxGripProc <-function(data) {
+gestMaxGripProc <-function(data, ...) {
   # extract the maxmium grip during the grip portion of all gesture trials
   # Side information for experiments involving side choices
   # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
-  filter_criteria <- lazyeval::interp(~ which_column == "GESTURE", which_column = as.name("type"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripProc(.))
+  filter_criteria <- lazyeval::interp(~ type == "GESTURE" & period == "GRIP", type = as.name("type"), period = as.name("period"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
 }
+
+
+
+# processing function for finding means or medians
+# the percOcclusion variable sets the maximum allowable occlusion, the default is 0.05
+meanMedianFinder <- function(data, percOcclusion = 0.05) {
+  if(nrow(data) == 0 ){
+    warning(paste("There was no STEADY period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
+    return(data.frame())
+  }
+  if(sum(is.na(data$grip))/nrow(data) > percOcclusion ){
+    warning(paste("There is ", as.character(round(sum(is.na(data$grip))/nrow(data)*100), digits=4), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(data$condition), " period: ", unique(data$period), " trial type: ", unique(data$type),  sep =""))
+    return(data.frame())
+  }
+
+  maxTime <- max(data$times, na.rm=TRUE)
+  meanGrip <- mean(data$grip, na.rm=TRUE)
+  medianGrip <- stats::median(data$grip, na.rm=TRUE)
+
+  return(cbind(data.frame(duration=maxTime, meanGrip=meanGrip, medianGrip=medianGrip), importCols(data[1,])))
+}
+
+estimationGripProc <-function(data, ...) {
+  # extract the mean and median grip during the steady portion of all estimate trials
+  filter_criteria <- lazyeval::interp(~ type == "ESTIMATION" & period == "STEADY", type = as.name("type"), period = as.name("period"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~meanMedianFinder(., ...))
+}
+
+gestMoveGripProc <-function(data, ...) {
+  # extract the mean and median grip during the move portion of all gesture trials
+  # Side information for experiments involving side choices
+  # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
+  filter_criteria <- lazyeval::interp(~ type == "GESTURE" & period == "MOVEMENT", type = as.name("type"), period = as.name("period"))
+  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~meanMedianFinder(., ...))
+}
+
+
 
 
 # takes a (vector of) period(s) and data, and gives back a list with the extracted data in named lists.
