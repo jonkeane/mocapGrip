@@ -59,8 +59,11 @@ knitr::kable(
 )
 ```
 
-There were `r length(params$data[["<>$analysis<>"]]$warnings)` trials that were excluded because there was occlusion:
+There were `r length(params$data[["<>$analysis<>"]]$warnings)` trials that were excluded because there was occlusion.
 
 ```{r, results='asis'}
-cat(paste0("  \n* ", params$data[["<>$analysis<>"]]$warnings, collapse = ""))
+if(length(params$data[["<>$analysis<>"]]$warnings)>0){
+  # don't print anythign if there are no occlusions.
+  cat(paste0("  \n* ", params$data[["<>$analysis<>"]]$warnings, collapse = ""))
+}
 ```
