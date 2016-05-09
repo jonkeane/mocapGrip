@@ -135,7 +135,7 @@ estMaxGripGripProc <-function(data, ...) {
   data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
 }
 
-gestMaxGripProc <-function(data, ...) {
+gestMaxGripGripProc <-function(data, ...) {
   # extract the maxmium grip during the grip portion of all gesture trials
   # Side information for experiments involving side choices
   # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
