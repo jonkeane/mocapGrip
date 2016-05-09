@@ -48,3 +48,17 @@ There are estimates of the intercept and slope adjustments by subject. and 95% c
 ```{r, results="hide", message=FALSE}
 mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["<>$analysis<>"]]$models$bestModel[[1]]$modelObject, condVar = TRUE))
 ```
+
+### Number of observations and occlusion
+
+```{r, results='asis'}
+knitr::kable(
+  tableData <- params$data[["<>$analysis<>"]]$data %>% dplyr::group_by(stick, fins) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+```
+
+There were `r length(params$data[["<>$analysis<>"]]$warnings)` trials that were excluded because there was occlusion:
+
+```{r, results='asis'}
+cat(paste0("  \n* ", params$data[["<>$analysis<>"]]$warnings, collapse = ""))
+```
