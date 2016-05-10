@@ -114,7 +114,7 @@
 				"title" : "Mean grip aperture during gesture (movement)",
 				"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
 			},
-			"defaultAnalysis" : "maxGrip.stickAsCategorical"
+			"defaultAnalysis" : "meanGrip.stickAsCategorical"
 		}
 	}
 }
