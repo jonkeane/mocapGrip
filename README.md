@@ -55,6 +55,8 @@ The empty elan files are then annotated according to annotation guidelines.
 * `estimation` Extracts the mean and median grip from the *steady* period of *estimation* trials
 * `release` Extracts the maximum grip from the *release* period of *action* trials
 * `estMaxGrip` Extracts the maximum grip from the *grip* period of *estimation* trials
+* `gestMaxGrip` Extracts the maximum grip from the *grip* period of *gesture* trials
+* `gestMove` Extracts the mean and median grip from the *movement* period of *gesture* trials
 
 An example of this command is `readExtractedMocapData(path="./extractData", types = c("action", "estimation"))` which would extract `action` and `estimation` from all of the data that is in the folder `./extractedData`
 
