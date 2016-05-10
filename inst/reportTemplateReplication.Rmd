@@ -25,7 +25,7 @@ We fit a hierarchical (mixed effects) linear regression model. The outcume (depe
 There are varying intercepts by subject, and the effects of all the predictors (including interactions) are also allowed to vary by subject. (These are the mixed effects)
 
 ```{r}
-actionCat.fit <- lme4::lmer(maxGrip~stickcmScaled*fins + (1+stickcmScaled*fins|obsisSubj), params$data[["action"]])
+actionCat.fit <- lme4::lmer(maxGrip~stickcmScaled*fins + (1+stickcmScaled*fins|obsisSubj), params$data$action$data)
 ```
 
 
@@ -84,7 +84,7 @@ We fit a hierarchical (mixed effects) linear regression model. The outcume (depe
 There are varying intercepts by subject, and the effects of all the predictors (including interactions) are also allowed to vary by subject. (These are the mixed effects)
 
 ```{r}
-estimation.fit <- lme4::lmer(meanGrip~stickcmScaled*fins + (1+stickcmScaled*fins|obsisSubj), params$data[["estimation"]])
+estimation.fit <- lme4::lmer(meanGrip~stickcmScaled*fins + (1+stickcmScaled*fins|obsisSubj), params$data$estimation$data)
 ```
 
 ## Coefficient plot

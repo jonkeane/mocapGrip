@@ -1,0 +1,106 @@
+{ "variableExplanations" : {
+		"stickcmScaled" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)",
+		"stick" : "the size of the stick in centimeters as a categorical variable (factor), with five as the reference level.",
+		"fins" : "the configuration of the fins (closed, none, open; where closed is the reference level)",
+		"stickcmScaledXfins" : "the interaction between the size of the stick and configuration of fins",
+		"stickXfins" : "the interaction between the size of the stick (as a categorical variable) and configuration of fins",
+		"maxGrip" : "maximum grip aperture (in mm)",
+		"meanGrip" : "mean grip aperture (in mm)",
+		"medianGrip" : "median grip aperture (in mm)",
+		"obsisSubj" : "by subject"
+	},
+	"models" : {
+		"analysisSkeleton" : "analysisSkeleton.Rmd",
+		"modelStructures" : {
+			"interactionInPredAndGroup" : "paste0(outcome, '~', predictor1, '*', predictor2, '+', '(', '1+', predictor1, '*', predictor2, '|', grouping1, ')')",
+			"interactionInPred" : "paste0(outcome, '~', predictor1, '*', predictor2, '+', '(', '1+', predictor1, '+', predictor2, '|', grouping1, ')')",
+			"noInteraction" : "paste0(outcome, '~', predictor1, '+', predictor2, '+', '(', '1+', predictor1, '+', predictor2, '|', grouping1, ')')"
+		},
+		"analyses" : {
+			"action" :	{
+				"narrative" : {
+					"title" : "Maximum grip aperture (on reach to grasp)",
+					"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
+				},
+				"variablesToUse" : {
+					"outcome" : "maxGrip",
+					"predictor1" : "stickcmScaled",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
+			},
+			"release" :	{
+				"narrative" : {
+					"title" : "Maximum grip aperture (on release of object)",
+					"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand is releasing the object. (this period is labeled as *release* in our annotation system)."
+				},
+				"variablesToUse" : {
+					"outcome" : "maxGrip",
+					"predictor1" : "stickcmScaled",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
+			},
+			"estimation" :	{
+				"narrative" : {
+					"title" : "Size estimation",
+					"intro" : "The mean grip aperture is the mean of the distance measurements between the markers on the thumb and index finger during the period when the subject said the word ready (this period is labeled as *steady* in our annotation system)."
+				},
+				"variablesToUse" : {
+					"outcome" : "meanGrip",
+					"predictor1" : "stickcmScaled",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
+			},
+			"estimationMedian" :	{
+				"narrative" : {
+					"title" : "Size estimation",
+					"intro" : "The median grip aperture is the mean of the distance measurements between the markers on the thumb and index finger during the period when the subject said the word ready (this period is labeled as *steady* in our annotation system)."
+				},
+				"variablesToUse" : {
+					"outcome" : "medianGrip",
+					"predictor1" : "stickcmScaled",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
+			},
+			"estMaxGrip" :	{
+				"narrative" : {
+					"title" : "Maximum grip aperture (on reach to grasp) after estimation",
+					"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
+				},
+				"variablesToUse" : {
+					"outcome" : "maxGrip",
+					"predictor1" : "stickcmScaled",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
+			},
+			"gestMaxGrip" :	{
+				"narrative" : {
+					"title" : "Maximum grip aperture during gesture",
+					"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it looked like it was picking up the stick during gesture."
+				},
+				"variablesToUse" : {
+					"outcome" : "maxGrip",
+					"predictor1" : "stick",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
+			},
+			"gestMove" :	{
+				"narrative" : {
+					"title" : "Mean grip aperture during gesture (movement)",
+					"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
+				},
+				"variablesToUse" : {
+					"outcome" : "meanGrip",
+					"predictor1" : "stick",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
+			}
+		}
+	}
+}

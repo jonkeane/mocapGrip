@@ -1,0 +1,39 @@
+---
+title: "Using mocapGrip"
+author: "Jonathan Keane"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
+
+## Data processing pipline
+
+See the project's readme file for information about this.
+
+## Report writing
+
+In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()` after that, you can use the `makeReport()` function to write the report for all of the types of analyses (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. the `makeReport()` function returns the data obejct with models included if it is needed for other uses.  A full example is below: 
+
+```{r, fig.show='hold', eval=FALSE}
+dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "release", "estMaxGrip"), includeFullData = FALSE)
+
+dataModeled <- makeReport(dataNew, reportPath="./reportActionExtimationFromGestureTrials.Rmd")
+```
+
+```{r, eval=FALSE, echo=FALSE}
+# run the report on new gesture data.
+dataNewGest <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation", "gestMaxGrip", "gestMove"), includeFullData = FALSE)
+
+dataNewGestModeled <- makeReport(dataNewGest, title="Gesture data report", reportPath="./reportGesture.Rmd")
+
+
+# replication
+pureReplicationModeled <- makeReport(pureReplication, title="Pure replication report", reportPath="./reportReplication.Rmd")
+
+
+```

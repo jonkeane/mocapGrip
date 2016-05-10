@@ -87,7 +87,7 @@ CoefficientPlot <- function(models, modelnames = "", variables = NA, interaction
     }
   }
 
-  OutputPlot <- OutputPlot + scale_size_continuous(range = c(0.5, 1), guide = FALSE) + ylab(NULL) + xlab(NULL)
+  OutputPlot <- OutputPlot + scale_size_continuous(range = c(0.5, 1), guide = FALSE) + ylab("effect size") + xlab("predictor variables")
   OutputPlot <- OutputPlot  + coord_flip()
 
   return(OutputPlot)

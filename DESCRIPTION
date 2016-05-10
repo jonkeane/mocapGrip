@@ -8,12 +8,14 @@ Description: This package contains all of the code to synchronize, clip,
     extract, and analyze data from a project that uses motion capture to understand
     visual illusion, reach to grasp action, size estimation, and gesture.
 Imports: dplyr (>= 0.3.0),
+        jsonlite,
         lazyeval,
         lme4 (>= 1.1-12),
         lubridate,
         magrittr,
         plyr,
         reshape2,
+        rmarkdown,
         stringr,
         texreg,
         tidyr
@@ -22,9 +24,10 @@ Depends: R (>= 2.10),
         Matrix
 Suggests: testthat,
           devtools,
-          git2r
+          git2r,
+          knitr
 SystemRequirements: python
 License: GPL-2
 LazyData: TRUE
 RoxygenNote: 5.0.1
-
+VignetteBuilder: knitr

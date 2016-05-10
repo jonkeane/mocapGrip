@@ -17,6 +17,6 @@ Nothing, not useful currently.
 The \code{files} option can be a single (fully specified) elan file, a vector of fully specific elan files, or it can be a path with wildcards (e.g. \code{./GRI_0??/GRI_0??-SESSION_0??-TRIAL_0??.eaf}) that matches at least one, but potentially many elan files
 }
 \description{
-This function takes in a vector of elan files (*.eaf) and extracts the annotations from them. Additionally it preforms some checking to make sure that the annotations are in the format we expect. This won't catch all possible annotation errors, but should catch many of the most common ones.
+Takes in a vector of elan files (*.eaf) and extracts the annotations from them. Additionally it preforms some checking to make sure that the annotations are in the format we expect. This won't catch all possible annotation errors, but should catch many of the most common ones.
 }
 
