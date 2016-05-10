@@ -221,12 +221,12 @@ processPeriod <- function(period, data){
 #' Reads in extracted motion capture data from a directory.
 #'
 #' @param path Directory containing motion catpure csv files that were extracted with the \code{\link{extractMocapDataFromAnnotations}} function.
-#' @param types A vector of the types of periods to extract for analysis. Default: c("action", "estimation") Possible values are: "action", "estimation", "estimationMedian", "release", "estMaxGrip"
+#' @param dataSets A vector of the types of periods (aka: dataSets) to extract for analysis. Default: c("action", "estimation") Possible values are: "action", "estimation", "release", "estMaxGrip", "gestMaxGrip", and "gestMove"
 #' @param includeFullData A logical, should the output include the full data? default:\code{FALSE}
 #' @return Not sure yet.
 #'
 #' @export
-readExtractedMocapData <- function(path, types = c("action", "estimation"), includeFullData=FALSE){
+readExtractedMocapData <- function(path, dataSets = c("action", "estimation"), includeFullData=FALSE){
   # to be added to main function for oparsing data
   files <- list.files(path, recursive = TRUE, pattern = NULL, full.names=TRUE)
 
@@ -237,7 +237,7 @@ readExtractedMocapData <- function(path, types = c("action", "estimation"), incl
   data$stickcmScaled <- data$stickcm - 8
 
   # add check if there are no known types found.
-  periodData <- sapply(types, processPeriod, data=data, USE.NAMES = TRUE, simplify = FALSE)
+  periodData <- sapply(dataSets, processPeriod, data=data, USE.NAMES = TRUE, simplify = FALSE)
 
   if(includeFullData==TRUE){
     periodData[["fullData"]] <- data
