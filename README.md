@@ -1,6 +1,6 @@
 # Mocap-Grip project at the Center for Gesture, Sign, and Language at the University of Chicago
 
-[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=devel)](https://travis-ci.org/jonkeane/mocapGrip)
+[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=master)](https://travis-ci.org/jonkeane/mocapGrip)
 
 This package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
 
@@ -55,6 +55,8 @@ The empty elan files are then annotated according to annotation guidelines.
 * `estimation` Extracts the mean and median grip from the *steady* period of *estimation* trials
 * `release` Extracts the maximum grip from the *release* period of *action* trials
 * `estMaxGrip` Extracts the maximum grip from the *grip* period of *estimation* trials
+* `gestMaxGrip` Extracts the maximum grip from the *grip* period of *gesture* trials
+* `gestMove` Extracts the mean and median grip from the *movement* period of *gesture* trials
 
 An example of this command is `readExtractedMocapData(path="./extractData", types = c("action", "estimation"))` which would extract `action` and `estimation` from all of the data that is in the folder `./extractedData`
 
