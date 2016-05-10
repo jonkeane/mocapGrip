@@ -26,7 +26,8 @@ Suggests: testthat,
           devtools,
           git2r,
           knitr
-SystemRequirements: python
+SystemRequirements: python,
+                    pandoc
 License: GPL-2
 LazyData: TRUE
 RoxygenNote: 5.0.1
