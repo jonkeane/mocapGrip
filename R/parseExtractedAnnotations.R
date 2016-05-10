@@ -97,8 +97,6 @@ moveProc <- function(data) {
 
 
 
-
-
 # processing function for maximum grip period
 # the percOcclusion variable sets the maximum allowable occlusion, the default is 0.05
 maxGripFinder <- function(data, percOcclusion = 0.05) {
@@ -208,6 +206,10 @@ processPeriod <- function(period, data){
                                               }
   )
   periodData[["warnings"]] <- warns
+
+  # grab default analyses
+  periodData[["analysesToRun"]] <- modelStructure$dataSets[[period]]$defaultAnalysis
+
   return(periodData)
 }
 
@@ -230,99 +232,12 @@ readExtractedMocapData <- function(path, types = c("action", "estimation"), incl
 
   data <- plyr::ldply(files, process, conditionCodesFile=system.file("GRIPMLstimuli.csv", package = "mocapGrip", mustWork=TRUE), verbose=FALSE, .progress = "text" )
 
+  # modifications of the data to be better structure (should these go elsewhere?)
   data$stick <- factor(as.character(data$stick), levels = c("five", "seven", "nine", "eleven"))
-
   data$stickcmScaled <- data$stickcm - 8
 
   # add check if there are no known types found.
   periodData <- sapply(types, processPeriod, data=data, USE.NAMES = TRUE, simplify = FALSE)
-
-
-  # periodData <- list()
-  # # any way to offload this repitition?
-  # if("action" %in% types){
-  #   # action grip
-  #   periodData[["action"]] <- list()
-  #   warns <- list()
-  #   periodData[["action"]][["data"]] <- withCallingHandlers({actionGripProc(data)},
-  #                                                warning = function(w) {
-  #                                                  warns <<- append(warns,w$message)
-  #                                                  invokeRestart("muffleWarning")
-  #                                                }
-  #   )
-  #   periodData[["action"]][["warnings"]] <- warns
-  #   # write.csv(file="action.csv", actionData)
-  # }
-  #
-  # if("release" %in% types){
-  #   # release max grip
-  #   periodData[["release"]] <- list()
-  #   warns <- list()
-  #   periodData[["release"]][["data"]] <- withCallingHandlers({releaseGripProc(data)},
-  #                                                            warning = function(w) {
-  #                                                              warns <<- append(warns,w$message)
-  #                                                              invokeRestart("muffleWarning")
-  #                                                            }
-  #   )
-  #   periodData[["release"]][["warnings"]] <- warns
-  #   # write.csv(file="release.csv", releaseData)
-  # }
-  #
-  # if("estimation" %in% types){
-  #   # estimation
-  #   periodData[["estimation"]] <- list()
-  #   warns <- list()
-  #   periodData[["estimation"]][["data"]] <- withCallingHandlers({estSteadyProc(data)},
-  #                                                               warning = function(w) {
-  #                                                                 warns <<- append(warns,w$message)
-  #                                                                 invokeRestart("muffleWarning")
-  #                                                               }
-  #   )
-  #   periodData[["estimation"]][["warnings"]] <- warns
-  #   # write.csv(file="estimation.csv", estimationData)
-  # }
-  #
-  # if("estMaxGrip" %in% types){
-  #   # estimation max grip
-  #   periodData[["estMaxGrip"]] <- list()
-  #   warns <- list()
-  #   periodData[["estMaxGrip"]][["data"]] <- withCallingHandlers({estMaxGripProc(data)},
-  #                                                               warning = function(w) {
-  #                                                                 warns <<- append(warns$message,w)
-  #                                                                 invokeRestart("muffleWarning")
-  #                                                               }
-  #   )
-  #   periodData[["estMaxGrip"]][["warnings"]] <- warns
-  #   # write.csv(file="estMaxGrip.csv", estMaxGripData)
-  # }
-  #
-  # if("gestureMaxGrip" %in% types){
-  #   # gestureMaxGrip grip
-  #   periodData[["gestureMaxGrip"]] <- list()
-  #   warns <- list()
-  #   periodData[["gestureMaxGrip"]][["data"]] <- withCallingHandlers({gestMaxGripProc(data)},
-  #                                                                   warning = function(w) {
-  #                                                                     warns <<- append(warns$message,w)
-  #                                                                     invokeRestart("muffleWarning")
-  #                                                                   }
-  #   )
-  #   periodData[["gestureMaxGrip"]][["warnings"]] <- warns
-  #   # write.csv(file="gestureMaxGrip.csv", gestureMaxGripData)
-  # }
-  #
-  # if("gestureMovement" %in% types){
-  #   # gestureMovement grip
-  #   periodData[["gestureMovement"]] <- list()
-  #   warns <- list()
-  #   periodData[["gestureMovement"]][["data"]] <- withCallingHandlers({gestMoveGripProc(data)},
-  #                                                                    warning = function(w) {
-  #                                                                      warns <<- append(warns$message,w)
-  #                                                                      invokeRestart("muffleWarning")
-  #                                                                    }
-  #   )
-  #   periodData[["gestureMovement"]][["warnings"]] <- warns
-  #   # write.csv(file="gestureMovement.csv", gestureMovementData)
-  # }
 
   if(includeFullData==TRUE){
     periodData[["fullData"]] <- data

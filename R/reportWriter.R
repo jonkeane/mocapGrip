@@ -49,14 +49,21 @@ writeMarkdown <- function(modeledData,
                           header = readLines(system.file("markdown", "header.Rmd", package = "mocapGrip", mustWork = TRUE))
                           ){
   # grab names, and exclude fullData
-  analyses <- names(modeledData)
-  analyses <- analyses[analyses!="fullData"]
+  dataSets <- names(modeledData)
+  dataSets <- dataSets[dataSets!="fullData"]
 
-  content <- sapply(analyses,
-                    function(analysis) {
-                      cleanText(analysisSkel, formatGatherReplacements(analysis, modeledData))},
+  # this will break if there is more than one analysis specifically: `names(modeledData[[dataSet]]$analyses)`
+  content <- sapply(dataSets,
+                    function(dataSet) {
+                      sapply(names(modeledData[[dataSet]]$analyses),
+                             function(analysis){
+                               cleanText(analysisSkel, formatGatherReplacements(dataSet, analysis, modeledData))
+                               },
+                             simplify = TRUE, USE.NAMES = TRUE)
+                      },
                     simplify = TRUE, USE.NAMES = TRUE)
-  markdownOut <- c(header, content)
+
+  markdownOut <- c(header, unlist(content))
 
   con <- file(markdownPath)
   on.exit(close(con))
@@ -65,17 +72,17 @@ writeMarkdown <- function(modeledData,
 
 
 # takes an analysis specification and (all of the) modeled data and then returns a (named) list of replacements to be used by replaceText()
-formatGatherReplacements = function(analysis, modeledData) {
+formatGatherReplacements = function(dataSet, analysis, modeledData) {
   # grab variables from the analyses structure
   outcome <- modelStructure$models$analyses[[analysis]]$variablesToUse$outcome
   predictor1 <- modelStructure$models$analyses[[analysis]]$variablesToUse$predictor1
   predictor2 <- modelStructure$models$analyses[[analysis]]$variablesToUse$predictor2
   grouping1 <- modelStructure$models$analyses[[analysis]]$variablesToUse$grouping1
   # grab the formula from the best model.
-  formula <- stats::formula(modeledData[[analysis]]$models$bestModel[[1]]$modelObject)
+  formula <- stats::formula(modeledData[[dataSet]]$analyses[[analysis]]$bestModel[[1]]$modelObject)
 
   # check if there is an interaction in the predictors.
-  if(names(modeledData[[analysis]]$models$bestModel) %in% c("interactionInPredAndGroup", "interactionInPred")){
+  if(names(modeledData[[dataSet]]$analyses[[analysis]]$bestModel) %in% c("interactionInPredAndGroup", "interactionInPred")){
     interaction <- modelStructure$variableExplanations[[paste(predictor1, predictor2, sep = "X")]]
   } else {
     interaction <-  NULL # NULL so that no extra bullet is added.
@@ -90,7 +97,7 @@ formatGatherReplacements = function(analysis, modeledData) {
 
 
   # add interaction text if  the selected model is $includeInteractionInGroup
-  if(names(modeledData[[analysis]]$models$bestModel)=="interactionInPredAndGroup"){
+  if(names(modeledData[[dataSet]]$analyses[[analysis]]$bestModel)=="interactionInPredAndGroup"){
     includeInteractionInGroup <- "(including interactions)"
   } else {
     includeInteractionInGroup <- "" # empty string so that nothing is printed.
@@ -99,8 +106,9 @@ formatGatherReplacements = function(analysis, modeledData) {
   # adjust predictor one (which is usually sticks) if it is scaled to the unscaled version.
   plotPredictor1 <- ifelse(predictor1 == "stickcmScaled", "stickcmScaled+8", predictor1)
 
-  c("analysis" = analysis,
-    modelStructure$models$analyses[[analysis]]$narrative, # gather narratives
+  c("dataSet" = dataSet,
+    "analysis" = analysis,
+    modelStructure$dataSets[[dataSet]]$narrative, # gather narratives
     "outcomeVariable" = modelStructure$variableExplanations[[outcome]],
     "predictorVariables" = predictorVariables,
     "includeInteractionInGroup" = includeInteractionInGroup,

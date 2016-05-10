@@ -9,7 +9,7 @@ test_that("equation (formula) generation works", {
 })
 
 test_that("equation (formula) generation works", {
-  expect_equal(eqsGen(modelStructure$models$analyses$action$variablesToUse, modelStructure$models$modelStructures),
+  expect_equal(eqsGen(modelStructure$models$analyses$maxGrip.stickAsContinuous$variablesToUse, modelStructure$models$modelStructures),
                c("interactionInPredAndGroup" = "maxGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)",
                     "interactionInPred" = "maxGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)",
                     "noInteraction" = "maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)"))
@@ -32,7 +32,8 @@ test_that("fitting lmer function returns the right shape, and handles warnings",
 })
 
 test_that("fitting lmer function returns the right shape, and handles warnings", {
-  expect_error(fitModels(type="this is not a type", data=list()))
+  expect_error(fitModels(dataSet="action", analysis="this is not a type", data=list()))
+  expect_error(fitModels(dataSet="this is not a type", analysis="maxGrip.stickAsContinuous", data=list()))
 })
 
 test_that("the model chosing function works forwards", {
@@ -49,7 +50,6 @@ test_that("the model chosing function works backwords", {
   expect_equal(names(modsChoseAction$bestModel), "maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)")
 })
 
-
 ### Setup dataModeled for test
 dataModeled <- modelAllData(pureReplication)
 
@@ -59,53 +59,58 @@ dataModeledSimplest <- modelAllData(pureReplication, last = TRUE)
 
 
 test_that("modelAllData runs through data", {
-  expect_equal(names(dataModeled$action), c("data", "warnings", "models"))
+  expect_equal(names(dataModeled$action), c("data", "warnings", "analysesToRun", "analyses"))
   expect_equal(dataModeled$action$data, pureReplication$action$data)
   expect_equal(dataModeled$action$warnings, pureReplication$action$warnings)
 
-  expect_equal(names(dataModeledSimplest$action), c("data", "warnings", "models"))
+  expect_equal(names(dataModeledSimplest$action), c("data", "warnings", "analysesToRun", "analyses"))
   expect_equal(dataModeledSimplest$action$data, pureReplication$action$data)
   expect_equal(dataModeledSimplest$action$warnings, pureReplication$action$warnings)
   })
 
+
+
+
 context("report writer")
 
 test_that("replaceText works with a selection of texts", {
-  expect_equal(replaceText(list("##", "$title"), modelStructure$models$analyses$action$narrative),c("##", "Maximum grip aperture (on reach to grasp)"))
-  expect_equal(replaceText(list("##", "$title", "$intro"), modelStructure$models$analyses$action$narrative),c("##", "Maximum grip aperture (on reach to grasp)", "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
-})
-
-test_that("replaceText works with formatGatherReplacements", {
-  ## check dataModeled
-  expect_equal(replaceText(list("$title"), formatGatherReplacements("action", dataModeled)),c("Maximum grip aperture (on reach to grasp)"))
-  expect_equal(replaceText(list("$intro"), formatGatherReplacements("action", dataModeled)),c("The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
-  expect_equal(replaceText(list("$outcomeVariable"), formatGatherReplacements("action", dataModeled)),c("maximum grip aperture (in mm)"))
-  expect_equal(replaceText(list("$predictorVariables"), formatGatherReplacements("action", dataModeled)),c("\n* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)\n* the configuration of the fins (closed, none, open; where closed is the reference level)\n* the interaction between the size of the stick and configuration of fins"))
-  expect_equal(replaceText(list("$includeInteractionInGroup"), formatGatherReplacements("action", dataModeled)),c("(including interactions)"))
-  expect_equal(replaceText(list("$groupingVariable"), formatGatherReplacements("action", dataModeled)),c("by subject"))
-
-  ## check dataModeledSimplest
-  expect_equal(replaceText(list("$title"), formatGatherReplacements("action", dataModeledSimplest)),c("Maximum grip aperture (on reach to grasp)"))
-  expect_equal(replaceText(list("$intro"), formatGatherReplacements("action", dataModeledSimplest)),c("The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
-  expect_equal(replaceText(list("$outcomeVariable"), formatGatherReplacements("action", dataModeledSimplest)),c("maximum grip aperture (in mm)"))
-  expect_equal(replaceText(list("$predictorVariables"), formatGatherReplacements("action", dataModeledSimplest)),c("\n* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)\n* the configuration of the fins (closed, none, open; where closed is the reference level)"))
-  expect_equal(replaceText(list("$includeInteractionInGroup"), formatGatherReplacements("action", dataModeledSimplest)),c(""))
-  expect_equal(replaceText(list("$groupingVariable"), formatGatherReplacements("action", dataModeledSimplest)),c("by subject"))
+  expect_equal(replaceText(list("##", "$title"), modelStructure$dataSets$action$narrative),c("##", "Maximum grip aperture (on reach to grasp)"))
+  expect_equal(replaceText(list("##", "$title", "$intro"), modelStructure$dataSets$action$narrative),c("##", "Maximum grip aperture (on reach to grasp)", "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
 })
 
 test_that("formatGatherReplacements works", {
-  expect_equal(formatGatherReplacements("action", dataModeled), list("analysis" = "action",
-                                                                                 "title" = "Maximum grip aperture (on reach to grasp)",
-                                                                                 "intro" = "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system).",
-                                                                                 "outcomeVariable" = "maximum grip aperture (in mm)",
-                                                                                 "predictorVariables" = "\n* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)\n* the configuration of the fins (closed, none, open; where closed is the reference level)\n* the interaction between the size of the stick and configuration of fins",
-                                                                                 "includeInteractionInGroup" = "(including interactions)",
-                                                                                 "groupingVariable" = "by subject",
-                                                                                 "plotOutcome" = "maxGrip",
-                                                                                 "plotPredictor1" = "stickcmScaled+8",
-                                                                                 "plotPredictor2" = "fins",
-                                                                                 "formula" = "maxGrip ~ stickcmScaled * fins + (1 + stickcmScaled * fins | obsisSubj)"))
+  expect_equal(formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeled), list("dataSet" = "action",
+                                                                                                  "analysis" = "maxGrip.stickAsContinuous",
+                                                                     "title" = "Maximum grip aperture (on reach to grasp)",
+                                                                     "intro" = "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system).",
+                                                                     "outcomeVariable" = "maximum grip aperture (in mm)",
+                                                                     "predictorVariables" = "\n* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)\n* the configuration of the fins (closed, none, open; where closed is the reference level)\n* the interaction between the size of the stick and configuration of fins",
+                                                                     "includeInteractionInGroup" = "(including interactions)",
+                                                                     "groupingVariable" = "by subject",
+                                                                     "plotOutcome" = "maxGrip",
+                                                                     "plotPredictor1" = "stickcmScaled+8",
+                                                                     "plotPredictor2" = "fins",
+                                                                     "formula" = "maxGrip ~ stickcmScaled * fins + (1 + stickcmScaled * fins | obsisSubj)"))
 
+})
+
+
+test_that("replaceText works with formatGatherReplacements", {
+  ## check dataModeled
+  expect_equal(replaceText(list("$title"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeled)),c("Maximum grip aperture (on reach to grasp)"))
+  expect_equal(replaceText(list("$intro"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeled)),c("The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
+  expect_equal(replaceText(list("$outcomeVariable"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeled)),c("maximum grip aperture (in mm)"))
+  expect_equal(replaceText(list("$predictorVariables"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeled)),c("\n* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)\n* the configuration of the fins (closed, none, open; where closed is the reference level)\n* the interaction between the size of the stick and configuration of fins"))
+  expect_equal(replaceText(list("$includeInteractionInGroup"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeled)),c("(including interactions)"))
+  expect_equal(replaceText(list("$groupingVariable"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeled)),c("by subject"))
+
+  ## check dataModeledSimplest
+  expect_equal(replaceText(list("$title"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeledSimplest)),c("Maximum grip aperture (on reach to grasp)"))
+  expect_equal(replaceText(list("$intro"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeledSimplest)),c("The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
+  expect_equal(replaceText(list("$outcomeVariable"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeledSimplest)),c("maximum grip aperture (in mm)"))
+  expect_equal(replaceText(list("$predictorVariables"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeledSimplest)),c("\n* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)\n* the configuration of the fins (closed, none, open; where closed is the reference level)"))
+  expect_equal(replaceText(list("$includeInteractionInGroup"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeledSimplest)),c(""))
+  expect_equal(replaceText(list("$groupingVariable"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeledSimplest)),c("by subject"))
 })
 
 writeMarkdown(dataModeled, markdownPath = "./toTest.Rmd")

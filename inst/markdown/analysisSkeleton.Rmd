@@ -17,7 +17,7 @@ There are varying intercepts by subject, and the effects of all the predictors <
 These are the estimates of the effect sizes for the predictors (and interactions) in the model. The dot is the point estimate, the thick line is the 95% confidence interval, and the thin line the 99% confidence interval. One rule of thumb is: if the confidence intervals do not the effect is statistically significant.
 
 ```{r}
-mocapGrip:::CoefficientPlot(list(params$data[["<>$analysis<>"]]$models$bestModel[[1]]$modelObject))
+mocapGrip:::CoefficientPlot(list(params$data[["<>$dataSet<>"]]$analyses[["<>$analysis<>"]]$bestModel[[1]]$modelObject))
 ```
 
 ### Model predictions
@@ -25,13 +25,13 @@ mocapGrip:::CoefficientPlot(list(params$data[["<>$analysis<>"]]$models$bestModel
 These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
 
 ```{r}
-ggplot(mocapGrip:::pred(params$data[["<>$analysis<>"]]$models$bestModel[[1]]$modelObject)) + aes(x=<>$plotPredictor1<>, y=<>$plotOutcome<>, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="<>$outcomeVariable<>")
+ggplot(mocapGrip:::pred(params$data[["<>$dataSet<>"]]$analyses[["<>$analysis<>"]]$bestModel[[1]]$modelObject)) + aes(x=<>$plotPredictor1<>, y=<>$plotOutcome<>, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="<>$outcomeVariable<>")
 ```
 
 ### Full model output
 
 ```{r, fig.keep='none', results="asis", message=FALSE}
-texreg::htmlreg(list(params$data[["<>$analysis<>"]]$models$bestModel[[1]]$modelObject),
+texreg::htmlreg(list(params$data[["<>$dataSet<>"]]$analyses[["<>$analysis<>"]]$bestModel[[1]]$modelObject),
         method = "boot", # only needed for the overriding of pvalues
         use.se=TRUE, # only needed for the overriding of pvalues
         #        override.pval = list(lengthLMscaleSum$coefficients[,"Pr(>|t|)"]),
@@ -50,30 +50,30 @@ texreg::htmlreg(list(params$data[["<>$analysis<>"]]$models$bestModel[[1]]$modelO
 There are estimates of the intercept and slope adjustments by subject. and 95% confidence intervals around those estimates. This is also referred to as the mixed effects structure and is one way to see variability between subjects.
 
 ```{r, results="hide", message=FALSE}
-mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["<>$analysis<>"]]$models$bestModel[[1]]$modelObject, condVar = TRUE))
+mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["<>$dataSet<>"]]$analyses[["<>$analysis<>"]]$bestModel[[1]]$modelObject, condVar = TRUE))
 ```
 
 ### Number of observations and occlusion
 
 ```{r, results='asis'}
 knitr::kable(
-  params$data[["<>$analysis<>"]]$data %>% dplyr::group_by(stick, fins) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+  params$data[["<>$dataSet<>"]]$data %>% dplyr::group_by(stick, fins) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
 )
 
-if("<>$analysis<>" %in% c("gestMove")){
+if("<>$dataSet<>" %in% c("gestMove")){
   cat("#### Observations with gripType included *this is temporary*  \n The vast majority of the movements are open, with very few being open/closed. Currently, all of these (including the closed grips) are included in the analysis. We probably should exclude the closed, and possibly even the open.closed ones in the future. Thoughts?")
 
 knitr::kable(
-  params$data[["<>$analysis<>"]]$data %>% dplyr::group_by(stick, fins, gripType) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+  params$data[["<>$dataSet<>"]]$data %>% dplyr::group_by(stick, fins, gripType) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
 )
 }
 ```
 
-There were `r length(params$data[["<>$analysis<>"]]$warnings)` trials that were excluded because there was occlusion.
+There were `r length(params$data[["<>$dataSet<>"]]$warnings)` trials that were excluded because there was occlusion.
 
 ```{r, results='asis'}
-if(length(params$data[["<>$analysis<>"]]$warnings)>0){
+if(length(params$data[["<>$dataSet<>"]]$warnings)>0){
   # don't print anythign if there are no occlusions.
-  cat(paste0("  \n* ", params$data[["<>$analysis<>"]]$warnings, collapse = ""))
+  cat(paste0("  \n* ", params$data[["<>$dataSet<>"]]$warnings, collapse = ""))
 }
 ```
