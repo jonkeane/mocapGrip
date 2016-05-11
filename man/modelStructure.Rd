@@ -3,13 +3,13 @@
 \docType{data}
 \name{modelStructure}
 \alias{modelStructure}
-\title{modelStructure}
+\title{model analysis structure, and explanation information}
 \format{An object of class \code{list} of length 3.}
 \usage{
 modelStructure
 }
 \description{
-modelStructure
+This is read from modelStructure.json, and different structures can be read by \code{readModelStructure()}
 }
 \keyword{datasets}
 

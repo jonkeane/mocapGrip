@@ -1,4 +1,8 @@
-#' modelStructure
+# data <- readExtractedMocapData(path="~/Dropbox/mocap/gripStudy/analysis/extractedData/")
+
+#' model analysis structure, and explanation information
+#'
+#' This is read from modelStructure.json, and different structures can be read by \code{readModelStructure()}
 #'
 #' @export
 modelStructure <- jsonlite::fromJSON(system.file("modelStructure.json", package = "mocapGrip", mustWork = TRUE))
