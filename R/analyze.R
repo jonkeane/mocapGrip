@@ -3,10 +3,7 @@
 #' model analysis structure, and explanation information
 #'
 #' This is read from modelStructure.json, and different structures can be read by \code{readModelStructure()}
-#'
-#'
-#' @export
-modelStructure <- jsonlite::fromJSON(system.file("modelStructure.json", package = "mocapGrip", mustWork = TRUE))
+
 
 # Fit an lmer model with an equation and data, return list of the model, and convergence diagnostics (with the equation as the name)
 fitLMERsingle <- function(eq, data){
