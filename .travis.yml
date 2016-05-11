@@ -33,4 +33,4 @@ r_github_packages:
 
 after_success:
   - Rscript -e 'covr::codecov()'
-  - Rscript -r 'covr::package_coverage()'
+  - Rscript -e 'covr::package_coverage()'
