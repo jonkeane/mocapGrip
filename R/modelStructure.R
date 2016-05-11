@@ -86,13 +86,6 @@ checkModelStructure <- function(modelStructure){
   # check that there are no other names
   if( any(! names(modelStructure) %in% c("variableExplanations", "models", "dataSets")) ) { stop("The model structure has more sections than just variableExplanations, models, dataSets. It has: ", names(modelStructure)) }
 
-
+  return(modelStructure)
 }
 
-# formulaGood <- "paste0(outcome, '~', predictor1, '*', predictor2, '+', '(', '1+', predictor1, '*', predictor2, '|', grouping1, ')')"
-# checkModelStructure(list("variableExplanations" = list("foo" = "bar"),
-#                          "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
-#                                          "modelStructures" = list("foo" = formulaGood)),
-#                          "dataSets" = list("foo" = list("narrative" = list("title" = character(),
-#                                                                            "intro" = character()),
-#                                                         "defaultAnalysis" = 1))))

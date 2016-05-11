@@ -135,7 +135,11 @@ test_that("error if the defaultAnalysis is not a character", {
 })
 
 
-context("the supplied modelStructure complies with checks")
+context("the supplied modelStructures comply with checks")
 test_that("modelStructure Checkes out.", {
   expect_silent(checkModelStructure(modelStructure))
 })
+test_that("modelStructure Checkes out.", {
+  expect_silent(checkModelStructure(jsonlite::fromJSON("./testAddModelStructure.json")))
+})
+
