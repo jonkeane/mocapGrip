@@ -134,6 +134,16 @@ test_that("error if the defaultAnalysis is not a character", {
                                                           "defaultAnalysis" = 1)))))
 })
 
+goodStructure <- list("variableExplanations" = list("foo" = "bar"),
+                      "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
+                                      "modelStructures" = list("foo" = formulaGood)),
+                      "dataSets" = list("foo" = list("narrative" = list("title" = character(),
+                                                                        "intro" = character()),
+                                                     "defaultAnalysis" = character())))
+
+test_that("checkModelStructure returns the same object it is given.", {
+  expect_equal(checkModelStructure(goodStructure), goodStructure)
+})
 
 context("the supplied modelStructures comply with checks")
 test_that("modelStructure Checkes out.", {
