@@ -114,7 +114,6 @@ test_that("replaceText works with formatGatherReplacements", {
 })
 
 writeMarkdown(dataModeled, markdownPath = "./toTest.Rmd")
-# paused for now as the report is developed.
-# test_that("writeMarkdown conforms to standard", {
-#   expect_equal(readLines("./toTest.Rmd"), readLines("./pureReplicationReport.Rmd"))
-# })
+test_that("writeMarkdown conforms to standard", {
+  expect_equal(readLines("./toTest.Rmd"), readLines("./pureReplicationReport.Rmd"))
+})
