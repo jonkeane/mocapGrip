@@ -24,7 +24,7 @@ fitLMERsingle <- function(eq, data){
 fitLMER <- Vectorize(fitLMERsingle, vectorize.args = "eq", SIMPLIFY = FALSE)
 
 # generate equations (formulas) with two predictors from maximal to simpler
-# this is depricated, because eqsGen is a better use of modelStructure.json
+# this is depricated, because eqsGen is a better use of modelMetadata.json
 eqsGen2preds <- function(outcome, predictor1, predictor2, grouping1 = "obsisSubj"){
   eqs <- character()
   eqs <- append(eqs, paste0(outcome, "~", predictor1, "*", predictor2, "+", "(", "1+", predictor1, "*", predictor2, "|", grouping1, ")"))
@@ -33,7 +33,7 @@ eqsGen2preds <- function(outcome, predictor1, predictor2, grouping1 = "obsisSubj
   return(eqs)
 }
 
-# generate equations from variables to use and formulas (both of which come from modelStructure.json)
+# generate equations from variables to use and formulas (both of which come from modelMetadata.json)
 eqsGen <- Vectorize(function(variablesToUse, formula){
   with(variablesToUse, eval(parse(text=formula)))
 }, vectorize.args = "formula", USE.NAMES = TRUE)
@@ -50,12 +50,12 @@ fitModels <- function(dataSet, analysis, data){
 
   # check if the analysis of analysis is one of the known ones.
   # update this message if the models by analysis is moved elsewhere.
-  if(!{analysis %in% names(modelStructure$models$analyses)}){
-    stop("Error, the analysis ", analysis, " can't be found in the analyses specifications that are available. Please update the modelStructure object or modelStructure.json", sep="")
+  if(!{analysis %in% names(modelMetadata$models$analyses)}){
+    stop("Error, the analysis ", analysis, " can't be found in the analyses specifications that are available. Please update the modelMetadata object or modelMetadata.json", sep="")
   }
 
-  modelsOut <- fitLMER(eqsGen(modelStructure$models$analyses[[analysis]]$variablesToUse,
-                                    modelStructure$models$modelStructures)
+  modelsOut <- fitLMER(eqsGen(modelMetadata$models$analyses[[analysis]]$variablesToUse,
+                                    modelMetadata$models$modelStructures)
                        , data=data[[dataSet]]$data)
 
   return(modelsOut)

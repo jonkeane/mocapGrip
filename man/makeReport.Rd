@@ -20,6 +20,6 @@ makeReport(data, reportPath = "./report.Rmd", title = "Grip Project Report",
 An object that is a code of \code{data}, but with the models appened to each analysis present. This is useful if you need to inspect the models or use this for further analysis or reporting.
 }
 \description{
-takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelStructure.
+takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelMetadata.
 }
 

@@ -15,7 +15,7 @@ writeMarkdown(modeledData, markdownPath = "./report.Rmd",
 
 \item{markdownPath}{a string of the path to store the report markdown file. By default is is \code{"./report.Rmd"}}
 
-\item{analysisSkel}{an R Markdown (\code{.Rmd}) file that has the skeleton for the analysis. This skeleton is the output for a single analysis. It will be repeated if multiple analysis types are in \code{modeledData}. It includes special variables which will be replaced with information from \code{modelStructure}. These special variables look like \code{<>$intro<>}, which would be replaced with the text marked \code{intro} in \code{modelStructure} for the specific analysis in modeledData.}
+\item{analysisSkel}{an R Markdown (\code{.Rmd}) file that has the skeleton for the analysis. This skeleton is the output for a single analysis. It will be repeated if multiple analysis types are in \code{modeledData}. It includes special variables which will be replaced with information from \code{modelMetadata}. These special variables look like \code{<>$intro<>}, which would be replaced with the text marked \code{intro} in \code{modelMetadata} for the specific analysis in modeledData.}
 
 \item{header}{an R Markdown file that has header information so that the report can be generated.}
 }

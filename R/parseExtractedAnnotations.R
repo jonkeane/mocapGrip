@@ -208,7 +208,7 @@ processPeriod <- function(period, data){
   periodData[["warnings"]] <- warns
 
   # grab default analyses
-  periodData[["analysesToRun"]] <- modelStructure$dataSets[[period]]$defaultAnalysis
+  periodData[["analysesToRun"]] <- modelMetadata$dataSets[[period]]$defaultAnalysis
 
   return(periodData)
 }

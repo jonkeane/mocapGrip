@@ -9,7 +9,7 @@ test_that("equation (formula) generation works", {
 })
 
 test_that("equation (formula) generation works", {
-  expect_equal(eqsGen(modelStructure$models$analyses$maxGrip.stickAsContinuous$variablesToUse, modelStructure$models$modelStructures),
+  expect_equal(eqsGen(modelMetadata$models$analyses$maxGrip.stickAsContinuous$variablesToUse, modelMetadata$models$modelStructures),
                c("interactionInPredAndGroup" = "maxGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)",
                     "interactionInPred" = "maxGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)",
                     "noInteraction" = "maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)"))
@@ -54,7 +54,7 @@ test_that("the model chosing function works backwords", {
 dataModeled <- modelAllData(pureReplication)
 
 # this takes the last model to fit as the best.
-# In the current setup of modelStructure.json, this is the simplest model.
+# In the current setup of modelMetadata.json, this is the simplest model.
 dataModeledSimplest <- modelAllData(pureReplication, last = TRUE)
 
 
@@ -74,8 +74,8 @@ test_that("modelAllData runs through data", {
 context("report writer")
 
 test_that("replaceText works with a selection of texts", {
-  expect_equal(replaceText(list("##", "$title"), modelStructure$dataSets$action$narrative),c("##", "Maximum grip aperture (on reach to grasp)"))
-  expect_equal(replaceText(list("##", "$title", "$intro"), modelStructure$dataSets$action$narrative),c("##", "Maximum grip aperture (on reach to grasp)", "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
+  expect_equal(replaceText(list("##", "$title"), modelMetadata$dataSets$action$narrative),c("##", "Maximum grip aperture (on reach to grasp)"))
+  expect_equal(replaceText(list("##", "$title", "$intro"), modelMetadata$dataSets$action$narrative),c("##", "Maximum grip aperture (on reach to grasp)", "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."))
 })
 
 test_that("formatGatherReplacements works", {
