@@ -2,8 +2,9 @@
 #'
 #' takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelMetadata.
 #'
-#' @param data A list conforming to the structure of data for the project from \code{\link{extractMocapDataFromAnnotations}} (an example of this is the \code{\link{pureReplication}} object)
+#' @param data A list conforming to the structure of data for the project from \code{\link{extractMocapDataFromAnnotations}} (an example of this is the \code{\link{pureReplication}} object). If this data object includes fit models, they will not be refit by default.
 #' @param reportPath a string with the path and name of the report to be made (this should end in \code{.Rmd}), by default it is: \code{"./report.Rmd"}
+#' @param refitAllModels logical, if there are models that are already fit, should they be refit? Default: \code{FALSE}
 #' @param title a string for the title of the report, the default is "Grip Project Report"
 #' @param ... options to pass to \code{\link{modelAllData}}, (e.g. \code{last=TRUE} if the last model that converged should be selected rather than the default (\code{last=FALSE}) first).
 #'
@@ -12,15 +13,11 @@
 #' @export
 # add kinds of models?
 # add in different analysis skeletons?
-makeReport <- function(data, reportPath="./report.Rmd", title = "Grip Project Report", ...){
-  # parse data? this should be an option
-  # data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", types)
-
-  # check wellformedness of the data object.
+makeReport <- function(data, reportPath="./report.Rmd", title = "Grip Project Report", refitAllModels = FALSE, ...){
 
   # fit models from analyze
   # pick the best model (add warnings here?)
-  dataModeled <- modelAllData(data, ...)
+  dataModeled <- modelAllData(data, refitAllModels = refitAllModels, ...)
 
   # read/write template
   writeMarkdown(dataModeled, markdownPath = reportPath)
