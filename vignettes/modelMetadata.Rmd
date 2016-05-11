@@ -145,3 +145,8 @@ Here are the currently possible dataSet names:
 * `gestMaxGrip` pulls out the maximum grip aperture during the *grip* portion of *gesture* trials.
 * `gestMove` pulls out the mean and median grip aperture during the *movement* portion of *estimation* trials.
 
+## extending the default modelMetadata
+TBW
+
+## replacing the default modelMetadata
+TBW
