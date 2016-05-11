@@ -1,5 +1,6 @@
 process <- function(file, conditionCodesFile, verbose=FALSE){
   # read in csvs as strings including NA (which indicates occlusion) as a string (and empty as a true NA)
+  # readr::read_csv doesn't work as a simple replacement.
   data <- utils::read.csv(file=file, na.strings = "", stringsAsFactors=FALSE)
   data$times <- seq(from = 0, to = (1/120)*(nrow(data)-1), length.out= nrow(data))
   # melt ignoring true NAs
