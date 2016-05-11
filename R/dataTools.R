@@ -1,4 +1,9 @@
 #' write csvs of data from a data object
+#' @param data a data object to use for writing data.
+#' @param namePrefix a character string to prepend to each file. Default: ""
+#' @param path a character string of the path to save the data. Default: "./"
+#' @param overwrite logical, should the writer overwrite files that already exist? Default: `FALSE`
+#' @return None
 #'
 writeCSVsFromData <- function(data, namePrefix = "", path="./", overwrite = FALSE) {
   dataNames <- names(data)
