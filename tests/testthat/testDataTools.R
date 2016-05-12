@@ -11,3 +11,9 @@ test_that("writeCSVsFromData accepts prefixes", {
   expect_message(writeCSVsFromData(pureReplication, namePrefix = "prefix"))
   unlink(c("./prefixaction.csv", "./prefixestimation.csv"))
 })
+
+context("displayModelsToRun")
+test_that("display models works", {
+  expect_message(displayAnalysesToRun(pureReplication))
+})
+
