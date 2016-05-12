@@ -5,6 +5,7 @@
 #' @param overwrite logical, should the writer overwrite files that already exist? Default: `FALSE`
 #' @return None
 #'
+#' @export
 writeCSVsFromData <- function(data, namePrefix = "", path="./", overwrite = FALSE) {
   dataNames <- names(data)
   filenamesout <- paste0(path, namePrefix, dataNames, ".csv")

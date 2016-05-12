@@ -94,7 +94,7 @@ This section contains information about what variables will be used in the model
 	},
 ```
 
-#### `analyses`
+#### `modalStructures`
 This section describes how the variables should be used within the models. Specifically, this part specifies if the variables should be included as just the predictor, or if they should also be included in interactions. When you run the analysis from the section above, each of these formulas will be used, and then one will be selected as the best (based on the options for `findtheBest()` or `fitAllModels()`). This section will always be named `modelStructures`. Each structure within have a name and then a string that tells `R` how to make the formula for [`lme4`](https://cran.r-project.org/web/packages/lme4/index.html). The format for the formula lists each of the variables, with the formula syntax (e.g. `~`, `+`, `*`), in quotes, all surrounded by `paste0()` so that when they are needed the variable names that are specified above can be put together with the formula syntax and be made into a full formula.
 
 *For the most part, these should be sufficient for most models. Adding different configurations should be done with care.*

@@ -4,3 +4,4 @@
 ^\.travis\.yml$
 ^inst/dataForConstructingTests$
 ^inst/extdata$
+^codecov.yml$
