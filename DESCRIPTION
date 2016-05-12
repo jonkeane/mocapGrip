@@ -14,6 +14,7 @@ Imports: dplyr (>= 0.3.0),
         lubridate,
         magrittr,
         plyr,
+        readr,
         reshape2,
         rmarkdown,
         stringr,
@@ -26,7 +27,8 @@ Suggests: testthat,
           devtools,
           git2r,
           knitr
-SystemRequirements: python
+SystemRequirements: python,
+                    pandoc
 License: GPL-2
 LazyData: TRUE
 RoxygenNote: 5.0.1

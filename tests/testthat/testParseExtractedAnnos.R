@@ -8,7 +8,7 @@ load(file.path('./dataForParsingTests/GRI057-001-013estimationMaxGrip.RData')) #
 
 
 test_that("readExtractedMocapData matches precomputed action data", {
-  expect_output(dataToBeTested <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", types = c("action")))
+  expect_output(dataToBeTested <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action")))
   # expect_equal(dataToBeTested$action$data$duration, actionData$duration)
   # expect_equal(dataToBeTested$action$data$maxGrip, actionData$maxGrip)
   # expect_equal(dataToBeTested$action$data$maxGripTime, actionData$maxGripTime)
@@ -29,21 +29,21 @@ test_that("readExtractedMocapData matches precomputed action data", {
 })
 
 test_that("readExtractedMocapData matches precomputed release data", {
-  expect_output(dataToBeTested <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", types = c("release")))
+  expect_output(dataToBeTested <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("release")))
   colsToTest <- names(releaseData)
   colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
   lapply(colsToTest, function(co) expect_equal(dataToBeTested$release$data[co], releaseData[co]))
 })
 
 test_that("readExtractedMocapData matches precomputed estimation data", {
-  expect_output(dataToBeTested <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", types = c("estimation")))
+  expect_output(dataToBeTested <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("estimation")))
   colsToTest <- names(estimationData)
   colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
   lapply(colsToTest, function(co) expect_equal(dataToBeTested$estimation$data[co], estimationData[co]))
 })
 
 test_that("readExtractedMocapData matches precomputed estimation data", {
-  expect_output(dataToBeTested <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", types = c("estMaxGrip")))
+  expect_output(dataToBeTested <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("estMaxGrip")))
   colsToTest <- names(estimationMaxGripData)
   colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
   lapply(colsToTest, function(co) expect_equal(dataToBeTested$estMaxGrip$data[co], estimationMaxGripData[co]))

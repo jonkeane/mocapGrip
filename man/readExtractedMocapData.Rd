@@ -4,13 +4,13 @@
 \alias{readExtractedMocapData}
 \title{Read extracted motion capture data}
 \usage{
-readExtractedMocapData(path, types = c("action", "estimation"),
+readExtractedMocapData(path, dataSets = c("action", "estimation"),
   includeFullData = FALSE)
 }
 \arguments{
 \item{path}{Directory containing motion catpure csv files that were extracted with the \code{\link{extractMocapDataFromAnnotations}} function.}
 
-\item{types}{A vector of the types of periods to extract for analysis. Default: c("action", "estimation") Possible values are: "action", "estimation", "estimationMedian", "release", "estMaxGrip"}
+\item{dataSets}{A vector of the types of periods (aka: dataSets) to extract for analysis. Default: c("action", "estimation") Possible values are: "action", "estimation", "release", "estMaxGrip", "gestMaxGrip", and "gestMove"}
 
 \item{includeFullData}{A logical, should the output include the full data? default:\code{FALSE}}
 }

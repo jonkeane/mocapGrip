@@ -1,0 +1,152 @@
+---
+title: "Model metadata"
+author: "Jonathan Keane"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Each of the models and analyses is only able to run because `mocapGrip` has metadata about what to do. There is a large amount of default information included in mocapGrip (this is stored in the modelMetadata object by default), but this can be extended by adding your own model metadata. The rest of this vignette will describe how to do that, and what structure you need to have to do that.
+
+## modelMetadata json file structure
+
+The model metadata is read into `mocapGrip` from a specially formatted [json file](http://blog.scottlowe.org/2013/11/08/a-non-programmers-introduction-to-json/). These files take the same format as the [default file that comes with the package](https://github.com/jonkeane/mocapGrip/blob/master/inst/modelMetadata.json). The basic structure of this file for action maximum grip, using the predictor variable for stick (as continuous) looks like:
+
+```
+{ "variableExplanations" : {
+				"stickcmScaled" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)",
+    		"fins" : "the configuration of the fins (closed, none, open; where closed is the reference level)",
+    		"stickcmScaledXfins" : "the interaction between the size of the stick and configuration of fins",
+    		"maxGrip" : "maximum grip aperture (in mm)",
+    		"obsisSubj" : "by subject"
+	},
+	"models" : {
+		"analyses" : {
+			"maxGrip.stickAsContinuous" : {
+				"variablesToUse" : {
+					"outcome" : "maxGrip",
+					"predictor1" : "stickcmScaled",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				}
+			}
+		},
+		"modelStructures" : {
+			"interactionInPredAndGroup" : "paste0(outcome, '~', predictor1, '*', predictor2, '+', '(', '1+', predictor1, '*', predictor2, '|', grouping1, ')')",
+			"interactionInPred" : "paste0(outcome, '~', predictor1, '*', predictor2, '+', '(', '1+', predictor1, '+', predictor2, '|', grouping1, ')')",
+			"noInteraction" : "paste0(outcome, '~', predictor1, '+', predictor2, '+', '(', '1+', predictor1, '+', predictor2, '|', grouping1, ')')"
+		}
+	},
+	"dataSets" : {
+		"action" :	{
+			"narrative" : {
+				"title" : "Maximum grip aperture (on reach to grasp)",
+				"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
+			},
+			"defaultAnalysis" : "maxGrip.stickAsContinuous"
+		}
+	}
+}
+```
+
+
+There are three main areas of information `variableExplanations`, `models`, and `dataSets`. Each will be described in detail below:
+
+### `variableExplanations`
+This contains explanatory descriptions of each of the variables that are used in a model/analysis. These are required to be named with the same name as the column that they refer to in the data. These only have to be specified once even if they are used in many many models. This section looks like (this is copied from above):
+
+```
+"variableExplanations" : {
+	"stickcmScaled" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)",
+	"fins" : "the configuration of the fins (closed, none, open; where closed is the reference level)",
+	"stickcmScaledXfins" : "the interaction between the size of the stick and configuration of fins",
+	"maxGrip" : "maximum grip aperture (in mm)",
+	"obsisSubj" : "by subject"
+},
+```
+
+
+### `models`
+This section contains information to fit different kinds of (linear regression) models. Each model can be applied to different dataSets, although the dataSet must have all of the variables (`outcome`, `predictor1`, `predictor2`, and `grouping1`) in order for it to fit.  Then there are two different sections (`analyses` and `modelStructures`) describe in turn.
+
+#### `analyses`
+This section contains information about what variables will be used in the models. Each model has a name (this model is named `maxGrip.stickAsContinuous`) that is a short description of what is going on. When you fit the models, this will be how you find these models in the `data` object. Each model also must have four variables contained in `variablesToUse`.
+
+* `outcome`  This is the outcome (dependent) variable in the linear model, in this example it is `maxGrip`
+* `predictor1` This is the first predictor (independent) variable in the linear model, in this example it is `stickcmScaled`
+* `predictor2` This is the second predictor (independent) variable in the linear model, in this example it is `fins`
+* `grouping1` This is the grouping parameter (also known as levels for mixed effects) for most models (including the one her) this should be `obsisSubj`
+
+```
+"models" : {
+	"analyses" : {
+		"maxGrip.stickAsContinuous" : {
+			"variablesToUse" : {
+				"outcome" : "maxGrip",
+				"predictor1" : "stickcmScaled",
+				"predictor2" : "fins",
+				"grouping1" : "obsisSubj"
+			}
+		}
+	},
+```
+
+#### `analyses`
+This section describes how the variables should be used within the models. Specifically, this part specifies if the variables should be included as just the predictor, or if they should also be included in interactions. When you run the analysis from the section above, each of these formulas will be used, and then one will be selected as the best (based on the options for `findtheBest()` or `fitAllModels()`). This section will always be named `modelStructures`. Each structure within have a name and then a string that tells `R` how to make the formula for [`lme4`](https://cran.r-project.org/web/packages/lme4/index.html). The format for the formula lists each of the variables, with the formula syntax (e.g. `~`, `+`, `*`), in quotes, all surrounded by `paste0()` so that when they are needed the variable names that are specified above can be put together with the formula syntax and be made into a full formula.
+
+*For the most part, these should be sufficient for most models. Adding different configurations should be done with care.*
+
+* `interactionInPredAndGroup` This includes all possible interactions in both the predictors (sometimes called main effects) and the slope adjustments (aka mixed effects)    
+formula: maxGrip~stickcmScaled\*fins+(1+stickcmScaled\*fins|obsisSubj)
+* `interactionInPred` This includes all possible interactions in the predictors (sometimes called main effects) but not in the the slope adjustments (aka mixed effects)    
+formula: maxGrip~stickcmScaled\*fins+(1+stickcmScaled\*fins|obsisSubj)
+
+* `noInteractions` This has no interactions in either the predictors (sometimes called main effects) or the slope adjustments (aka mixed effects)       		
+formula: maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)
+
+```
+"modelStructures" : {
+	"interactionInPredAndGroup" : "paste0(outcome, '~', predictor1, '*', predictor2, '+', '(', '1+', predictor1, '*', predictor2, '|', grouping1, ')')",
+	"interactionInPred" : "paste0(outcome, '~', predictor1, '*', predictor2, '+', '(', '1+', predictor1, '+', predictor2, '|', grouping1, ')')",
+	"noInteraction" : "paste0(outcome, '~', predictor1, '+', predictor2, '+', '(', '1+', predictor1, '+', predictor2, '|', grouping1, ')')"
+  } 
+},
+```
+
+    	
+###`dataSets`
+This section specifies the dataSet to be read and processed from the extracted annotations data. This defines what aspects of the data should be extracted, and gives some language to be used in reports. Currently, there are a limited number of possible dataSet names (because the methods for extracting them are hard coded, they are listed below). Although you can change the `title`, `intro`, or `defaultAnalysis` for these.
+
+* `title` short title for the section of the report discussing this dataSet.
+* `intro` a more detailed description of the dataSet
+* `defaultAnalysis` this is the default analysis to be used. This must be the name of one of the analyses in the `analyses` section above.
+    	
+```
+"dataSets" : {
+	"action" :	{
+		"narrative" : {
+			"title" : "Maximum grip aperture (on reach to grasp)",
+			"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
+		},
+		"defaultAnalysis" : "maxGrip.stickAsContinuous"
+	}
+}
+```
+
+Here are the currently possible dataSet names:
+
+* `action` pulls out the maximum grip aperture during the *grip* portion of *action* trials.
+* `release` pulls out the maximum grip aperture during the *release* portion of *action* trials.
+* `estimation` pulls out the mean and median grip aperture during the *steady* portion of *estimation* trials.
+* `estMaxGrip` pulls out the maximum grip aperture during the *grip* portion of *estimation* trials.
+* `gestMaxGrip` pulls out the maximum grip aperture during the *grip* portion of *gesture* trials.
+* `gestMove` pulls out the mean and median grip aperture during the *movement* portion of *estimation* trials.
+
+## extending the default modelMetadata
+TBW
+
+## replacing the default modelMetadata
+TBW

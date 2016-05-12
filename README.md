@@ -1,6 +1,6 @@
 # Mocap-Grip project at the Center for Gesture, Sign, and Language at the University of Chicago
 
-[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=master)](https://travis-ci.org/jonkeane/mocapGrip)
+[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=devel)](https://travis-ci.org/jonkeane/mocapGrip)
 
 This package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
 
@@ -49,7 +49,7 @@ The empty elan files are then annotated according to annotation guidelines.
 `extractMocapDataFromAnnotations(...)` extracts completed annotations from the files specified, and checks to make sure that the format is correct. Currently it will give warnings if the checks it runs don't work, and will suggest possible fixes. Any file that has a warning will not have any annotations extract. You can supply it with a destination directory, which must already exist. An example of this command is: `extractMocapDataFromAnnotations(files=c("./elanFilesCompleted/GRI_059/GRI_059-SESSION_001-TRIAL_001.eaf", "./elanFilesCompleted/GRI_059/GRI_059-SESSION_001-TRIAL_002.eaf"), destDir="./extractedData/")` You can also use wildcards with this command: `extractMocapDataFromAnnotations(files="./elanFilesCompleted/GRI_0??/GRI_0??-SESSION_0??-TRIAL_0??.eaf", destDir="./extractedData/")` which will match any files that have any character in each of the positions with a `?`.
 
 ### `readExtractedMocapData(...)`
-`readExtractedMocapData(...)` reads in the extracted motion capture data (that are written by the command `extractMocapDataFromAnnotations(...)` above). This function can extract as many or as few types of data for analysis as we want. Possible types include:
+`readExtractedMocapData(...)` reads in the extracted motion capture data (that are written by the command `extractMocapDataFromAnnotations(...)` above). This function can extract as many or as few types of data (dataSets) for analysis as we want. Possible dataSets include:
 
 * `action` Extracts the maximum grip from the *grip* period of *action* trials
 * `estimation` Extracts the mean and median grip from the *steady* period of *estimation* trials
@@ -58,7 +58,7 @@ The empty elan files are then annotated according to annotation guidelines.
 * `gestMaxGrip` Extracts the maximum grip from the *grip* period of *gesture* trials
 * `gestMove` Extracts the mean and median grip from the *movement* period of *gesture* trials
 
-An example of this command is `readExtractedMocapData(path="./extractData", types = c("action", "estimation"))` which would extract `action` and `estimation` from all of the data that is in the folder `./extractedData`
+An example of this command is `readExtractedMocapData(path="./extractData", dataSets = c("action", "estimation"))` which would extract `action` and `estimation` from all of the data that is in the folder `./extractedData`
 
 
 ## Testing
