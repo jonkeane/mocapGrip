@@ -32,5 +32,6 @@ deploy:
   file: mocapGrip_0.1.tar.gz
   skip_cleanup: true
   on:
+	tags: true
     repo: jonkeane/mocapGrip
     branch: devel	
