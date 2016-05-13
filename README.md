@@ -1,14 +1,16 @@
-# Mocap-Grip project at the Center for Gesture, Sign, and Language at the University of Chicago
+# Mocap-Grip project at the [Center for Gesture, Sign, and Language at the University of Chicago](https://gslcenter.uchicago.edu/)
 
 [![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=devel)](https://travis-ci.org/jonkeane/mocapGrip)
 
-This package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
+This [R](https://www.r-project.org/) package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
 
 The main functions are:
 * synchronize motion capture and video data,
 * setup annotation files to be annotated with [elan](https://tla.mpi.nl/tools/tla-tools/elan/),
 * extract and check the annotations for errors,
-* run basic analyses on the extracted data (forthcoming)
+* run basic analyses on the extracted data
+
+If you do not yet have R installed on your computer I highly recommend using [RStudio](https://www.rstudio.com/products/rstudio/#Desktop). Once you have installed RStudio, you can install mocapGrip using the commands in the next section.
 
 ## Install
 
@@ -23,7 +25,8 @@ To install mocapGrip copy and paste the following command into R:
 
 ### 2. Install the most recent source version
 
-To install mocapGrip type `devtools::install_github("jonkeane/mocapGrip",  build_vignettes = TRUE)` at an R command prompt.
+To install mocapGrip copy and paste the following command into R:     
+`devtools::install_github("jonkeane/mocapGrip",  build_vignettes = TRUE)`
 
 By default, this installation will not include [pyelan](https://github.com/jonkeane/pyelan). To install it, type `library(mocapGrip); installPyelan()` at an R command prompt. (This will have to be done once each time you install a new version of mocapGrip, but shouldn't need to be run more than that.)
 
@@ -49,7 +52,7 @@ The package vignettes give step by step walkthroughs of how to use mocapGrip:
 
 * *modalMetadata* is a description of the modelMetadata object which is needed to specify different dataSets, models/analyses, and (some) narrative details for reports.  
    To view, after loading the package (with `library(mocapGrip)`), use the command:  
-> `vignette("modelMetadata")`
+ `vignette("modelMetadata")`
 
 
 
