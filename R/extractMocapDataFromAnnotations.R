@@ -17,7 +17,8 @@ extractMocapDataFromAnnotations <- function(files, destDir){
   if(file.info(files)$isdir) {stop("The file that was passed (", files ,") appears to be a folder. This should be a single elan file, a vector (list) of elan files, or a path with wild cards that lead to multiple elan files.")}
 
   lapply(files, function(file) {
-    if(file) {stop("The file that was passed (", file ,") does not end in .eaf, this function only accepts eaf files.")}
+    print(file)
+    if(!grepl(".*\\.eaf", file)) {stop("The file that was passed (", file ,") does not end in .eaf, this function only accepts eaf files.")}
   })
 
   arugments <- c(pathToExtractScript, destDir, Sys.glob(files))
