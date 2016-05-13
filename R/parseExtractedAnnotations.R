@@ -170,7 +170,9 @@ processDataSet <- function(dataSet, data, modelMd = modelMetadata){
 #' @param path Directory containing motion catpure csv files that were extracted with the \code{\link{extractMocapDataFromAnnotations}} function.
 #' @param dataSets A vector of the types of periods (aka: dataSets) to extract for analysis. Default: c("action", "estimation") Possible values are: "action", "estimation", "release", "estMaxGrip", "gestMaxGrip", and "gestMove"
 #' @param includeFullData A logical, should the output include the full data? default:\code{FALSE}
-#' @return Not sure yet.
+#' @param modelMd a modelMetadata object, default: the modelMetadata from the package
+
+#' @return a data object. Wellformedness of this object can be checked with \code{\link{checkData}}
 #'
 #' @export
 readExtractedMocapData <- function(path, dataSets = c("action", "estimation"), includeFullData=FALSE, modelMd = modelMetadata){
