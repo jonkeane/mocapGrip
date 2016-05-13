@@ -8,7 +8,7 @@ writeMarkdown(modeledData, markdownPath = "./report.Rmd",
   analysisSkel = readLines(system.file("markdown", "analysisSkeleton.Rmd",
   package = "mocapGrip", mustWork = TRUE)),
   header = readLines(system.file("markdown", "header.Rmd", package =
-  "mocapGrip", mustWork = TRUE)))
+  "mocapGrip", mustWork = TRUE)), modelMd = modelMetadata)
 }
 \arguments{
 \item{modeledData}{a list of modeled data of the format from \code{\link{modelAllData}}}
@@ -18,6 +18,8 @@ writeMarkdown(modeledData, markdownPath = "./report.Rmd",
 \item{analysisSkel}{an R Markdown (\code{.Rmd}) file that has the skeleton for the analysis. This skeleton is the output for a single analysis. It will be repeated if multiple analysis types are in \code{modeledData}. It includes special variables which will be replaced with information from \code{modelMetadata}. These special variables look like \code{<>$intro<>}, which would be replaced with the text marked \code{intro} in \code{modelMetadata} for the specific analysis in modeledData.}
 
 \item{header}{an R Markdown file that has header information so that the report can be generated.}
+
+\item{modelMd}{a modelMetadata object, by default it uses the \code{modelMetadata} that comes with the package.}
 }
 \value{
 None

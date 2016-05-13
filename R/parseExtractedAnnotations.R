@@ -53,53 +53,18 @@ importCols <- function(data){
   data[ , !(names(data) %in% c("times", "grip"))]
 }
 
-
-
-
-# processing function for steady period
-steadyProc <- function(data) {
-  # subData <- subset(data, period == "STEADY")
-  subData <- data[data$period == "STEADY",]
-
-  if(nrow(subData) == 0 ){
-    warning(paste("There was no STEADY period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
-    return(data.frame())
-  }
-  if(sum(is.na(subData$grip))/nrow(subData) > 0.05 ){
-    warning(paste("There is ", as.character(round(sum(is.na(subData$grip))/nrow(subData)*100), digits=4), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(subData$condition), " period: ", unique(subData$period), " trial type: ", unique(subData$type),  sep =""))
-    return(data.frame())
-  }
-
-  maxTime <- max(subData$times, na.rm=TRUE)
-  meanGrip <- mean(subData$grip, na.rm=TRUE)
-  medianGrip <- stats::median(subData$grip, na.rm=TRUE)
-  cbind(data.frame(duration=maxTime, meanGrip=meanGrip, medianGrip=medianGrip), importCols(subData[1,]))
-}
-
-# processing function for movement period
-moveProc <- function(data) {
-  # subData <- subset(data, period == "MOVEMENT")
-  subData <- data[data$period == "MOVEMENT", ]
-
-  if(nrow(subData) == 0 ){
-    warning(paste("There was no MOVEMENT period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
-    return(data.frame())
-  }
-  if(sum(is.na(subData$grip))/nrow(subData) > 0.05 ){
-    warning(paste("There is ", as.character(round(sum(is.na(subData$grip))/nrow(subData)*100), digits=4), "% occlusion for obsisSubj: ", unique(data$obsisSubj), " obsisTrail: ", unique(data$obsisTrial), " condition: ", unique(subData$condition), " period: ", unique(subData$period),  " trial type: ", unique(data$type),  sep =""))
-    return(data.frame())
-  }
-
-  maxTime <- max(subData$times, na.rm=TRUE)
-  meanGrip <- mean(subData$grip, na.rm=TRUE)
-  medianGrip <- stats::median(subData$grip, na.rm=TRUE)
-  cbind(data.frame(duration=maxTime, meanGrip=meanGrip, medianGrip=medianGrip), importCols(subData[1,]))
-}
-
-
-
-# processing function for maximum grip period
-# the percOcclusion variable sets the maximum allowable occlusion, the default is 0.05
+#' Processing function for finding maximum grips
+#'
+#' \code{maxGripFinder()} takes the period and extracts the maximum value of grip for the whole period.
+#' This function should only be used in \code{\link{processDataSet}}, because that has the code to group all
+#'  of the data into the right groups based on subject, session, trial, condition, period, etc. This should be
+#'  included in the processing section of \link{modelMetadata} called \code{processFunction}
+#'
+#' @param data the data to process.
+#' @param percOcclusion the percentage of occlusion that is acceptable (this is the upper bound, in percent.) Default: \code{0.05}, or only trials where there is less than 5\% of occlusion are processed.
+#'
+#' @return a dataframe with the data that has been processed, one line per observation
+#'
 maxGripFinder <- function(data, percOcclusion = 0.05) {
   if(nrow(data) == 0 ){
     warning(paste("There was no GRIP period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
@@ -116,36 +81,19 @@ maxGripFinder <- function(data, percOcclusion = 0.05) {
   return(cbind(data.frame(duration=maxTime, maxGrip=maxGripRow$grip, maxGripTime=maxGripRow$times, maxGripTimeRel=maxGripRow$times/maxTime), importCols(maxGripRow)))
 }
 
-actionGripProc <-function(data, ...) {
-  # extract the maxmium grip during the grip portion of all action trials
-  filter_criteria <- lazyeval::interp(~ type == "ACTION" & period == "GRIP", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
-}
 
-releaseGripProc <-function(data, ...) {
-  # extract the maxmium grip during the release portion of all action trials
-  filter_criteria <- lazyeval::interp(~ type == "ACTION" & period == "RELEASE", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
-}
-
-estMaxGripGripProc <-function(data, ...) {
-  # extract the maxmium grip during the grip portion of all estimate trials
-  filter_criteria <- lazyeval::interp(~ type == "ESTIMATION" & period == "GRIP", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
-}
-
-gestMaxGripGripProc <-function(data, ...) {
-  # extract the maxmium grip during the grip portion of all gesture trials
-  # Side information for experiments involving side choices
-  # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
-  filter_criteria <- lazyeval::interp(~ type == "GESTURE" & period == "GRIP", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
-}
-
-
-
-# processing function for finding means or medians
-# the percOcclusion variable sets the maximum allowable occlusion, the default is 0.05
+#' Processing function for finding means or medians
+#'
+#' \code{meanMedianFinder()} takes the dataSet and extracts the mean and median of grip for the whole dataSet.
+#' This function should only be used in \code{\link{processDataSet}}, because that has the code to group all
+#'  of the data into the right groups based on subject, session, trial, condition, period, etc. This should be
+#'  included in the processing section of \link{modelMetadata} called \code{processFunction}
+#'
+#' @param data the data to process.
+#' @param percOcclusion the percentage of occlusion that is acceptable (this is the upper bound, in percent.) Default: \code{0.05}, or only trials where there is less than 5\% of occlusion are processed.
+#'
+#' @return a dataframe with the data that has been processed, one line per observation
+#'
 meanMedianFinder <- function(data, percOcclusion = 0.05) {
   if(nrow(data) == 0 ){
     warning(paste("There was no STEADY period found for obsisSubj:", unique(data$obsisSubj), "obsisTrail:", unique(data$obsisTrial), "condition", unique(data$condition), "trial type:", unique(data$type), "The following periods were found:", paste(unique(data$period), collapse=", "),  sep =" "))
@@ -163,57 +111,55 @@ meanMedianFinder <- function(data, percOcclusion = 0.05) {
   return(cbind(data.frame(duration=maxTime, meanGrip=meanGrip, medianGrip=medianGrip), importCols(data[1,])))
 }
 
-estimationGripProc <-function(data, ...) {
-  # extract the mean and median grip during the steady portion of all estimate trials
-  filter_criteria <- lazyeval::interp(~ type == "ESTIMATION" & period == "STEADY", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~meanMedianFinder(., ...))
-}
 
-gestMoveGripProc <-function(data, ...) {
-  # extract the mean and median grip during the move portion of all gesture trials
-  # Side information for experiments involving side choices
-  # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
-  filter_criteria <- lazyeval::interp(~ type == "GESTURE" & period == "MOVEMENT", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~meanMedianFinder(., ...))
-}
-
-
-
-
-# takes a (vector of) period(s) and data, and gives back a list with the extracted data in named lists.
-# this can't be Vectorized (hangs, instead of errors, unclear why)
-processPeriod <- function(period, data){
-  # make a list to store period data in
-  periodData <- list()
+#' takes a dataSet and data, and gives back a list with the extracted data in named lists.
+#'
+#' @param dataSet character the name of the dataSet
+#' @param data a data object for the data to be retrieved from
+#' @param modelMd a modelMetadata object, default: the modelMetadata from the package
+#'
+#' @return the extracted data from the dataSet
+processDataSet <- function(dataSet, data, modelMd = modelMetadata){
+  # make a list to store dataSet data in
+  dataSetData <- list()
 
   # make a list for warnings to be stored
   warns <- list()
 
-  # Try and find a processing function with is nameGripProc(). Give an error if none is found.
+  # grab the dataSet specificationsi from the modelMd object
+  filterString <- modelMd$dataSets[[dataSet]]$processing$filterString
+  func <- modelMd$dataSets[[dataSet]]$processing$processFunction
+  percentOcclusion <- modelMd$dataSets[[dataSet]]$processing$percentOcclusion
+
+  # Try and find a the given processing file
   # the error could be more specific
   # asNamespace might not be needed.
   tryCatch(
-    {func <- get(paste0(period, "GripProc"), envir=asNamespace('mocapGrip'), mode='function')},
+    {get(func, envir=asNamespace('mocapGrip'), mode='function')},
     error = function(e) {
-      stop("Could not find a function to parse the data for the period ", period, sep="")
+      stop("Could not find the function ", func, ", which was specified to process the data for the dataSet ", dataSet, sep="")
     }
   )
 
-  # process the data with the function that was found, add it to periodData (along with warnings)
-  periodData[["data"]] <- withCallingHandlers({func(data)},
-                                              warning = function(w) {
-                                                warns <<- append(warns,w$message)
-                                                invokeRestart("muffleWarning")
-                                              }
+  # process the data with the function that was found, add it to dataSetData (along with warnings)
+  dataSetData[["data"]] <- withCallingHandlers({
+    data %>%
+      dplyr::filter_(stats::as.formula(paste0("~", filterString))) %>%
+      dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>%
+      dplyr::do_(stats::as.formula(paste0("~", func, "(., percOcclusion = ", percentOcclusion, ")")))
+    },
+    warning = function(w) {
+      warns <<- append(warns,w$message)
+      invokeRestart("muffleWarning")
+    }
   )
-  periodData[["warnings"]] <- warns
+  dataSetData[["warnings"]] <- warns
 
   # grab default analyses
-  periodData[["analysesToRun"]] <- modelMetadata$dataSets[[period]]$defaultAnalysis
+  dataSetData[["analysesToRun"]] <- modelMd$dataSets[[dataSet]]$defaultAnalysis
 
-  return(periodData)
+  return(dataSetData)
 }
-
 
 
 
@@ -224,25 +170,28 @@ processPeriod <- function(period, data){
 #' @param path Directory containing motion catpure csv files that were extracted with the \code{\link{extractMocapDataFromAnnotations}} function.
 #' @param dataSets A vector of the types of periods (aka: dataSets) to extract for analysis. Default: c("action", "estimation") Possible values are: "action", "estimation", "release", "estMaxGrip", "gestMaxGrip", and "gestMove"
 #' @param includeFullData A logical, should the output include the full data? default:\code{FALSE}
-#' @return Not sure yet.
+#' @param modelMd a modelMetadata object, default: the modelMetadata from the package
+
+#' @return a data object. Wellformedness of this object can be checked with \code{\link{checkData}}
 #'
 #' @export
-readExtractedMocapData <- function(path, dataSets = c("action", "estimation"), includeFullData=FALSE){
+readExtractedMocapData <- function(path, dataSets = c("action", "estimation"), includeFullData=FALSE, modelMd = modelMetadata){
   # to be added to main function for oparsing data
   files <- list.files(path, recursive = TRUE, pattern = NULL, full.names=TRUE)
 
   data <- plyr::ldply(files, process, conditionCodesFile=system.file("GRIPMLstimuli.csv", package = "mocapGrip", mustWork=TRUE), verbose=FALSE, .progress = "text" )
 
-  # modifications of the data to be better structure (should these go elsewhere?)
-  data$stick <- factor(as.character(data$stick), levels = c("five", "seven", "nine", "eleven"))
-  data$stickcmScaled <- data$stickcm - 8
-
-  # add check if there are no known types found.
-  periodData <- sapply(dataSets, processPeriod, data=data, USE.NAMES = TRUE, simplify = FALSE)
-
-  if(includeFullData==TRUE){
-    periodData[["fullData"]] <- data
+  # run the preprocessing commans
+  for(line in modelMd$dataPreProcessing){
+    eval(parse(text = line))
   }
 
-  return(periodData)
+  # add check if there are no known types found.
+  dataSetData <- sapply(dataSets, processDataSet, data=data, modelMd = modelMd, USE.NAMES = TRUE, simplify = FALSE)
+
+  if(includeFullData==TRUE){
+    dataSetData[["fullData"]] <- data
+  }
+
+  return(dataSetData)
 }
