@@ -179,3 +179,38 @@ removeAnalysesToRun <- function(data, modelMd = modelMetadata) {
 
   return(data)
 }
+
+## check the form of data object
+dataCheck <- function(data, modelMd) {
+  errormsg <- "The data object supplied does not have the right form. If you've changed the data object since it was created by the readExtractedMocapData() function, something went wrong with those changes. Please try runing readExtractedMocapData() again, and using that object, if that works, try your changes one by one to see which of the changes is causing the problem."
+  if( !is.list(data) ) { stop(errormsg) }
+
+  if(length(data) < 1) { stop(errormsg) }
+
+  # check that the names of data are names of dataSets in modelMd (or fullData)
+  dataSetNames <- names(data)
+  if(!all(dataSetNames %in% c(names(modelMd$dataSets), "fullData"))) { stop(errormsg, dataSet, "names of the dataSets") }
+
+  for(dataSet in dataSetNames) {
+    # check that the names within each dataSet are correct
+    dataSetSubNames <- names(data[[dataSet]])
+    if(!all(dataSetSubNames %in% c("data", "warnings", "analysesToRun", "analyses"))) {stop(errormsg, dataSet, ": names within the dataSet")  }
+    for(dataSetSub in dataSetSubNames) {
+      # check that the dataSetSub structures are the right type
+      if(dataSetSub == "data") {
+        if(!is.data.frame(data[[dataSet]][[dataSetSub]])) { stop(errormsg, dataSet, ": data") }
+      }
+      if(dataSetSub == "warnings") {
+        if(!is.list(data[[dataSet]][[dataSetSub]])) { stop(errormsg, dataSet, ": warnings")  }
+      }
+      if(dataSetSub == "analysesToRun") {
+        if(!is.character(data[[dataSet]][[dataSetSub]])) { stop(errormsg, dataSet, ": analysesToRun") }
+      }
+      if(dataSetSub == "analyses") {
+        if(!is.list(data[[dataSet]][[dataSetSub]])) { stop(errormsg, dataSet, ": analyses")  }
+      }
+    }
+  }
+
+  return(data)
+}
