@@ -34,5 +34,5 @@ deploy:
   on:
     repo: jonkeane/mocapGrip
     branch: devel
-	tags: true
+    tags: true
 	
