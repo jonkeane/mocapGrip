@@ -182,7 +182,8 @@ gestMoveGripProc <-function(data, ...) {
 
 # takes a (vector of) period(s) and data, and gives back a list with the extracted data in named lists.
 # this can't be Vectorized (hangs, instead of errors, unclear why)
-processPeriod <- function(period, data){
+# This needs to be changed to accept new modelMetadata
+processPeriod <- function(period, data, modelMd = modelMetadata){
   # make a list to store period data in
   periodData <- list()
 
@@ -209,7 +210,7 @@ processPeriod <- function(period, data){
   periodData[["warnings"]] <- warns
 
   # grab default analyses
-  periodData[["analysesToRun"]] <- modelMetadata$dataSets[[period]]$defaultAnalysis
+  periodData[["analysesToRun"]] <- modelMd$dataSets[[period]]$defaultAnalysis
 
   return(periodData)
 }

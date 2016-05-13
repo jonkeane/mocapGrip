@@ -21,7 +21,7 @@ makeReport <- function(data, reportPath="./report.Rmd", title = "Grip Project Re
   dataModeled <- modelAllData(data, refitModels = refitModels, ...)
 
   # read/write template
-  writeMarkdown(dataModeled, markdownPath = reportPath)
+  writeMarkdown(dataModeled, markdownPath = reportPath, modelMd = modelMd)
 
   # render
   reportOut <- rmarkdown::render(reportPath, params = list(data = dataModeled, title = title))
@@ -37,14 +37,15 @@ makeReport <- function(data, reportPath="./report.Rmd", title = "Grip Project Re
 #' @param markdownPath a string of the path to store the report markdown file. By default is is \code{"./report.Rmd"}
 #' @param analysisSkel an R Markdown (\code{.Rmd}) file that has the skeleton for the analysis. This skeleton is the output for a single analysis. It will be repeated if multiple analysis types are in \code{modeledData}. It includes special variables which will be replaced with information from \code{modelMetadata}. These special variables look like \code{<>$intro<>}, which would be replaced with the text marked \code{intro} in \code{modelMetadata} for the specific analysis in modeledData.
 #' @param header an R Markdown file that has header information so that the report can be generated.
-# @param modelMetadata ??
+#' @param modelMd a modelMetadata object, by default it uses the \code{modelMetadata} that comes with the package.
 #'
 #' @return None
 #' @export
 writeMarkdown <- function(modeledData,
                           markdownPath = "./report.Rmd",
                           analysisSkel = readLines(system.file("markdown", "analysisSkeleton.Rmd", package = "mocapGrip", mustWork = TRUE)),
-                          header = readLines(system.file("markdown", "header.Rmd", package = "mocapGrip", mustWork = TRUE))
+                          header = readLines(system.file("markdown", "header.Rmd", package = "mocapGrip", mustWork = TRUE)),
+                          modelMd = modelMetadata
                           ){
   # grab names, and exclude fullData
   dataSets <- names(modeledData)
@@ -55,7 +56,7 @@ writeMarkdown <- function(modeledData,
                     function(dataSet) {
                       sapply(names(modeledData[[dataSet]]$analyses),
                              function(analysis){
-                               cleanText(analysisSkel, formatGatherReplacements(dataSet, analysis, modeledData))
+                               cleanText(analysisSkel, formatGatherReplacements(dataSet, analysis, modeledData, modelMd = modelMd))
                                },
                              simplify = TRUE, USE.NAMES = TRUE)
                       },
@@ -70,26 +71,26 @@ writeMarkdown <- function(modeledData,
 
 
 # takes an analysis specification and (all of the) modeled data and then returns a (named) list of replacements to be used by replaceText()
-formatGatherReplacements = function(dataSet, analysis, modeledData) {
+formatGatherReplacements = function(dataSet, analysis, modeledData, modelMd = modelMetadata) {
   # grab variables from the analyses structure
-  outcome <- modelMetadata$models$analyses[[analysis]]$variablesToUse$outcome
-  predictor1 <- modelMetadata$models$analyses[[analysis]]$variablesToUse$predictor1
-  predictor2 <- modelMetadata$models$analyses[[analysis]]$variablesToUse$predictor2
-  grouping1 <- modelMetadata$models$analyses[[analysis]]$variablesToUse$grouping1
+  outcome <- modelMd$models$analyses[[analysis]]$variablesToUse$outcome
+  predictor1 <- modelMd$models$analyses[[analysis]]$variablesToUse$predictor1
+  predictor2 <- modelMd$models$analyses[[analysis]]$variablesToUse$predictor2
+  grouping1 <- modelMd$models$analyses[[analysis]]$variablesToUse$grouping1
   # grab the formula from the best model.
   formula <- stats::formula(modeledData[[dataSet]]$analyses[[analysis]]$bestModel[[1]]$modelObject)
 
   # check if there is an interaction in the predictors.
   if(names(modeledData[[dataSet]]$analyses[[analysis]]$bestModel) %in% c("interactionInPredAndGroup", "interactionInPred")){
-    interaction <- modelMetadata$variableExplanations[[paste(predictor1, predictor2, sep = "X")]]
+    interaction <- modelMd$variableExplanations[[paste(predictor1, predictor2, sep = "X")]]
   } else {
     interaction <-  NULL # NULL so that no extra bullet is added.
   }
 
   # make and format $predictorVariables
   predictorVariables <- paste0("\n* ",
-                               c(modelMetadata$variableExplanations[[predictor1]],
-                                 modelMetadata$variableExplanations[[predictor2]],
+                               c(modelMd$variableExplanations[[predictor1]],
+                                 modelMd$variableExplanations[[predictor2]],
                                  interaction),
                                collapse = "")
 
@@ -106,11 +107,11 @@ formatGatherReplacements = function(dataSet, analysis, modeledData) {
 
   c("dataSet" = dataSet,
     "analysis" = analysis,
-    modelMetadata$dataSets[[dataSet]]$narrative, # gather narratives
-    "outcomeVariable" = modelMetadata$variableExplanations[[outcome]],
+    modelMd$dataSets[[dataSet]]$narrative, # gather narratives
+    "outcomeVariable" = modelMd$variableExplanations[[outcome]],
     "predictorVariables" = predictorVariables,
     "includeInteractionInGroup" = includeInteractionInGroup,
-    "groupingVariable" = modelMetadata$variableExplanations[[grouping1]],
+    "groupingVariable" = modelMd$variableExplanations[[grouping1]],
     "plotOutcome" = outcome, # for plotting
     "plotPredictor1" = plotPredictor1, # for plotting, not used now
     "plotPredictor2" = predictor2, # for plotting, not used now
