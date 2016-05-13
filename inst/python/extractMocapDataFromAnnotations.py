@@ -91,6 +91,11 @@ def annoChecker(annos, eafFile, trialTypesPerTrial = 3):
     if annoStruct[0] == [None, [None, None, [None]]]:
         annoStruct.pop(0)
 
+    # check if there are any duplicate conditions
+    conditionNums = [trial[0] for trial in annoStruct]
+    if len(conditionNums) > len(set(conditionNums)):
+        warnings.warn("There are duplicate conditions numbers in the trials in the file "+eafFile+" This could be a typo. If there are actual multiple trials with the same condition numbers, all of the annotations for one of those trials must be deleted. The conditions that were found were: "+str(conditionNums))
+
     for condition in annoStruct:
         if  not re.match("[1234567890]", condition[0]):
             warnings.warn("The condition "+condition[0]+" in "+str(condition)+" does not match the possible condition list. In the file "+eafFile)
@@ -116,6 +121,7 @@ def annoChecker(annos, eafFile, trialTypesPerTrial = 3):
                 gestureCheck(trialType = trialType, condition = condition, typ = typ, eafFile = eafFile)
             elif trialType[0] == "ESTIMATION":
                 estimationCheck(trialType = trialType, condition = condition)
+
 
 # setup a warning catcher so that each file can be stopped form processing if there are warnings that pop up, but that they are displayed. from http://stackoverflow.com/questions/2324820/count-warnings-in-python-2-4
 def setup_warning_catcher():
