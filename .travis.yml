@@ -1,36 +1,34 @@
-
 language: r
 r:
-    - oldrel
-    - release
-    - devel
+- oldrel
+- release
+- devel
 os:
-    - linux
-    - osx
-
+- linux
+- osx
 cache: packages
-
 matrix:
   exclude:
-    - os: osx
-      r: oldrel
-    - os: osx
-      r: devel
-
+  - os: osx
+    r: oldrel
+  - os: osx
+    r: devel
 warnings_are_errors: true
-
-# Handle git submodules yourself from http://stackoverflow.com/questions/15674064/github-submodule-access-rights-travis-ci
 git:
-    submodules: false
-# Use sed to replace the SSH URL with the public URL, then initialize submodules, doesn't work on osx
+  submodules: false
 before_install:
-    - sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
-    - git submodule update --init --recursive
-
-# for code coverage
+- sed -i.bak 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+- git submodule update --init --recursive
 r_github_packages:
-  - jimhester/covr
-
+- jimhester/covr
 after_success:
-  - Rscript -e 'covr::codecov()'
-  - Rscript -e 'covr::package_coverage()'
+- Rscript -e 'covr::codecov()'
+- Rscript -e 'covr::package_coverage()'
+deploy:
+  provider: releases
+  api_key:
+    secure: J3EjlduNp/5hbHo4x2xIhtPZTnTzeDvql9H9cV/WIt0EzCJG15fyYSBcfvPdbmaNNm0bIuSnV6IZMhJ+IWHfzBUqjv9eYmWuwwl+37J4MSozW4rn843VvXJ43aRYWlrgXhH2BmEYG5WCGLVlwjL1Jti3nQrGpvzMjs82KcFM5WwiD4MzRjzbmW3KMn2kBblZewUWXbc9JTAsnsGDPy9bISy9JSwYiJ11wmFKhvvftecDU/arZN26jrjyamZTKHGJkHjTZUSUFrTnMi3PO9xfppe6QzCgXh1TGGwCpILNgfYuoQbptZXpAF5Rm2q0cCSfZtmiD4+YebohZFtHyk04CwOE/aUMzMVIe284LlWbr3cHxk0MvZPI+of+FaMKMgNHjYvJxEY1MwFnl4O2E/KsFS+7ZE1qEB9l5HOUB6RwLwx3gJ6srP0sAAE+deiDSTd+n1tFDz5cB8soIUv3bvxfv5U2qTJl5M+xWW3wKBBOGRGL0G+5bvq25y2GHsHWfjYaiCxpAv3Ko9vqQbMydXF5MQzsi3/DVwaxReZx0/W8YzSdq++hlFYqzloSa09oTpB8muCh7Tjgbk3IIkdXm22+EX5i8m1KhSynYuIUyMr8ROR6CFVavXoHUgTm4X8Jq6AOC0VXoF0/bKcRCy68jJDCuzcwCSM/8Sf6cDpqse3ysAE=
+  file: mocapGrip_0.1.tar.gz
+  on:
+    repo: jonkeane/mocapGrip
+    branch: devel
