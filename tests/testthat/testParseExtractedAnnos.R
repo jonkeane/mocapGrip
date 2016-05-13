@@ -26,6 +26,7 @@ test_that("readExtractedMocapData matches precomputed action data", {
   colsToTest <- names(actionData)
   colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
   lapply(colsToTest, function(co) expect_equal(dataToBeTested$action$data[co], actionData[co]))
+  expect_silent(checkData(dataToBeTested, modelMd = modelMetadata))
 })
 
 test_that("readExtractedMocapData matches precomputed release data", {
@@ -33,6 +34,7 @@ test_that("readExtractedMocapData matches precomputed release data", {
   colsToTest <- names(releaseData)
   colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
   lapply(colsToTest, function(co) expect_equal(dataToBeTested$release$data[co], releaseData[co]))
+  expect_silent(checkData(dataToBeTested, modelMd = modelMetadata))
 })
 
 test_that("readExtractedMocapData matches precomputed estimation data", {
@@ -40,6 +42,7 @@ test_that("readExtractedMocapData matches precomputed estimation data", {
   colsToTest <- names(estimationData)
   colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
   lapply(colsToTest, function(co) expect_equal(dataToBeTested$estimation$data[co], estimationData[co]))
+  expect_silent(checkData(dataToBeTested, modelMd = modelMetadata))
 })
 
 test_that("readExtractedMocapData matches precomputed estimation data", {
@@ -47,5 +50,6 @@ test_that("readExtractedMocapData matches precomputed estimation data", {
   colsToTest <- names(estimationMaxGripData)
   colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
   lapply(colsToTest, function(co) expect_equal(dataToBeTested$estMaxGrip$data[co], estimationMaxGripData[co]))
+  expect_silent(checkData(dataToBeTested, modelMd = modelMetadata))
 })
 

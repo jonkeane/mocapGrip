@@ -9,13 +9,68 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
+This package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm. 
+
+The general paradigm for data collection follows the following pipeline:
+
+1. **Collect motion capture and video data** The motion capture data is collected using *Obsis*, currently there are two video streams, the modified clapperboard needs to be clapped at the beginning and end of each trial.
+
+1. **Process the mocap data and move data** The motion capture data needs to be processed within *Obsis*, and then that proceessed data (especially the *Filtered Markers.txt*, which is where `mocapGrip` extarcts the mocap data from) as well as the (clipped) videos are uploaded to the server in the folder structure that is described in the `makeElanFiles(...)` section below.
+
+1. **Make blank elan files** The command `makeElanFiles(...)` us used to make blank elan files to be annotated.
+
+1. **Annotate** The elan files are time annotated to segment out different periods of each trial, and associate the condition number with each trial.
+
+1. **Extract the mocap data based on the annotations** After the elan files are annotated, the mocap data can be extracted based on those annotations. The command `extractMocapDataFromAnnotations(...)` first checks that the annotations conform to the standard, and then extracts the mocap data labelling it with each period/condition/trial type.
+
+After the processing pipeline is completed, the data can be read into R, analyzed/modeled, and a report can be made.
+
+1. **Read in the extracted mocap data and extract data sets** The function `readExtractedMocapData(...)` reads in extracted mocap data, and extracts dataSets (e.g. the maximum grip from the grip portion of *action* trials). 
+
+1. **Analyze/model the data** the command `modelAllData()` models all of the dataSets it is given.
+
+1. **Make a report** the command `makeReport()` makes a report based on the data (or modeled data) that it is given.
 
 ## Data processing pipline
 
-See the project's readme file for information about this.
+There are a number of functions (all of which are documented in the man folder for use with R's help system), but a basic workflow would look something like this:
 
-## Report writing
+### `makeElanFiles(...)`
+
+ `makeElanFiles(...)`makes blank elan files and links the videos, audio, and motion capture data that is necessary to then annotate the videos. This command relies on the video, audio, and motion capture files being put into the folder structure that has already been established:
+
+* `AUDIO` for audio files, one folder per subject (e.g. `./AUDIO/057GRI_057-SESSION_001-TRIAL_002.wav`)
+* `Clipped Videos` for video files, one folder per subject (e.g. `./Clipped Video/057GRI_057-SESSION_001-TRIAL_002.mov`)
+* `mocapData` for the motion capture data files, one subfolder called `GRIP`, and then one folder per subject (e.g. `./mocapData/GRIP/GRI_057/[phase space / obsis folder structure]`)
+
+The script will then save files to the following two folders:
+
+* `mocapCSVs` for clipped motion capture csvs, one folder per subject (e.g. `./mocapCSVs/GRI_057/GRI_057-SESSION_001-TRIAL_002.csv`)
+* `elanFilesOut` for elan files the script will then make one folder per subject  (e.g. `./elanFilesOut/GRI_057/GRI_057-SESSION_001-TRIAL_002.eaf` and `./elanFilesOut/GRI_057/GRI_057-SESSION_001-TRIAL_002_tsconf.xml`), and put the created elan files as well as the time series configuration files (`\*.eaf` and `\*_tsconf.xml`)
+
+An example of this command is: `makeElanFiles(files=c("./Clipped Video/059/GRI_059-SESSION_001-TRIAL_001.mov", "./Clipped Video/059/GRI_059-SESSION_001-TRIAL_002.mov"))` You can also use wildcards with this command: `makeElanFiles(files="./Clipped Video/0??/GRI_0??-SESSION_0??-TRIAL_0??.mov")` which will match any files that have any character in each of the positions with a `?`.
+
+The empty elan files are then annotated according to annotation guidelines.
+
+### `extractMocapDataFromAnnotations(...)`
+
+`extractMocapDataFromAnnotations(...)` extracts completed annotations from the files specified, and checks to make sure that the format is correct. Currently it will give warnings if the checks it runs don't work, and will suggest possible fixes. Any file that has a warning will not have any annotations extract. You can supply it with a destination directory, which must already exist. An example of this command is: `extractMocapDataFromAnnotations(files=c("./elanFilesCompleted/GRI_059/GRI_059-SESSION_001-TRIAL_001.eaf", "./elanFilesCompleted/GRI_059/GRI_059-SESSION_001-TRIAL_002.eaf"), destDir="./extractedData/")` You can also use wildcards with this command: `extractMocapDataFromAnnotations(files="./elanFilesCompleted/GRI_0??/GRI_0??-SESSION_0??-TRIAL_0??.eaf", destDir="./extractedData/")` which will match any files that have any character in each of the positions with a `?`.
+
+## Read data, analyze/model, write reports
+
+### `readExtractedMocapData(...)`
+`readExtractedMocapData(...)` reads in the extracted motion capture data (that are written by the command `extractMocapDataFromAnnotations(...)` above). This function can extract as many or as few types of data (dataSets) for analysis as we want. Possible dataSets include:
+
+* `action` Extracts the maximum grip from the *grip* period of *action* trials
+* `estimation` Extracts the mean and median grip from the *steady* period of *estimation* trials
+* `release` Extracts the maximum grip from the *release* period of *action* trials
+* `estMaxGrip` Extracts the maximum grip from the *grip* period of *estimation* trials
+* `gestMaxGrip` Extracts the maximum grip from the *grip* period of *gesture* trials
+* `gestMove` Extracts the mean and median grip from the *movement* period of *gesture* trials
+
+An example of this command is `readExtractedMocapData(path="./extractData", dataSets = c("action", "estimation"))` which would extract `action` and `estimation` from all of the data that is in the folder `./extractedData`
+
+### Analysis/modeling and report writing
 
 In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()` after that, you can use the `makeReport()` function to write the report for all of the analyses for all of the dataSets (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. The `makeReport()` function returns the data obejct with models included if it is needed for other uses. If you want the fullData to be included in the data object you can use the option `includeFullData = TRUE` with the function `readExtractedMocapData()`. A full example is below: 
 
