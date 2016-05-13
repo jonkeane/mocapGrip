@@ -1,5 +1,5 @@
 library(mocapGrip)
-context("parse extract annotations")
+context("parse extracted annotations")
 
 load(file.path('./dataForParsingTests/GRI057-001-002action.RData')) # actionData
 load(file.path('./dataForParsingTests/GRI057-001-002release.RData')) # releaseData
