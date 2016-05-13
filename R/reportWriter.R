@@ -6,6 +6,7 @@
 #' @param reportPath a string with the path and name of the report to be made (this should end in \code{.Rmd}), by default it is: \code{"./report.Rmd"}
 #' @param refitModels logical, if there are models that are already fit, should they be refit? Default: \code{FALSE}
 #' @param title a string for the title of the report, the default is "Grip Project Report"
+#' @param modelMd a modelMetadata object. If you have loaded a different modelMetadata object that you would like to use, place it here. The default is `modelMetadata` which comes with the package.
 #' @param ... options to pass to \code{\link{modelAllData}}, (e.g. \code{last=TRUE} if the last model that converged should be selected rather than the default (\code{last=FALSE}) first).
 #'
 #' @return An object that is a code of \code{data}, but with the models appened to each analysis present. This is useful if you need to inspect the models or use this for further analysis or reporting.
@@ -13,7 +14,7 @@
 #' @export
 # add kinds of models?
 # add in different analysis skeletons?
-makeReport <- function(data, reportPath="./report.Rmd", title = "Grip Project Report", refitModels = FALSE, ...){
+makeReport <- function(data, reportPath="./report.Rmd", title = "Grip Project Report", refitModels = FALSE, modelMd = modelMetadata, ...){
 
   # fit models from analyze
   # pick the best model (add warnings here?)
