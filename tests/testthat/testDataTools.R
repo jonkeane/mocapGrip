@@ -21,49 +21,49 @@ test_that("display models works", {
   expect_message(displayAnalysesToRun(pureReplication))
 })
 
-context("dataChecker errors where appropriate")
-test_that("dataChecker errors when there is an errant dataSet",{
+context("checkDataer errors where appropriate")
+test_that("checkDataer errors when there is an errant dataSet",{
   fakeReplication <- pureReplication
   fakeReplication$foo <- list()
-  expect_error(dataCheck(fakeReplication, modelMd = modelMetadata))
+  expect_error(checkData(fakeReplication, modelMd = modelMetadata))
 })
 
-test_that("dataChecker errors when there is an errant name in an existing dataSet",{
+test_that("checkDataer errors when there is an errant name in an existing dataSet",{
   fakeReplication <- pureReplication
   fakeReplication$action$foo <- list()
-  expect_error(dataCheck(fakeReplication, modelMd = modelMetadata))
+  expect_error(checkData(fakeReplication, modelMd = modelMetadata))
 })
-test_that("dataChecker errors when there is an errant type in an existing dataSet",{
+test_that("checkDataer errors when there is an errant type in an existing dataSet",{
   fakeReplication <- pureReplication[names(pureReplication) == "action"]
   fakeReplication$action$data <- list() # wrong
   fakeReplication$action$warnings <- list()
   fakeReplication$action$analysesToRun <- character()
   fakeReplication$action$analyses <- list()
-  expect_error(dataCheck(fakeReplication, modelMd = modelMetadata))
+  expect_error(checkData(fakeReplication, modelMd = modelMetadata))
 
   fakeReplication <- pureReplication[names(pureReplication) == "action"]
   fakeReplication$action$data <- data.frame()
   fakeReplication$action$warnings <- character() # wrong
   fakeReplication$action$analysesToRun <- character()
   fakeReplication$action$analyses <- list()
-  expect_error(dataCheck(fakeReplication, modelMd = modelMetadata))
+  expect_error(checkData(fakeReplication, modelMd = modelMetadata))
 
   fakeReplication <- pureReplication[names(pureReplication) == "action"]
   fakeReplication$action$data <- data.frame()
   fakeReplication$action$warnings <- list()
   fakeReplication$action$analysesToRun <- list() # wrong
   fakeReplication$action$analyses <- list()
-  expect_error(dataCheck(fakeReplication, modelMd = modelMetadata))
+  expect_error(checkData(fakeReplication, modelMd = modelMetadata))
 
   fakeReplication <- pureReplication[names(pureReplication) == "action"]
   fakeReplication$action$data <- data.frame()
   fakeReplication$action$warnings <- list()
   fakeReplication$action$analysesToRun <- character()
   fakeReplication$action$analyses <- character() # wrong
-  expect_error(dataCheck(fakeReplication, modelMd = modelMetadata))
+  expect_error(checkData(fakeReplication, modelMd = modelMetadata))
 })
 
-test_that("dataChecker silently returns the data object it was presented",{
-  expect_silent(dataCheck(pureReplication, modelMd = modelMetadata))
-  expect_equal(dataCheck(pureReplication, modelMd = modelMetadata), pureReplication)
+test_that("checkDataer silently returns the data object it was presented",{
+  expect_silent(checkData(pureReplication, modelMd = modelMetadata))
+  expect_equal(checkData(pureReplication, modelMd = modelMetadata), pureReplication)
 })

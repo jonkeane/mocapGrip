@@ -181,11 +181,11 @@ removeAnalysesToRun <- function(data, modelMd = modelMetadata) {
 }
 
 ## check the form of data object
-dataCheck <- function(data, modelMd) {
+checkData <- function(data, modelMd) {
   errormsg <- "The data object supplied does not have the right form. If you've changed the data object since it was created by the readExtractedMocapData() function, something went wrong with those changes. Please try runing readExtractedMocapData() again, and using that object, if that works, try your changes one by one to see which of the changes is causing the problem."
   if( !is.list(data) ) { stop(errormsg) }
 
-  if(length(data) < 1) { stop(errormsg) }
+  if( length(data) < 1 ) { stop(errormsg) }
 
   # check that the names of data are names of dataSets in modelMd (or fullData)
   dataSetNames <- names(data)
