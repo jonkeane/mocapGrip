@@ -67,6 +67,7 @@ checkmodelMetadata <- function(modelMd){
     # check each of the variable explanations
     lapply(dataSetNames, function(dataSet){
       if(!is.list(modelMd$dataSets[[dataSet]])) {stop("The dataSet '", dataSet, "' is not a list")}
+      # test the narrative section
       if(!"narrative" %in% names(modelMd$dataSets[[dataSet]])) {stop("There is no narrative section for the dataSet ", dataSet)}
        else {
          if(!"title" %in% names(modelMd$dataSets[[dataSet]]$narrative)) {
@@ -79,7 +80,27 @@ checkmodelMetadata <- function(modelMd){
          } else {
            if(!is.character(modelMd$dataSets[[dataSet]]$narrative$intro)) {stop("The intro for dataSet ", dataSet, " is not a character string.")}
          }
+       }
+      # test the processing sectoin
+      if(!"processing" %in% names(modelMd$dataSets[[dataSet]])) {stop("There is no processing section for the dataSet ", dataSet)}
+      else {
+        if(!"filterString" %in% names(modelMd$dataSets[[dataSet]]$processing)) {
+          stop("There is no filterString in the processing section for the dataSet ", dataSet)
+        } else {
+          if(!is.character(modelMd$dataSets[[dataSet]]$processing$filterString)) {stop("The filterString for dataSet ", dataSet, " is not a character string.")}
         }
+        if(!"processFunction" %in% names(modelMd$dataSets[[dataSet]]$processing)) {
+          stop("There is no processFunction in the processing section for the dataSet ", dataSet)
+        } else {
+          if(!is.character(modelMd$dataSets[[dataSet]]$processing$processFunction)) {stop("The processFunction for dataSet ", dataSet, " is not a character string.")}
+        }
+        if(!"percentOcclusion" %in% names(modelMd$dataSets[[dataSet]]$processing)) {
+          stop("There is no percentOcclusion in the processing section for the dataSet ", dataSet)
+        } else {
+          if(!is.numeric(modelMd$dataSets[[dataSet]]$processing$percentOcclusion)) {stop("The percentOcclusion for dataSet ", dataSet, " is not a numeric string.")}
+        }
+      }
+      # test the defaultAnalysis section
       if(!"defaultAnalysis" %in% names(modelMd$dataSets[[dataSet]])) {
           stop("There is no defautlAnalysis section for the dataSet ", dataSet)
       } else {

@@ -96,8 +96,6 @@ moveProc <- function(data) {
   cbind(data.frame(duration=maxTime, meanGrip=meanGrip, medianGrip=medianGrip), importCols(subData[1,]))
 }
 
-
-
 # processing function for maximum grip period
 # the percOcclusion variable sets the maximum allowable occlusion, the default is 0.05
 maxGripFinder <- function(data, percOcclusion = 0.05) {
@@ -115,33 +113,6 @@ maxGripFinder <- function(data, percOcclusion = 0.05) {
 
   return(cbind(data.frame(duration=maxTime, maxGrip=maxGripRow$grip, maxGripTime=maxGripRow$times, maxGripTimeRel=maxGripRow$times/maxTime), importCols(maxGripRow)))
 }
-
-actionGripProc <-function(data, ...) {
-  # extract the maxmium grip during the grip portion of all action trials
-  filter_criteria <- lazyeval::interp(~ type == "ACTION" & period == "GRIP", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
-}
-
-releaseGripProc <-function(data, ...) {
-  # extract the maxmium grip during the release portion of all action trials
-  filter_criteria <- lazyeval::interp(~ type == "ACTION" & period == "RELEASE", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
-}
-
-estMaxGripGripProc <-function(data, ...) {
-  # extract the maxmium grip during the grip portion of all estimate trials
-  filter_criteria <- lazyeval::interp(~ type == "ESTIMATION" & period == "GRIP", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
-}
-
-gestMaxGripGripProc <-function(data, ...) {
-  # extract the maxmium grip during the grip portion of all gesture trials
-  # Side information for experiments involving side choices
-  # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
-  filter_criteria <- lazyeval::interp(~ type == "GESTURE" & period == "GRIP", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~maxGripFinder(., ...))
-}
-
 
 
 # processing function for finding means or medians
@@ -163,49 +134,42 @@ meanMedianFinder <- function(data, percOcclusion = 0.05) {
   return(cbind(data.frame(duration=maxTime, meanGrip=meanGrip, medianGrip=medianGrip), importCols(data[1,])))
 }
 
-estimationGripProc <-function(data, ...) {
-  # extract the mean and median grip during the steady portion of all estimate trials
-  filter_criteria <- lazyeval::interp(~ type == "ESTIMATION" & period == "STEADY", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~meanMedianFinder(., ...))
-}
-
-gestMoveGripProc <-function(data, ...) {
-  # extract the mean and median grip during the move portion of all gesture trials
-  # Side information for experiments involving side choices
-  # actionSideDF <- data %>% dplyr::filter_("type"=="ACTION") %>% dplyr::group_by_(c("obsisSubj","obsisTrial","condition")) %>% dplyr::summarise_(actionSide=unique("side"))
-  filter_criteria <- lazyeval::interp(~ type == "GESTURE" & period == "MOVEMENT", type = as.name("type"), period = as.name("period"))
-  data %>% dplyr::filter_(filter_criteria) %>% dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>% dplyr::do_(~meanMedianFinder(., ...))
-}
-
-
-
 
 # takes a (vector of) period(s) and data, and gives back a list with the extracted data in named lists.
 # this can't be Vectorized (hangs, instead of errors, unclear why)
-# This needs to be changed to accept new modelMetadata
-processPeriod <- function(period, data, modelMd = modelMetadata){
+processPeriod <- function(period, data, modelMd = modelMetadata, ...){
   # make a list to store period data in
   periodData <- list()
 
   # make a list for warnings to be stored
   warns <- list()
 
-  # Try and find a processing function with is nameGripProc(). Give an error if none is found.
+  # grab the dataSet specificationsi from the modelMd object
+  filterString <- modelMd$dataSets[[period]]$processing$filterString
+  func <- modelMd$dataSets[[period]]$processing$processFunction
+  percentOcclusion <- modelMd$dataSets[[period]]$processing$percentOcclusion
+
+  # Try and find a the given processing file
   # the error could be more specific
   # asNamespace might not be needed.
   tryCatch(
-    {func <- get(paste0(period, "GripProc"), envir=asNamespace('mocapGrip'), mode='function')},
+    {get(func, envir=asNamespace('mocapGrip'), mode='function')},
     error = function(e) {
-      stop("Could not find a function to parse the data for the period ", period, sep="")
+      stop("Could not find the function ", func, ", which was specified to process the data for the dataSet ", period, sep="")
     }
   )
 
   # process the data with the function that was found, add it to periodData (along with warnings)
-  periodData[["data"]] <- withCallingHandlers({func(data)},
-                                              warning = function(w) {
-                                                warns <<- append(warns,w$message)
-                                                invokeRestart("muffleWarning")
-                                              }
+  periodData[["data"]] <- withCallingHandlers({
+    data %>%
+      dplyr::filter_(stats::as.formula(paste0("~", filterString))) %>%
+      dplyr::group_by_(.dots=list("obsisSubj","obsisTrial","condition")) %>%
+      dplyr::do_(stats::as.formula(paste0("~", func, "(., percOcclusion = ", percentOcclusion, ")")))
+    },
+    warning = function(w) {
+      warns <<- append(warns,w$message)
+      invokeRestart("muffleWarning")
+    }
   )
   periodData[["warnings"]] <- warns
 
@@ -214,7 +178,6 @@ processPeriod <- function(period, data, modelMd = modelMetadata){
 
   return(periodData)
 }
-
 
 
 

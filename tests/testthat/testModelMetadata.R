@@ -107,6 +107,9 @@ test_that("error if there is no intro in the dataSet", {
                                         "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                                         "modelStructures" = list("foo" = formulaGood)),
                                         "dataSets" = list("foo" = list("narrative" = list("title" = character()),
+                                                                       "processing" = list("filterString" = character(),
+                                                                                           "processFunction" = character(),
+                                                                                           "percentOcclusion" = numeric()),
                                                                        "defaultAnalysis" = character())))))
 })
 test_that("error if the title is not a character", {
@@ -115,7 +118,52 @@ test_that("error if the title is not a character", {
                                                         "modelStructures" = list("foo" = formulaGood)),
                                         "dataSets" = list("foo" = list("narrative" = list("title" = 1,
                                                                                           "intro" = character()),
+                                                                       "processing" = list("filterString" = character(),
+                                                                                           "processFunction" = character(),
+                                                                                           "percentOcclusion" = numeric()),
                                                                        "defaultAnalysis" = character())))))
+})
+test_that("error if processing is a not list", {
+  expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
+                                       "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
+                                                       "modelStructures" = list("foo" = formulaGood)),
+                                       "dataSets" = list("foo" = list("narrative" = list("title" = character(),
+                                                                                         "intro" = character()),
+                                                                      "processing" = 1,
+                                                                      "defaultAnalysis" = character())))))
+})
+test_that("error if the filterString is not a character", {
+  expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
+                                       "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
+                                                       "modelStructures" = list("foo" = formulaGood)),
+                                       "dataSets" = list("foo" = list("narrative" = list("title" = character(),
+                                                                                         "intro" = character()),
+                                                                      "processing" = list("filterString" = 1,
+                                                                                          "processFunction" = character(),
+                                                                                          "percentOcclusion" = numeric()),
+                                                                      "defaultAnalysis" = character())))))
+})
+test_that("error if the processFunction is not a character", {
+  expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
+                                       "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
+                                                       "modelStructures" = list("foo" = formulaGood)),
+                                       "dataSets" = list("foo" = list("narrative" = list("title" = character(),
+                                                                                         "intro" = character()),
+                                                                      "processing" = list("filterString" = character(),
+                                                                                          "processFunction" = 1,
+                                                                                          "percentOcclusion" = numeric()),
+                                                                      "defaultAnalysis" = character())))))
+})
+test_that("error if the percentOcclusion is not a number", {
+  expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
+                                       "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
+                                                       "modelStructures" = list("foo" = formulaGood)),
+                                       "dataSets" = list("foo" = list("narrative" = list("title" = character(),
+                                                                                         "intro" = character()),
+                                                                      "processing" = list("filterString" = character(),
+                                                                                          "processFunction" = character(),
+                                                                                          "percentOcclusion" = character()),
+                                                                      "defaultAnalysis" = character())))))
 })
 test_that("error if the intro is not a character", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
@@ -123,6 +171,9 @@ test_that("error if the intro is not a character", {
                                                         "modelStructures" = list("foo" = formulaGood)),
                                         "dataSets" = list("foo" = list("narrative" = list("title" = character(),
                                                                                           "intro" = 1),
+                                                                       "processing" = list("filterString" = character(),
+                                                                                           "processFunction" = character(),
+                                                                                           "percentOcclusion" = numeric()),
                                                                        "defaultAnalysis" = character())))))
 })
 test_that("error if the defaultAnalysis is not a character", {
@@ -131,6 +182,9 @@ test_that("error if the defaultAnalysis is not a character", {
                                            "modelStructures" = list("foo" = formulaGood)),
                            "dataSets" = list("foo" = list("narrative" = list("title" = character(),
                                                                              "intro" = character()),
+                                                          "processing" = list("filterString" = character(),
+                                                                              "processFunction" = character(),
+                                                                              "percentOcclusion" = numeric()),
                                                           "defaultAnalysis" = 1)))))
 })
 
@@ -139,6 +193,9 @@ goodStructure <- list("variableExplanations" = list("foo" = "bar"),
                                       "modelStructures" = list("foo" = formulaGood)),
                       "dataSets" = list("foo" = list("narrative" = list("title" = character(),
                                                                         "intro" = character()),
+                                                     "processing" = list("filterString" = character(),
+                                                                         "processFunction" = character(),
+                                                                         "percentOcclusion" = numeric()),
                                                      "defaultAnalysis" = character())))
 
 test_that("checkmodelMetadata returns the same object it is given.", {
@@ -150,6 +207,6 @@ test_that("modelMetadata Checkes out.", {
   expect_silent(checkmodelMetadata(modelMetadata))
 })
 test_that("modelMetadata Checkes out.", {
-  expect_silent(checkmodelMetadata(jsonlite::fromJSON("./testAddmodelMetadata.json")))
+  expect_silent(checkmodelMetadata(jsonlite::fromJSON("./addModelMetadata.json")))
 })
 
