@@ -5,7 +5,7 @@
 \title{Read extracted motion capture data}
 \usage{
 readExtractedMocapData(path, dataSets = c("action", "estimation"),
-  includeFullData = FALSE)
+  includeFullData = FALSE, modelMd = modelMetadata)
 }
 \arguments{
 \item{path}{Directory containing motion catpure csv files that were extracted with the \code{\link{extractMocapDataFromAnnotations}} function.}

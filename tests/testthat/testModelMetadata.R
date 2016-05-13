@@ -8,37 +8,43 @@ test_that("modelMetadata is a list.", {
 })
 test_that("modelMetadata has the right names at the first level.", {
   expect_warning(checkmodelMetadata(list("variableExplanations" = list(),
-                                          "models" = list("analyses" = list(), "modelStructures" = list()),
-                                          "dataSets" = list())))
+                                         "models" = list("analyses" = list(), "modelStructures" = list()),
+                                         "dataSets" = list(),
+                                         "dataPreProcessing" = character())))
 })
 test_that("modelMetadata's variableExplanations are characters.", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = 2),
                                         "models" = list("analyses" = list(), "modelStructures" = list()),
-                                        "dataSets" = list())))
+                                       "dataSets" = list(),
+                                       "dataPreProcessing" = character())))
 })
 
 context("modelMetadataCheck, model, analyses")
 test_that("modelMetadata's model section has variablesToUse", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                         "models" = list("analyses" = list("variablesToUse" = list("foo"))),
-                                        "dataSets" = list())))
+                                       "dataSets" = list(),
+                                       "dataPreProcessing" = character())))
 })
 test_that("modelMetadata's model section has analyses", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                         "models" = list("modelStructures" = list()),
-                                        "dataSets" = list())))
+                                       "dataSets" = list(),
+                                       "dataPreProcessing" = character())))
 })
 test_that("modelMetadata's model's analyses  have lenght>1 (warn if not).", {
   expect_warning(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                           "models" = list("analyses" = list(),
                                                           "modelStructures" = list("foo" = formulaGood)),
-                                          "dataSets" = list())))
+                                         "dataSets" = list(),
+                                         "dataPreProcessing" = character())))
 })
 test_that("modelMetadata's model's analyses' sections have variables to use.", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                         "models" = list("analyses" = list("testAnalysis" = list()),
                                                         "modelStructures" = list()),
-                                        "dataSets" = list())))
+                                       "dataSets" = list(),
+                                       "dataPreProcessing" = character())))
 })
 
 context("modelMetadataCheck, model, modelMetadatas")
@@ -46,19 +52,22 @@ test_that("modelMetadata's model's modelStructures have lenght>1 (warn if not)",
   expect_warning(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                           "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                                           "modelStructures" = list()),
-                                          "dataSets" = list())))
+                                         "dataSets" = list(),
+                                         "dataPreProcessing" = character())))
 })
 test_that("modelMetadata's analyses' modelStructure sections are strings.", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                         "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                                         "modelStructures" = list("foo" = list())),
-                                        "dataSets" = list())))
+                                       "dataSets" = list(),
+                                       "dataPreProcessing" = character())))
 })
 test_that("modelMetadata's analyses' modelStructure sections are formated appropriately", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                         "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                                         "modelStructures" = list("foo" = "bar")),
-                                        "dataSets" = list())))
+                                       "dataSets" = list(),
+                                       "dataPreProcessing" = character())))
 })
 test_that("modelMetadataCheck has only the specified sections.", {
   expect_error(checkmodelMetadata(
@@ -75,32 +84,37 @@ test_that("warn if dataSets is empty.", {
   expect_warning(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                           "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                                           "modelStructures" = list("foo" = formulaGood)),
-                                          "dataSets" = list())))
+                                         "dataSets" = list(),
+                                         "dataPreProcessing" = character())))
 })
 test_that("error if each dataSet is not a list", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                         "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                                         "modelStructures" = list("foo" = formulaGood)),
-                                        "dataSets" = list("foo" = "bar"))))
+                                        "dataSets" = list("foo" = "bar"),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if there is no narrative in the dataSet", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                         "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                                         "modelStructures" = list("foo" = formulaGood)),
-                                        "dataSets" = list("foo" = list("defaultAnalysis" = character())))))
+                                        "dataSets" = list("foo" = list("defaultAnalysis" = character())),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if there is no defaultAnalysis in the dataSet", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                         "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                                         "modelStructures" = list("foo" = formulaGood)),
-                                        "dataSets" = list("foo" = list("defaultAnalysis" = character())))))
+                                        "dataSets" = list("foo" = list("defaultAnalysis" = character())),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if there is no title in the dataSet", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                            "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                            "modelStructures" = list("foo" = formulaGood)),
                            "dataSets" = list("foo" = list("narrative" = list("intro" = character()),
-                                                          "defaultAnalysis" = character())))))
+                                                          "defaultAnalysis" = character())),
+                           "dataPreProcessing" = character())))
 })
 test_that("error if there is no intro in the dataSet", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
@@ -110,7 +124,8 @@ test_that("error if there is no intro in the dataSet", {
                                                                        "processing" = list("filterString" = character(),
                                                                                            "processFunction" = character(),
                                                                                            "percentOcclusion" = numeric()),
-                                                                       "defaultAnalysis" = character())))))
+                                                                       "defaultAnalysis" = character())),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if the title is not a character", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
@@ -121,7 +136,8 @@ test_that("error if the title is not a character", {
                                                                        "processing" = list("filterString" = character(),
                                                                                            "processFunction" = character(),
                                                                                            "percentOcclusion" = numeric()),
-                                                                       "defaultAnalysis" = character())))))
+                                                                       "defaultAnalysis" = character())),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if processing is a not list", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
@@ -130,7 +146,8 @@ test_that("error if processing is a not list", {
                                        "dataSets" = list("foo" = list("narrative" = list("title" = character(),
                                                                                          "intro" = character()),
                                                                       "processing" = 1,
-                                                                      "defaultAnalysis" = character())))))
+                                                                      "defaultAnalysis" = character())),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if the filterString is not a character", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
@@ -141,7 +158,8 @@ test_that("error if the filterString is not a character", {
                                                                       "processing" = list("filterString" = 1,
                                                                                           "processFunction" = character(),
                                                                                           "percentOcclusion" = numeric()),
-                                                                      "defaultAnalysis" = character())))))
+                                                                      "defaultAnalysis" = character())),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if the processFunction is not a character", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
@@ -152,7 +170,8 @@ test_that("error if the processFunction is not a character", {
                                                                       "processing" = list("filterString" = character(),
                                                                                           "processFunction" = 1,
                                                                                           "percentOcclusion" = numeric()),
-                                                                      "defaultAnalysis" = character())))))
+                                                                      "defaultAnalysis" = character())),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if the percentOcclusion is not a number", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
@@ -163,7 +182,8 @@ test_that("error if the percentOcclusion is not a number", {
                                                                       "processing" = list("filterString" = character(),
                                                                                           "processFunction" = character(),
                                                                                           "percentOcclusion" = character()),
-                                                                      "defaultAnalysis" = character())))))
+                                                                      "defaultAnalysis" = character())),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if the intro is not a character", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
@@ -174,7 +194,8 @@ test_that("error if the intro is not a character", {
                                                                        "processing" = list("filterString" = character(),
                                                                                            "processFunction" = character(),
                                                                                            "percentOcclusion" = numeric()),
-                                                                       "defaultAnalysis" = character())))))
+                                                                       "defaultAnalysis" = character())),
+                                       "dataPreProcessing" = character())))
 })
 test_that("error if the defaultAnalysis is not a character", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
@@ -185,7 +206,8 @@ test_that("error if the defaultAnalysis is not a character", {
                                                           "processing" = list("filterString" = character(),
                                                                               "processFunction" = character(),
                                                                               "percentOcclusion" = numeric()),
-                                                          "defaultAnalysis" = 1)))))
+                                                          "defaultAnalysis" = 1)),
+                           "dataPreProcessing" = character())))
 })
 
 goodStructure <- list("variableExplanations" = list("foo" = "bar"),
@@ -196,7 +218,8 @@ goodStructure <- list("variableExplanations" = list("foo" = "bar"),
                                                      "processing" = list("filterString" = character(),
                                                                          "processFunction" = character(),
                                                                          "percentOcclusion" = numeric()),
-                                                     "defaultAnalysis" = character())))
+                                                     "defaultAnalysis" = character())),
+                      "dataPreProcessing" = c("foo", "bar"))
 
 test_that("checkmodelMetadata returns the same object it is given.", {
   expect_equal(checkmodelMetadata(goodStructure), goodStructure)

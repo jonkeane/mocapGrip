@@ -102,8 +102,8 @@ formatGatherReplacements = function(dataSet, analysis, modeledData, modelMd = mo
     includeInteractionInGroup <- "" # empty string so that nothing is printed.
   }
 
-  # adjust predictor one (which is usually sticks) if it is scaled to the unscaled version.
-  plotPredictor1 <- ifelse(predictor1 == "stickcmScaled", "stickcmScaled+8", predictor1)
+  # adjust predictor one (which is usually sticks) if it is Centered to the unCentered version.
+  plotPredictor1 <- ifelse(predictor1 == "stickcmCentered", "stickcmCentered+8", predictor1)
 
   c("dataSet" = dataSet,
     "analysis" = analysis,

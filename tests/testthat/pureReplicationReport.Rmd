@@ -34,7 +34,7 @@ We fit a hierarchical (mixed effects) linear regression model. The outcome (depe
 
 There are varying intercepts by subject, and the effects of all the predictors (including interactions) are also allowed to vary by subject (these are the mixed effects). The full formula^[See [the lme4 documentation](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf) (especially section 2) for explanation of the formula format.] for this model is:
 
-maxGrip ~ stickcmScaled * fins + (1 + stickcmScaled * fins | obsisSubj)
+maxGrip ~ stickcmCentered * fins + (1 + stickcmCentered * fins | obsisSubj)
 
 ### Coefficient plot
 
@@ -49,7 +49,7 @@ mocapGrip:::CoefficientPlot(list(params$data[["action"]]$analyses[["maxGrip.stic
 These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
 
 ```{r}
-ggplot(mocapGrip:::pred(params$data[["action"]]$analyses[["maxGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmScaled+8, y=maxGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="maximum grip aperture (in mm)")
+ggplot(mocapGrip:::pred(params$data[["action"]]$analyses[["maxGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmCentered+8, y=maxGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="maximum grip aperture (in mm)")
 ```
 
 ### Full model output
@@ -116,7 +116,7 @@ We fit a hierarchical (mixed effects) linear regression model. The outcome (depe
 
 There are varying intercepts by subject, and the effects of all the predictors (including interactions) are also allowed to vary by subject (these are the mixed effects). The full formula^[See [the lme4 documentation](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf) (especially section 2) for explanation of the formula format.] for this model is:
 
-meanGrip ~ stickcmScaled * fins + (1 + stickcmScaled * fins | obsisSubj)
+meanGrip ~ stickcmCentered * fins + (1 + stickcmCentered * fins | obsisSubj)
 
 ### Coefficient plot
 
@@ -131,7 +131,7 @@ mocapGrip:::CoefficientPlot(list(params$data[["estimation"]]$analyses[["meanGrip
 These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
 
 ```{r}
-ggplot(mocapGrip:::pred(params$data[["estimation"]]$analyses[["meanGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmScaled+8, y=meanGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="mean grip aperture (in mm)")
+ggplot(mocapGrip:::pred(params$data[["estimation"]]$analyses[["meanGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmCentered+8, y=meanGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="mean grip aperture (in mm)")
 ```
 
 ### Full model output

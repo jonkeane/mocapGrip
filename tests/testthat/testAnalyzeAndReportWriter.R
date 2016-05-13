@@ -2,33 +2,33 @@ library(mocapGrip)
 context("analysis functions")
 
 test_that("equation (formula) generation works", {
-  expect_equal(eqsGen2preds(outcome="maxGrip", predictor1="stickcmScaled", predictor2="fins"),
-               c("maxGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)",
-                 "maxGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)",
-                 "maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)"))
+  expect_equal(eqsGen2preds(outcome="maxGrip", predictor1="stickcmCentered", predictor2="fins"),
+               c("maxGrip~stickcmCentered*fins+(1+stickcmCentered*fins|obsisSubj)",
+                 "maxGrip~stickcmCentered*fins+(1+stickcmCentered+fins|obsisSubj)",
+                 "maxGrip~stickcmCentered+fins+(1+stickcmCentered+fins|obsisSubj)"))
 })
 
 test_that("equation (formula) generation works", {
   expect_equal(eqsGen(modelMetadata$models$analyses$maxGrip.stickAsContinuous$variablesToUse, modelMetadata$models$modelStructures),
-               c("interactionInPredAndGroup" = "maxGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)",
-                    "interactionInPred" = "maxGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)",
-                    "noInteraction" = "maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)"))
+               c("interactionInPredAndGroup" = "maxGrip~stickcmCentered*fins+(1+stickcmCentered*fins|obsisSubj)",
+                    "interactionInPred" = "maxGrip~stickcmCentered*fins+(1+stickcmCentered+fins|obsisSubj)",
+                    "noInteraction" = "maxGrip~stickcmCentered+fins+(1+stickcmCentered+fins|obsisSubj)"))
 })
 
 
-modelsAction <- fitLMER(eqsGen2preds(outcome="maxGrip", predictor1="stickcmScaled", predictor2="fins"), data=pureReplication$action$data)
+modelsAction <- fitLMER(eqsGen2preds(outcome="maxGrip", predictor1="stickcmCentered", predictor2="fins"), data=pureReplication$action$data)
 test_that("fitting lmer function returns the right shape, and handles warnings", {
   # these might change if optimizers change in lme
-  expect_equal(modelsAction$`maxGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)`$converged, TRUE)
-  expect_equal(modelsAction$`maxGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)`$converged, FALSE)
-  expect_equal(modelsAction$`maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
+  expect_equal(modelsAction$`maxGrip~stickcmCentered*fins+(1+stickcmCentered*fins|obsisSubj)`$converged, TRUE)
+  expect_equal(modelsAction$`maxGrip~stickcmCentered*fins+(1+stickcmCentered+fins|obsisSubj)`$converged, FALSE)
+  expect_equal(modelsAction$`maxGrip~stickcmCentered+fins+(1+stickcmCentered+fins|obsisSubj)`$converged, TRUE)
 
 
-  expect_silent(modelsEst <- fitLMER(eqsGen2preds(outcome="meanGrip", predictor1="stickcmScaled", predictor2="fins"), data=pureReplication$estimation$data))
+  expect_silent(modelsEst <- fitLMER(eqsGen2preds(outcome="meanGrip", predictor1="stickcmCentered", predictor2="fins"), data=pureReplication$estimation$data))
   # these might change if optimizers change in lme
-  expect_equal(modelsEst$`meanGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)`$converged, TRUE)
-  expect_equal(modelsEst$`meanGrip~stickcmScaled*fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
-  expect_equal(modelsEst$`meanGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)`$converged, TRUE)
+  expect_equal(modelsEst$`meanGrip~stickcmCentered*fins+(1+stickcmCentered*fins|obsisSubj)`$converged, TRUE)
+  expect_equal(modelsEst$`meanGrip~stickcmCentered*fins+(1+stickcmCentered+fins|obsisSubj)`$converged, TRUE)
+  expect_equal(modelsEst$`meanGrip~stickcmCentered+fins+(1+stickcmCentered+fins|obsisSubj)`$converged, TRUE)
 })
 
 test_that("fitting lmer function returns the right shape, and handles warnings", {
@@ -39,7 +39,7 @@ test_that("fitting lmer function returns the right shape, and handles warnings",
 test_that("the model chosing function works forwards", {
   expect_silent(modsChoseAction <- findTheBestModel(modelsAction))
   expect_equal(modsChoseAction$allModels, modelsAction)
-  expect_equal(names(modsChoseAction$bestModel), "maxGrip~stickcmScaled*fins+(1+stickcmScaled*fins|obsisSubj)")
+  expect_equal(names(modsChoseAction$bestModel), "maxGrip~stickcmCentered*fins+(1+stickcmCentered*fins|obsisSubj)")
   expect_equal(names(modsChoseAction), c("bestModel", "allModels"))
   })
 
@@ -47,7 +47,7 @@ test_that("the model chosing function works backwords", {
   expect_silent(modsChoseAction <- findTheBestModel(modelsAction, last = TRUE))
   expect_equal(modsChoseAction$allModels, modelsAction)
   expect_equal(names(modsChoseAction), c("bestModel", "allModels"))
-  expect_equal(names(modsChoseAction$bestModel), "maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)")
+  expect_equal(names(modsChoseAction$bestModel), "maxGrip~stickcmCentered+fins+(1+stickcmCentered+fins|obsisSubj)")
 })
 
 ### Setup dataModeled for test
@@ -88,9 +88,9 @@ test_that("formatGatherReplacements works", {
                                                                      "includeInteractionInGroup" = "(including interactions)",
                                                                      "groupingVariable" = "by subject",
                                                                      "plotOutcome" = "maxGrip",
-                                                                     "plotPredictor1" = "stickcmScaled+8",
+                                                                     "plotPredictor1" = "stickcmCentered+8",
                                                                      "plotPredictor2" = "fins",
-                                                                     "formula" = "maxGrip ~ stickcmScaled * fins + (1 + stickcmScaled * fins | obsisSubj)"))
+                                                                     "formula" = "maxGrip ~ stickcmCentered * fins + (1 + stickcmCentered * fins | obsisSubj)"))
 
 })
 

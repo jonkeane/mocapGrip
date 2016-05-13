@@ -173,18 +173,19 @@ processDataSet <- function(dataSet, data, modelMd = modelMetadata){
 #' @return Not sure yet.
 #'
 #' @export
-readExtractedMocapData <- function(path, dataSets = c("action", "estimation"), includeFullData=FALSE){
+readExtractedMocapData <- function(path, dataSets = c("action", "estimation"), includeFullData=FALSE, modelMd = modelMetadata){
   # to be added to main function for oparsing data
   files <- list.files(path, recursive = TRUE, pattern = NULL, full.names=TRUE)
 
   data <- plyr::ldply(files, process, conditionCodesFile=system.file("GRIPMLstimuli.csv", package = "mocapGrip", mustWork=TRUE), verbose=FALSE, .progress = "text" )
 
-  # modifications of the data to be better structure (should these go elsewhere?)
-  data$stick <- factor(as.character(data$stick), levels = c("five", "seven", "nine", "eleven"))
-  data$stickcmScaled <- data$stickcm - 8
+  # run the preprocessing commans
+  for(line in modelMd$dataPreProcessing){
+    eval(parse(text = line))
+  }
 
   # add check if there are no known types found.
-  dataSetData <- sapply(dataSets, processDataSet, data=data, USE.NAMES = TRUE, simplify = FALSE)
+  dataSetData <- sapply(dataSets, processDataSet, data=data, modelMd = modelMd, USE.NAMES = TRUE, simplify = FALSE)
 
   if(includeFullData==TRUE){
     dataSetData[["fullData"]] <- data

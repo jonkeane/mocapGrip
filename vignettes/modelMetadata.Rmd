@@ -53,12 +53,15 @@ The model metadata is read into `mocapGrip` from a specially formatted [json fil
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		}
-	}
+	},
+	"dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
+												"contrasts(data$stick) <- contr.treatment(levels(data$stick), base = 2) # make seven the reference level",
+												"data$stickcmCentered <- data$stickcm - 8"]
 }
 ```
 
 
-There are three main areas of information `variableExplanations`, `models`, and `dataSets`. Each will be described in detail below:
+There are four main areas of information `variableExplanations`, `models`, `dataSets`, and `dataPreProcessing` Each will be described in detail below:
 
 ### `variableExplanations`
 This contains explanatory descriptions of each of the variables that are used in a model/analysis. These are required to be named with the same name as the column that they refer to in the data. These only have to be specified once even if they are used in many many models. This section looks like (this is copied from above):
@@ -180,6 +183,15 @@ This section defines how to extract the dataSet from the full data.
 
 ```
 "defaultAnalysis" : "maxGrip.stickAsContinuous"
+```
+
+### `dataPreProcessing` section
+This section has a list of commands to run before processing any of the dataSets. This is where you can change reference level, or make transformations on **all** of the data. The data is a large dataframe called `data`.
+
+```
+"dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
+											"contrasts(data$stick) <- contr.treatment(levels(data$stick), base = 2) # make seven the reference level",
+											"data$stickcmCentered <- data$stickcm - 8"]
 ```
 
 ## extending the default modelMetadata

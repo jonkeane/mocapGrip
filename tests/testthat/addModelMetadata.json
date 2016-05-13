@@ -31,5 +31,8 @@
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		}
-	}
+	},
+	"dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
+												"contrasts(data$stick) <- contr.treatment(levels(data$stick), base = 2) # make seven the reference level",
+												"data$stickcmCentered <- data$stickcm - 8"]
 }
