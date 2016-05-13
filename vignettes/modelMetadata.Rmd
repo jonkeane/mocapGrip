@@ -46,6 +46,11 @@ The model metadata is read into `mocapGrip` from a specially formatted [json fil
 				"title" : "Maximum grip aperture (on reach to grasp)",
 				"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
 			},
+			"processing" : {
+				"filterString" : "type == 'ACTION' & period == 'GRIP'",
+				"processFunction" : "maxGripFinder",
+				"percentOcclusion" : 0.05
+			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		}
 	}
@@ -117,13 +122,9 @@ formula: maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)
 ```
 
     	
-###`dataSets`
-This section specifies the dataSet to be read and processed from the extracted annotations data. This defines what aspects of the data should be extracted, and gives some language to be used in reports. Currently, there are a limited number of possible dataSet names (because the methods for extracting them are hard coded, they are listed below). Although you can change the `title`, `intro`, or `defaultAnalysis` for these.
+### `dataSets`
+This section specifies the dataSet to be read and processed from the extracted annotations data. This defines what aspects of the data should be extracted, gives some narratives to be used in reports, and has one or more default analyses to run.
 
-* `title` short title for the section of the report discussing this dataSet.
-* `intro` a more detailed description of the dataSet
-* `defaultAnalysis` this is the default analysis to be used. This must be the name of one of the analyses in the `analyses` section above.
-    	
 ```
 "dataSets" : {
 	"action" :	{
@@ -131,19 +132,55 @@ This section specifies the dataSet to be read and processed from the extracted a
 			"title" : "Maximum grip aperture (on reach to grasp)",
 			"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
 		},
-		"defaultAnalysis" : "maxGrip.stickAsContinuous"
+			"processing" : {
+				"filterString" : "type == 'ACTION' & period == 'GRIP'",
+				"processFunction" : "maxGripFinder",
+				"percentOcclusion" : 0.05
+			},
+			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 	}
 }
 ```
 
-Here are the currently possible dataSet names:
+#### `narrative` section
+These details are used in the report to describe the data that is used.
 
-* `action` pulls out the maximum grip aperture during the *grip* portion of *action* trials.
-* `release` pulls out the maximum grip aperture during the *release* portion of *action* trials.
-* `estimation` pulls out the mean and median grip aperture during the *steady* portion of *estimation* trials.
-* `estMaxGrip` pulls out the maximum grip aperture during the *grip* portion of *estimation* trials.
-* `gestMaxGrip` pulls out the maximum grip aperture during the *grip* portion of *gesture* trials.
-* `gestMove` pulls out the mean and median grip aperture during the *movement* portion of *estimation* trials.
+* `title` short title for the section of the report discussing this dataSet.
+* `intro` a more detailed description of the dataSet
+    	
+```
+"narrative" : {
+	"title" : "Maximum grip aperture (on reach to grasp)",
+	"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
+},
+```
+
+#### `processing` section
+This section defines how to extract the dataSet from the full data.
+
+* `processing` specifies the `type` and `period` (or other columns in the data) to select for the dataSet. In this example only the *grip* periods of *action* trials will be extracted.
+* `processFunction` this is the function that processes the data. It can be any of the following possibilitys:
+  * `maxGripFinder` extracts the maximum grip and the percentage of the way through the grip that that maximum happens for the whole dataSet.
+  * `meanMedianGripFinder` extracts the mean and median of grip for the whole dataSet.
+  * `percentageMeanMedianGripFinder` TBA
+  * `openTargetGripFinder` TBA
+* `percentOcclusion` the percentage of occlusion that is acceptable (this is the upper bound, in percent.)  For example the value here is `0.05` means that only trials where there is less than 5% of occlusion are processed.
+
+```
+"processing" : {
+	"processing" : "type == 'ACTION' & period == 'GRIP'",
+	"processFunction" : "maxGripFinder",
+	"percentOcclusion" : 0.05
+},
+```
+
+#### `defaultAnalysis` section
+
+`defaultAnalysis` this is the default analysis to be used. This must be the name of one of the analyses in the `analyses` section above. This can also be a list (e.g. `["maxGrip.stickAsContinuous", "maxGrip.stickAsCategorical"]`)
+
+```
+"defaultAnalysis" : "maxGrip.stickAsContinuous"
+```
 
 ## extending the default modelMetadata
 TBW
