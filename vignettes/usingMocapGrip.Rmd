@@ -4,7 +4,7 @@ author: "Jonathan Keane"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Using mocapGrip}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,12 +17,42 @@ See the project's readme file for information about this.
 
 ## Report writing
 
-In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()` after that, you can use the `makeReport()` function to write the report for all of the types of analyses (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. the `makeReport()` function returns the data obejct with models included if it is needed for other uses.  A full example is below: 
+In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()` after that, you can use the `makeReport()` function to write the report for all of the analyses for all of the dataSets (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. The `makeReport()` function returns the data obejct with models included if it is needed for other uses. If you want the fullData to be included in the data object you can use the option `includeFullData = TRUE` with the function `readExtractedMocapData()`. A full example is below: 
 
 ```{r, fig.show='hold', eval=FALSE}
-dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "release", "estMaxGrip"), includeFullData = FALSE)
+dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"))
 
-dataModeled <- makeReport(dataNew, reportPath="./reportActionExtimationFromGestureTrials.Rmd")
+dataModeled <- makeReport(dataNew, reportPath="./reportGestureTrials.Rmd")
+```
+
+Alternatively, if you want to run the analyses/models separately from making the report you can do this using the `modelAllData()` command. This will return a data object the same as it is given, but with the fit models attached. This data with models object can then be passed to the `makeReport()` function which will write the report (without refitting the models, to save time). If you would prefer that all of the models are refit, you can use the option `refitModels = TRUE` with the `makeReport()` command.
+
+```{r, fig.show='hold', eval=FALSE}
+dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"))
+
+dataModeled <- modelAllData(dataNew)
+
+dataModeled <- makeReport(dataModeled, reportPath="./reportGestureTrials.Rmd")
+```
+
+## Advanced analysis/model manipulation
+
+By default, the `analysesToRun` for each data set are set as the default analyses given in the `modelMetadata` object. You can see what analyses are set to run for a specific data object with the command `displayAnalysesToRun()` Further, You can add or remove analyses with the commands `addAnalysesToRun()`, `removeAnalysesToRun()`. For both the add and remove functions, the first argument is the data object to add or remove analyses from, and they both return the data object with the new set of analyses. Using the `dataNew` object from before, 
+
+```{r, fig.show='hold', eval=FALSE}
+# See what analyses are to be run.
+displayAnalysesToRun(dataNew)
+
+# Run through prompts for each dataSet
+# asking if you want to remove any of
+# the analyses present
+removeAnalysesToRun(dataNew)
+
+# Run through prompts for each dataSet
+# asking if you want to add to any of
+# the analyses present
+addAnalysesToRun(dataNew)
+
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
