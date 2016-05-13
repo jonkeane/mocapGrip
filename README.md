@@ -27,17 +27,17 @@ To install mocapGrip type `devtools::install_github("jonkeane/mocapGrip",  build
 
 By default, this installation will not include [pyelan](https://github.com/jonkeane/pyelan). To install it, type `library(mocapGrip); installPyelan()` at an R command prompt. (This will have to be done once each time you install a new version of mocapGrip, but shouldn't need to be run more than that.)
 
-## Dependencies (non-R)
+> **Dependencies**
 
-Currently, there are only three dependencies (other than R package dependencies which will be installed by R in the `installation`):
+> Currently, there are only three dependencies (other than R package dependencies which will be installed by R in the `installation`). For the most part these should already be available, but if you run into errors about them, you might need to install them for mocapGrip to work properly.
 
-1. a working modern (>=2.6) version of python. Some functions rely on the python module [pyelan](https://github.com/jonkeane/pyelan) for parsing elan files. This should be downloaded automatically in the `[package install location]/python/` directory as `pyelan`.
+> 1. a working modern (>=2.6) version of python. Some functions rely on the python module [pyelan](https://github.com/jonkeane/pyelan) for parsing elan files. This should be downloaded automatically in the `[package install location]/python/` directory as `pyelan`.
 
-1. [pandoc](http://pandoc.org/) which is included in [RStudio](https://www.rstudio.com/), but can be [installed separately](http://pandoc.org/installing.html). *Pandoc is only required for making reports*   
-If you are running mocapGrip on the RCC server, you can use the command `module load pandoc` to load pandoc.
+> 1. [pandoc](http://pandoc.org/) which is included in [RStudio](https://www.rstudio.com/), but can be [installed separately](http://pandoc.org/installing.html). *Pandoc is only required for making reports*   
+> If you are running mocapGrip on the RCC server, you can use the command `module load pandoc` to load pandoc.
 
-1. [ffmpeg](https://ffmpeg.org/) is needed to check the duration of the video files when using `makeElanFiles(...)` If it is not present there will be warnings about the duration of the videos and mocap not matching, but mocapGrip will work fine. *ffmpeg is only used when making blank elan files*      
-If you are running mocapGrip on the RCC server, you can use the command `module load ffmpeg` to load ffmpeg.
+> 1. [ffmpeg](https://ffmpeg.org/) is needed to check the duration of the video files when using `makeElanFiles(...)` If it is not present there will be warnings about the duration of the videos and mocap not matching, but mocapGrip will work fine. *ffmpeg is only used when making blank elan files*>   
+> If you are running mocapGrip on the RCC server, you can use the command `module load ffmpeg` to load ffmpeg.
 
 ## Usage
 
@@ -49,7 +49,7 @@ The package vignettes give step by step walkthroughs of how to use mocapGrip:
 
 * *modalMetadata* is a description of the modelMetadata object which is needed to specify different dataSets, models/analyses, and (some) narrative details for reports.  
    To view, after loading the package (with `library(mocapGrip)`), use the command:  
-    `vignette("modelMetadata")`
+> `vignette("modelMetadata")`
 
 
 
