@@ -53,3 +53,16 @@ test_that("readExtractedMocapData matches precomputed estimation data", {
   expect_silent(checkData(dataToBeTested, modelMd = modelMetadata))
 })
 
+context("addNewDataSets")
+dataIncludeFull <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action"), includeFullData = TRUE)
+dataIncludeFullwithEst <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action", "estimation"), includeFullData = TRUE)
+test_that("addNewDataSets errors or warns appropriately", {
+  expect_error(addNewDataSets(pureReplication, dataSets = c("action")))
+  expect_warning(dataNotExtended <- addNewDataSets(dataIncludeFull, dataSets = c("action")))
+  expect_equal(dataNotExtended, dataIncludeFull)
+})
+
+test_that("addNewDataSets returns an extended object", {
+  expect_silent(dataExtended <- addNewDataSets(dataIncludeFull, dataSets = c("estimation")))
+  expect_equal(dataExtended, dataIncludeFullwithEst)
+})

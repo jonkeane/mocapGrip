@@ -29,5 +29,8 @@ fixPaths <- function(files){
 #'
 #' @export
 installPyelan <- function(){
-  git2r::clone("https://github.com/jonkeane/pyelan.git", system.file("python", "pyelan", package = "mocapGrip"))
+  pyelanFolder <- file.path(system.file("python", package = "mocapGrip"), "pyelan")
+  # check if folder exists, and create it if it doesn't
+  dir.create(pyelanFolder, showWarnings = FALSE)
+  git2r::clone("https://github.com/jonkeane/pyelan.git", pyelanFolder)
 }
