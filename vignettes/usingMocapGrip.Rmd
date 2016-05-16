@@ -119,5 +119,5 @@ A small amount of data is included with the package in order to show what a data
 pureReplicationNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", c("action", "estimation"))
 
 # replication
-pureReplicationModeled <- makeReport(pureReplicationNew, title="Pure replication report", reportPath="./reportReplication.Rmd")
+pureReplicationModeled <- makeReport(pureReplication, title="Pure replication report", reportPath="./reportReplication.Rmd")
 ```

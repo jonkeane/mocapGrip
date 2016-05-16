@@ -7,9 +7,9 @@
 		"fins" : "the configuration of the fins (closed, none, open; where closed is the reference level)",
 		"stickcmCenteredXfins" : "the interaction between the size of the stick and configuration of fins",
 		"stickXfins" : "the interaction between the size of the stick (as a categorical variable) and configuration of fins",
-		"maxGrip" : "maximum grip aperture (in mm)",
-		"meanGrip" : "mean grip aperture (in mm)",
-		"medianGrip" : "median grip aperture (in mm)",
+		"maxGrip" : "the maximum grip aperture (in mm)",
+		"meanGrip" : "the mean grip aperture (in mm)",
+		"medianGrip" : "the median grip aperture (in mm)",
 		"obsisSubj" : "by subject"
 	},
 	"models" : {

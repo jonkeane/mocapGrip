@@ -4,7 +4,13 @@
 
 <>$intro<>
 
-We fit a hierarchical (mixed effects) linear regression model. The outcome (dependent) variable is the <>$outcomeVariable<>, and the predictor (independent) variables are:
+We fit a hierarchical (mixed effects) linear regression model.
+
+#### The outcome (dependent) variable is:
+
+* <>$outcomeVariable<>
+
+#### The predictor (independent) variables are:
 
 <>$predictorVariables<>
 
