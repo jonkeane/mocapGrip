@@ -157,6 +157,23 @@
 				}
 			},
 			"defaultAnalysis" : "meanGrip.stickAsCategorical"
+		},
+		"gestMoveFirstQuarter" :	{
+			"narrative" : {
+				"title" : "Mean grip aperture during gesture (movement)",
+				"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
+			},
+			"processing" : {
+				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT'",
+				"processFunction" : "meanMedianSubsetFinder",
+				"processFunctionOptions": {
+					"start" : 0.0,
+					"stop" : 0.25,
+					"timeType" : "percent",
+					"percOcclusion" : 0.05
+				}
+			},
+			"defaultAnalysis" : "meanGrip.stickAsCategorical"
 		}
 	},
 	"dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
