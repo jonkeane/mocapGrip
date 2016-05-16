@@ -21,7 +21,7 @@ For both, you must install devtools, just type `install.packages("devtools")` at
 ### 1. Install the most recent stable packaged release
 
 To install mocapGrip copy and paste the following command into R:   
-`devtools::install_url("https://github.com/jonkeane/mocapGrip/releases/download/v0.1.0/mocapGrip_0.1.tar.gz")`
+`devtools::install_url("https://github.com/jonkeane/mocapGrip/releases/download/v0.1.1/mocapGrip_0.1.tar.gz")`
 
 ### 2. Install the most recent source version
 
