@@ -165,14 +165,31 @@ These details are used in the report to describe the data that is used.
 #### `processing` section
 This section defines how to extract the dataSet from the full data.
 
-* `processing` specifies the `type` and `period` (or other columns in the data) to select for the dataSet. In this example only the *grip* periods of *action* trials will be extracted.
-* `processFunction` this is the function that processes the data. It can be any of the following possibilitys:
-  * `maxGripFinder` extracts the maximum grip and the percentage of the way through the grip that that maximum happens for the whole dataSet.
-  * `meanMedianGripFinder` extracts the mean and median of grip for the whole dataSet.
-  * `percentageMeanMedianGripFinder` TBA
-  * `openTargetGripFinder` TBA
-* `processFunctionOptions` Options to be passed to the processing function. This should always include percentOcclusion, but may include others.   
-  * `percentOcclusion` the percentage of occlusion that is acceptable (this is the upper bound, in percent.)  For example the value here is `0.05` means that only trials where there is less than 5% of occlusion are processed.
+`processing` specifies the `type` and `period` (or other columns in the data) to select for the dataSet. In this example only the *grip* periods of *action* trials will be extracted. 
+
+
+`processFunction` this is the function that processes the data. It can be any of the following possibilities:
+
+* `maxGripFinder` extracts the maximum grip and the percentage of the way through the grip that that maximum happens for the whole dataSet.  
+options:    
+    * `percOcclusion` the maximum allowable occlusion as a percentage (in decimal notation). Default: 0.05 (meaning 5%)    
+* `meanMedianGripFinder` extracts the mean and median of grip for the whole dataSet.
+options:    
+    * `percOcclusion` the maximum allowable occlusion as a percentage (in decimal notation). Default: 0.05 (meaning 5%)   
+* `meanMedianSubsetFinder` this extracts the mean and the median from a subset of the duration of the period. The start and stop times are given as options, as well as if those should be interpreted as percentage of period or as miliseconds.
+options:  
+    * `percOcclusion` the maximum allowable occlusion as a percentage (in decimal notation). Default: 0.05 (meaning 5%)  
+    * `start` time to start the subset. If percentage this should be greater than or equal to 0 (which means 0%) and less than 1 (which means 100%). If milliseconds, it should be greater than 0, but less than the duration of the period (warnings will be producded if this period does not contain any data)
+    * `stop` time to stop the subset. If percentage this should be greater than 0 (which means 0%) and less than or equal to 1 (which means 100%). If milliseconds, it should be greater than 0, but less than the duration of the period (warnings will be producded if this period does not contain any data)
+    * `timeType` should the times above be interpreted as percentages (`percent`) of the time period or miliseconds (`msecs`)
+* `ceilingFinder` find the mean and the median of a grip that is in a band at the top of the range. How large the band is is defined by the `bandWidth` option below. The data also includes a measure of how during the period the grip is within this band (column name: `durInBand`).
+options:  
+    * `percOcclusion` the maximum allowable occlusion as a percentage (in decimal notation). Default: 0.05 (meaning 5%)
+    * `bandWidth` the width of the band at the top of the grip range. In either millimeters or as a percentage of the total grip range (for this period)
+    * `bandType` should the value in `bandWidth` be interpreted as millimeters (`mm`) or a percentage (`percent`)
+
+
+`processFunctionOptions` Options to be passed to the processing function. This should always include percentOcclusion, but may include others, as described above for each processFunction
 
 ```
 "processing" : {
