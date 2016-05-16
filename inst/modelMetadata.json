@@ -82,7 +82,9 @@
 			"processing" : {
 				"filterString" : "type == 'ACTION' & period == 'GRIP'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		},
@@ -94,7 +96,9 @@
 			"processing" : {
 				"filterString" : "type == 'ACTION' & period == 'RELEASE'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		},
@@ -106,7 +110,9 @@
 			"processing" : {
 				"filterString" : "type == 'ESTIMATION' & period == 'STEADY'",
 				"processFunction" : "meanMedianFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "meanGrip.stickAsContinuous"
 		},
@@ -118,7 +124,9 @@
 			"processing" : {
 				"filterString" : "type == 'ESTIMATION' & period == 'GRIP'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		},
@@ -130,19 +138,56 @@
 			"processing" : {
 				"filterString" : "type == 'GESTURE' & period == 'GRIP'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsCategorical"
 		},
 		"gestMove" :	{
 			"narrative" : {
 				"title" : "Mean grip aperture during gesture (movement)",
-				"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
+				"intro" : "The mean and median distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
 			},
 			"processing" : {
 				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT'",
 				"processFunction" : "meanMedianFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
+			},
+			"defaultAnalysis" : "meanGrip.stickAsCategorical"
+		},
+		"gestMoveFirstQuarter" :	{
+			"narrative" : {
+				"title" : "Mean grip aperture during gesture (only first 25% of movement)",
+				"intro" : "The mean and median distance between the markers on the thumb and index finger during the first 25% of the period when the hand was moving during gesture."
+			},
+			"processing" : {
+				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT'",
+				"processFunction" : "meanMedianSubsetFinder",
+				"processFunctionOptions": {
+					"start" : 0.0,
+					"stop" : 0.25,
+					"timeType" : "percent",
+					"percOcclusion" : 0.05
+				}
+			},
+			"defaultAnalysis" : "meanGrip.stickAsCategorical"
+		},
+		"gestMoveTop2mm" :	{
+			"narrative" : {
+				"title" : "Mean grip aperture during gesture (movement)",
+				"intro" : "The mean and median distance between the markers on the thumb and index finger when that grip is within 2mm of the maximum grip."
+			},
+			"processing" : {
+				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT'",
+				"processFunction" : "ceilingFinder",
+				"processFunctionOptions": {
+					"bandWidth" : 2,
+					"bandType" : "mm",
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "meanGrip.stickAsCategorical"
 		}

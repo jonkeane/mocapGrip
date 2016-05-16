@@ -123,7 +123,7 @@ test_that("error if there is no intro in the dataSet", {
                                         "dataSets" = list("foo" = list("narrative" = list("title" = character()),
                                                                        "processing" = list("filterString" = character(),
                                                                                            "processFunction" = character(),
-                                                                                           "percentOcclusion" = numeric()),
+                                                                                           "processFunctionOptions" = list()),
                                                                        "defaultAnalysis" = character())),
                                        "dataPreProcessing" = character())))
 })
@@ -135,7 +135,7 @@ test_that("error if the title is not a character", {
                                                                                           "intro" = character()),
                                                                        "processing" = list("filterString" = character(),
                                                                                            "processFunction" = character(),
-                                                                                           "percentOcclusion" = numeric()),
+                                                                                           "processFunctionOptions" = list()),
                                                                        "defaultAnalysis" = character())),
                                        "dataPreProcessing" = character())))
 })
@@ -157,7 +157,7 @@ test_that("error if the filterString is not a character", {
                                                                                          "intro" = character()),
                                                                       "processing" = list("filterString" = 1,
                                                                                           "processFunction" = character(),
-                                                                                          "percentOcclusion" = numeric()),
+                                                                                          "processFunctionOptions" = list()),
                                                                       "defaultAnalysis" = character())),
                                        "dataPreProcessing" = character())))
 })
@@ -169,11 +169,11 @@ test_that("error if the processFunction is not a character", {
                                                                                          "intro" = character()),
                                                                       "processing" = list("filterString" = character(),
                                                                                           "processFunction" = 1,
-                                                                                          "percentOcclusion" = numeric()),
+                                                                                          "processFunctionOptions" = list()),
                                                                       "defaultAnalysis" = character())),
                                        "dataPreProcessing" = character())))
 })
-test_that("error if the percentOcclusion is not a number", {
+test_that("error if the processFunctionOptions is not a number", {
   expect_error(checkmodelMetadata(list("variableExplanations" = list("foo" = "bar"),
                                        "models" = list("analyses" = list("testAnalysis" = list("variablesToUse" = list())),
                                                        "modelStructures" = list("foo" = formulaGood)),
@@ -181,7 +181,7 @@ test_that("error if the percentOcclusion is not a number", {
                                                                                          "intro" = character()),
                                                                       "processing" = list("filterString" = character(),
                                                                                           "processFunction" = character(),
-                                                                                          "percentOcclusion" = character()),
+                                                                                          "processFunctionOptions" = character()),
                                                                       "defaultAnalysis" = character())),
                                        "dataPreProcessing" = character())))
 })
@@ -193,7 +193,7 @@ test_that("error if the intro is not a character", {
                                                                                           "intro" = 1),
                                                                        "processing" = list("filterString" = character(),
                                                                                            "processFunction" = character(),
-                                                                                           "percentOcclusion" = numeric()),
+                                                                                           "processFunctionOptions" = list()),
                                                                        "defaultAnalysis" = character())),
                                        "dataPreProcessing" = character())))
 })
@@ -205,7 +205,7 @@ test_that("error if the defaultAnalysis is not a character", {
                                                                              "intro" = character()),
                                                           "processing" = list("filterString" = character(),
                                                                               "processFunction" = character(),
-                                                                              "percentOcclusion" = numeric()),
+                                                                              "processFunctionOptions" = list()),
                                                           "defaultAnalysis" = 1)),
                            "dataPreProcessing" = character())))
 })
@@ -217,7 +217,7 @@ goodStructure <- list("variableExplanations" = list("foo" = "bar"),
                                                                         "intro" = character()),
                                                      "processing" = list("filterString" = character(),
                                                                          "processFunction" = character(),
-                                                                         "percentOcclusion" = numeric()),
+                                                                         "processFunctionOptions" = list()),
                                                      "defaultAnalysis" = character())),
                       "dataPreProcessing" = c("foo", "bar"))
 

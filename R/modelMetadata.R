@@ -94,10 +94,10 @@ checkmodelMetadata <- function(modelMd){
         } else {
           if(!is.character(modelMd$dataSets[[dataSet]]$processing$processFunction)) {stop("The processFunction for dataSet ", dataSet, " is not a character string.")}
         }
-        if(!"percentOcclusion" %in% names(modelMd$dataSets[[dataSet]]$processing)) {
-          stop("There is no percentOcclusion in the processing section for the dataSet ", dataSet)
+        if(!"processFunctionOptions" %in% names(modelMd$dataSets[[dataSet]]$processing)) {
+          stop("There is no processFunctionOptions in the processing section for the dataSet ", dataSet)
         } else {
-          if(!is.numeric(modelMd$dataSets[[dataSet]]$processing$percentOcclusion)) {stop("The percentOcclusion for dataSet ", dataSet, " is not a numeric string.")}
+          if(!is.list(modelMd$dataSets[[dataSet]]$processing$processFunctionOptions)) {stop("The processFunctionOptions for dataSet ", dataSet, " is not a list.")}
         }
       }
       # test the defaultAnalysis section

@@ -15,13 +15,13 @@ The general paradigm for data collection follows the following pipeline:
 
 1. **Collect motion capture and video data** The motion capture data is collected using *Obsis*, currently there are two video streams, the modified clapperboard needs to be clapped at the beginning and end of each trial.
 
-1. **Process the mocap data and move data** The motion capture data needs to be processed within *Obsis*, and then that proceessed data (especially the *Filtered Markers.txt*, which is where `mocapGrip` extarcts the mocap data from) as well as the (clipped) videos are uploaded to the server in the folder structure that is described in the `makeElanFiles(...)` section below.
+1. **Process the mocap data and move data** The motion capture data needs to be processed within *Obsis*, and then that processed data (especially the *Filtered Markers.txt*, which is where `mocapGrip` extracts the mocap data from) as well as the (clipped) videos are uploaded to the server in the folder structure that is described in the `makeElanFiles(...)` section below.
 
 1. **Make blank elan files** The command `makeElanFiles(...)` us used to make blank elan files to be annotated.
 
 1. **Annotate** The elan files are time annotated to segment out different periods of each trial, and associate the condition number with each trial.
 
-1. **Extract the mocap data based on the annotations** After the elan files are annotated, the mocap data can be extracted based on those annotations. The command `extractMocapDataFromAnnotations(...)` first checks that the annotations conform to the standard, and then extracts the mocap data labelling it with each period/condition/trial type.
+1. **Extract the mocap data based on the annotations** After the elan files are annotated, the mocap data can be extracted based on those annotations. The command `extractMocapDataFromAnnotations(...)` first checks that the annotations conform to the standard, and then extracts the mocap data labeling it with each period/condition/trial type.
 
 After the processing pipeline is completed, the data can be read into R, analyzed/modeled, and a report can be made.
 
@@ -45,7 +45,7 @@ There are a number of functions (all of which are documented in the man folder f
 
 The script will then save files to the following two folders:
 
-* `mocapCSVs` for clipped motion capture csvs, one folder per subject (e.g. `./mocapCSVs/GRI_057/GRI_057-SESSION_001-TRIAL_002.csv`)
+* `mocapCSVs` for clipped motion capture CSVs, one folder per subject (e.g. `./mocapCSVs/GRI_057/GRI_057-SESSION_001-TRIAL_002.csv`)
 * `elanFilesOut` for elan files the script will then make one folder per subject  (e.g. `./elanFilesOut/GRI_057/GRI_057-SESSION_001-TRIAL_002.eaf` and `./elanFilesOut/GRI_057/GRI_057-SESSION_001-TRIAL_002_tsconf.xml`), and put the created elan files as well as the time series configuration files (`\*.eaf` and `\*_tsconf.xml`)
 
 An example of this command is: `makeElanFiles(files=c("./Clipped Video/059/GRI_059-SESSION_001-TRIAL_001.mov", "./Clipped Video/059/GRI_059-SESSION_001-TRIAL_002.mov"))` You can also use wildcards with this command: `makeElanFiles(files="./Clipped Video/0??/GRI_0??-SESSION_0??-TRIAL_0??.mov")` which will match any files that have any character in each of the positions with a `?`.
@@ -72,7 +72,7 @@ An example of this command is `readExtractedMocapData(path="./extractData", data
 
 ### Analysis/modeling and report writing
 
-In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()` after that, you can use the `makeReport()` function to write the report for all of the analyses for all of the dataSets (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. The `makeReport()` function returns the data obejct with models included if it is needed for other uses. If you want the fullData to be included in the data object you can use the option `includeFullData = TRUE` with the function `readExtractedMocapData()`. A full example is below: 
+In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()` after that, you can use the `makeReport()` function to write the report for all of the analyses for all of the dataSets (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. The `makeReport()` function returns the data object with models included if it is needed for other uses. If you want the fullData to be included in the data object you can use the option `includeFullData = TRUE` with the function `readExtractedMocapData()`. A full example is below: 
 
 ```{r, fig.show='hold', eval=FALSE}
 dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"))
@@ -110,15 +110,11 @@ addAnalysesToRun(dataNew)
 
 ```
 
-```{r, eval=FALSE, echo=FALSE}
-# run the report on new gesture data.
-dataNewGest <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation", "gestMaxGrip", "gestMove"), includeFullData = FALSE)
+## Data included with the package.
 
-dataNewGestModeled <- makeReport(dataNewGest, title="Gesture data report", reportPath="./reportGesture.Rmd")
+A small amount of data is included with the package in order to show what a data object looks like and how to easily process this data into a report. This data comes from a pure replication of previous work. This data can be found in the `pureReplication` data object. It induces an `action` dataSet and an `estimation` dataSet from 11 subjects. A report can be run directly with the following commands. 
 
-
+```{r, eval=FALSE, echo=TRUE}
 # replication
 pureReplicationModeled <- makeReport(pureReplication, title="Pure replication report", reportPath="./reportReplication.Rmd")
-
-
 ```

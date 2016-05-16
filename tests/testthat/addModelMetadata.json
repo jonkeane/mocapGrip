@@ -27,7 +27,9 @@
 			"processing" : {
 				"filterString" : "type == 'ACTION' & period == 'GRIP'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		}
