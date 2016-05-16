@@ -120,11 +120,21 @@ checkmodelMetadata <- function(modelMd){
     })
   }
 
+  # check the dataPreProcessing section.
+  if( !"dataPreProcessing" %in% names(modelMd) ) { stop("The model metadata does not have a section of dataPreProcessing") }
+  if(length(modelMd$dataPreProcessing) < 1) {
+    warning("The dataPreProcessing does not have any content. This is ok if the variables used in the models section already have explanations in the standard modelMetadata.")
+  } else {
+    # check each of the variable explanations
+    lapply(modelMd$dataPreProcessing, function(varExp){
+      if(!is.character(modelMd$dataPreProcessing)) {stop("The dataPreProcessing is not a character.")}
+    })
+  }
 
 
 
   # check that there are no other names
-  if( any(! names(modelMd) %in% c("variableExplanations", "models", "dataSets", "dataPreProcessing")) ) { stop("The model metadata has more sections than just variableExplanations, models, dataSets. It has: ", names(modelMd)) }
+  if( any(! names(modelMd) %in% c("variableExplanations", "models", "dataSets", "dataPreProcessing", "dataSetPostProcessing")) ) { stop("The model metadata has more sections than just variableExplanations, models, dataSets. It has: ", names(modelMd)) }
 
   return(modelMd)
 }

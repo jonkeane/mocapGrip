@@ -85,7 +85,7 @@ findTheBestModel <- function(models, last = FALSE){
 }
 
 
-#' Pick one model as the bist
+#' Model all data in a data object
 #'
 #' takes data, and returns an object that includes the originional data as well as fit models.
 #'
