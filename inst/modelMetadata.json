@@ -82,7 +82,9 @@
 			"processing" : {
 				"filterString" : "type == 'ACTION' & period == 'GRIP'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		},
@@ -94,7 +96,9 @@
 			"processing" : {
 				"filterString" : "type == 'ACTION' & period == 'RELEASE'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		},
@@ -106,7 +110,9 @@
 			"processing" : {
 				"filterString" : "type == 'ESTIMATION' & period == 'STEADY'",
 				"processFunction" : "meanMedianFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "meanGrip.stickAsContinuous"
 		},
@@ -118,7 +124,9 @@
 			"processing" : {
 				"filterString" : "type == 'ESTIMATION' & period == 'GRIP'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		},
@@ -130,7 +138,9 @@
 			"processing" : {
 				"filterString" : "type == 'GESTURE' & period == 'GRIP'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsCategorical"
 		},
@@ -142,7 +152,9 @@
 			"processing" : {
 				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT'",
 				"processFunction" : "meanMedianFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "meanGrip.stickAsCategorical"
 		}

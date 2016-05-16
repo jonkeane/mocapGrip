@@ -49,7 +49,9 @@ The model metadata is read into `mocapGrip` from a specially formatted [json fil
 			"processing" : {
 				"filterString" : "type == 'ACTION' & period == 'GRIP'",
 				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
 			},
 			"defaultAnalysis" : "maxGrip.stickAsContinuous"
 		}
@@ -135,12 +137,14 @@ This section specifies the dataSet to be read and processed from the extracted a
 			"title" : "Maximum grip aperture (on reach to grasp)",
 			"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
 		},
-			"processing" : {
-				"filterString" : "type == 'ACTION' & period == 'GRIP'",
-				"processFunction" : "maxGripFinder",
-				"percentOcclusion" : 0.05
-			},
-			"defaultAnalysis" : "maxGrip.stickAsContinuous"
+		"processing" : {
+			"filterString" : "type == 'ACTION' & period == 'GRIP'",
+			"processFunction" : "maxGripFinder",
+			"processFunctionOptions": {
+				"percOcclusion" : 0.05
+			}
+		},
+		"defaultAnalysis" : "maxGrip.stickAsContinuous"
 	}
 }
 ```
@@ -167,13 +171,16 @@ This section defines how to extract the dataSet from the full data.
   * `meanMedianGripFinder` extracts the mean and median of grip for the whole dataSet.
   * `percentageMeanMedianGripFinder` TBA
   * `openTargetGripFinder` TBA
-* `percentOcclusion` the percentage of occlusion that is acceptable (this is the upper bound, in percent.)  For example the value here is `0.05` means that only trials where there is less than 5% of occlusion are processed.
+* `processFunctionOptions` Options to be passed to the processing function. This should always include percentOcclusion, but may include others.   
+  * `percentOcclusion` the percentage of occlusion that is acceptable (this is the upper bound, in percent.)  For example the value here is `0.05` means that only trials where there is less than 5% of occlusion are processed.
 
 ```
 "processing" : {
 	"processing" : "type == 'ACTION' & period == 'GRIP'",
 	"processFunction" : "maxGripFinder",
-	"percentOcclusion" : 0.05
+	"processFunctionOptions": {
+		"percOcclusion" : 0.05
+	}
 },
 ```
 

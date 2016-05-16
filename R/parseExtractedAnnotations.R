@@ -247,8 +247,21 @@ processDataSet <- function(dataSet, data, modelMd = modelMetadata) {
   filterString <-
     modelMd$dataSets[[dataSet]]$processing$filterString
   func <- modelMd$dataSets[[dataSet]]$processing$processFunction
-  percentOcclusion <-
-    modelMd$dataSets[[dataSet]]$processing$percentOcclusion
+
+  # grab the process objects, and make them into a string to pass to do.
+  processFunctionOptions <-
+    modelMd$dataSets[[dataSet]]$processing$processFunctionOptions
+  processFuncOptString <- paste0(sapply(names(processFunctionOptions),
+                                        function(argName) {
+                                          nm <- argName
+                                          op <- processFunctionOptions[[argName]]
+                                          if(is.numeric(op)){
+                                            paste0(nm, " = ", op)
+                                          } else {
+                                            paste0(nm, " = '", op, "'")
+                                          }
+                                          }, simplify = TRUE, USE.NAMES = FALSE), collapse = ", ")
+
 
   # Try and find a the given processing file
   # the error could be more specific
@@ -271,9 +284,9 @@ processDataSet <- function(dataSet, data, modelMd = modelMetadata) {
     data %>%
       dplyr::filter_(stats::as.formula(paste0("~", filterString))) %>%
       dplyr::group_by_(.dots = list("obsisSubj", "obsisTrial", "condition")) %>%
-      dplyr::do_(stats::as.formula(
-        paste0("~", func, "(., percOcclusion = ", percentOcclusion, ")")
-      ))
+      dplyr::do_(
+        stats::as.formula(paste0("~", func, "(., ", processFuncOptString,")"))
+      )
   },
   warning = function(w) {
     warns <<- append(warns, w$message)
