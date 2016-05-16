@@ -16,7 +16,7 @@ meanMedianSubsetFinder(data, percOcclusion = 0.05, start, stop,
 
 \item{stop}{when to stop the subset, either in percentage (default) or milliseconds}
 
-\item{timeType}{a character, either "percentage" if the times given should be used as percentages (this is thedefault); or "msecs" if the times given should be used as miliseconds}
+\item{timeType}{a character, either "percentage" if the times given should be used as percentages (this is the default); or "msecs" if the times given should be used as miliseconds}
 }
 \value{
 a dataframe with the data that has been processed, one line per observation
