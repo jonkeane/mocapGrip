@@ -53,6 +53,11 @@ test_that("readExtractedMocapData matches precomputed estimation data", {
   expect_silent(checkData(dataToBeTested, modelMd = modelMetadata))
 })
 
+test_that("readExtractedMocapData errors if the folder is wrong", {
+  expect_error(readExtractedMocapData(path = "./dataForParsingTests/noDataHere/", dataSets = c("estMaxGrip")))
+  expect_error(readExtractedMocapData(path = "./testParseExtractedAnnos.R", dataSets = c("estMaxGrip")))
+})
+
 context("addNewDataSets")
 dataIncludeFull <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action"), includeFullData = TRUE)
 dataIncludeFullwithEst <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action", "estimation"), includeFullData = TRUE)
