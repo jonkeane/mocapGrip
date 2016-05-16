@@ -182,10 +182,10 @@
 			},
 			"processing" : {
 				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT'",
-				"processFunction" : "meanMedianSubsetFinder",
+				"processFunction" : "ceilingFinder",
 				"processFunctionOptions": {
 					"bandWidth" : 2,
-					"timeType" : "mm",
+					"bandType" : "mm",
 					"percOcclusion" : 0.05
 				}
 			},

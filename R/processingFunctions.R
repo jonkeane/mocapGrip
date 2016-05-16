@@ -46,6 +46,7 @@ maxGripFinder <- function(data, percOcclusion = 0.05) {
         unique(data$period),
         " trial type: ",
         unique(data$type),
+        " This observation has not been extracted because the occlusion is over the threshold of ", percOcclusion, ".",
         sep = ""
       )
     )
@@ -115,6 +116,7 @@ meanMedianFinder <- function(data, percOcclusion = 0.05) {
         unique(data$period),
         " trial type: ",
         unique(data$type),
+        " This observation has not been extracted because the occlusion is over the threshold of ", percOcclusion, ".",
         sep = ""
       )
     )
@@ -188,6 +190,7 @@ meanMedianSubsetFinder <- function(data, percOcclusion = 0.05, start, stop, time
         unique(data$period),
         " trial type: ",
         unique(data$type),
+        " This observation has not been extracted because the occlusion is over the threshold of ", percOcclusion, ".",
         sep = ""
       )
     )
@@ -316,6 +319,7 @@ ceilingFinder <- function(data, percOcclusion = 0.05, bandWidth, bandType = "per
         unique(data$period),
         " trial type: ",
         unique(data$type),
+        " This observation has not been extracted because the occlusion is over the threshold of ", percOcclusion, ".",
         sep = ""
       )
     )
