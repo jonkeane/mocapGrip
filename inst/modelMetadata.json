@@ -1,6 +1,9 @@
 { "variableExplanations" : {
 		"stickcmCentered" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)",
-		"stick" : "the size of the stick in centimeters as a categorical variable (factor), with five as the reference level.",
+		"stick" : "the size of the stick in centimeters as a categorical variable (factor), with seven as the reference level.",
+		"stickFiveRef" : "the size of the stick in centimeters as a categorical variable (factor), with five as the reference level.",
+		"stickNineRef" : "the size of the stick in centimeters as a categorical variable (factor), with nine as the reference level.",
+		"stickElevenRef" : "the size of the stick in centimeters as a categorical variable (factor), with eleven as the reference level.",
 		"fins" : "the configuration of the fins (closed, none, open; where closed is the reference level)",
 		"stickcmCenteredXfins" : "the interaction between the size of the stick and configuration of fins",
 		"stickXfins" : "the interaction between the size of the stick (as a categorical variable) and configuration of fins",
@@ -194,5 +197,13 @@
 	},
 	"dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
 												"data$stickcmCentered <- data$stickcm - 8"],
-	"dataSetPostProcessing" : ["contrasts(dataSetData[['data']]$stick) <- contr.treatment(levels(dataSetData[['data']]$stick), base = 2) # make seven the reference level"]
+	"dataSetPostProcessing" : [
+		"contrasts(dataSetData[['data']]$stick) <- contr.treatment(levels(dataSetData[['data']]$stick), base = 2) # make seven the reference level",
+		"dataSetData[['data']]$stickFiveRef <- dataSetData[['data']]$stick",
+		"contrasts(dataSetData[['data']]$stickFiveRef) <- contr.treatment(levels(dataSetData[['data']]$stickFiveRef), base = 1)",
+		"dataSetData[['data']]$stickNineRef <- dataSetData[['data']]$stick",
+		"contrasts(dataSetData[['data']]$stickNineRef) <- contr.treatment(levels(dataSetData[['data']]$stickNineRef), base = 3)",
+		"dataSetData[['data']]$stickElevenRef <- dataSetData[['data']]$stick",
+		"contrasts(dataSetData[['data']]$stickElevenRef) <- contr.treatment(levels(dataSetData[['data']]$stickElevenRef), base = 4)"
+	]
 }

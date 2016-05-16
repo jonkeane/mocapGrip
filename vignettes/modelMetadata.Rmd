@@ -57,8 +57,16 @@ The model metadata is read into `mocapGrip` from a specially formatted [json fil
 		}
 	},
 	"dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
-												"contrasts(data$stick) <- contr.treatment(levels(data$stick), base = 2) # make seven the reference level",
-												"data$stickcmCentered <- data$stickcm - 8"]
+												"data$stickcmCentered <- data$stickcm - 8"],
+	"dataSetPostProcessing" : [
+		"contrasts(dataSetData[['data']]$stick) <- contr.treatment(levels(dataSetData[['data']]$stick), base = 2) # make seven the reference level",
+		"dataSetData[['data']]$stickFiveRef <- dataSetData[['data']]$stick",
+		"contrasts(dataSetData[['data']]$stickFiveRef) <- contr.treatment(levels(dataSetData[['data']]$stickFiveRef), base = 1)",
+		"dataSetData[['data']]$stickNineRef <- dataSetData[['data']]$stick",
+		"contrasts(dataSetData[['data']]$stickNineRef) <- contr.treatment(levels(dataSetData[['data']]$stickNineRef), base = 3)",
+		"dataSetData[['data']]$stickElevenRef <- dataSetData[['data']]$stick",
+		"contrasts(dataSetData[['data']]$stickElevenRef) <- contr.treatment(levels(dataSetData[['data']]$stickElevenRef), base = 4)"
+	]												
 }
 ```
 
@@ -210,12 +218,26 @@ options:
 ```
 
 ### `dataPreProcessing` section
-This section has a list of commands to run before processing any of the dataSets. This is where you can change reference level, or make transformations on **all** of the data. The data is a large dataframe called `data`.
+This section has a list of commands to run before processing any of the dataSets. This is where you can make transformations on **all** of the data. The data is a large dataframe called `data`.
 
 ```
 "dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
-											"contrasts(data$stick) <- contr.treatment(levels(data$stick), base = 2) # make seven the reference level",
 											"data$stickcmCentered <- data$stickcm - 8"]
+```
+
+
+### `dataSetPostProcessing` section
+This section has a list of commands to run after the processing of each of the dataSets. This is where you can change reference levels or create new variables that don't survive processing. The data frame here is called `dataSetData[['data']]`. The example here makes sure that the stick size that is the reference level of the categorical (factor) variable is seven (the second in the ordered list, hence using `base=2`). Additionally, new variables (`stickFiveRef`, `stickNineRef`, and `stickElevenRef`) are created for each level as the reference if needed in the future.
+```
+"dataSetPostProcessing" : [
+	"contrasts(dataSetData[['data']]$stick) <- contr.treatment(levels(dataSetData[['data']]$stick), base = 2) # make seven the reference level",
+	"dataSetData[['data']]$stickFiveRef <- dataSetData[['data']]$stick",
+	"contrasts(dataSetData[['data']]$stickFiveRef) <- contr.treatment(levels(dataSetData[['data']]$stickFiveRef), base = 1)",
+	"dataSetData[['data']]$stickNineRef <- dataSetData[['data']]$stick",
+	"contrasts(dataSetData[['data']]$stickNineRef) <- contr.treatment(levels(dataSetData[['data']]$stickNineRef), base = 3)",
+	"dataSetData[['data']]$stickElevenRef <- dataSetData[['data']]$stick",
+	"contrasts(dataSetData[['data']]$stickElevenRef) <- contr.treatment(levels(dataSetData[['data']]$stickElevenRef), base = 4)"
+]	
 ```
 
 ## extending the default modelMetadata
