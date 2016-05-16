@@ -147,7 +147,7 @@
 		"gestMove" :	{
 			"narrative" : {
 				"title" : "Mean grip aperture during gesture (movement)",
-				"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
+				"intro" : "The mean and median distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
 			},
 			"processing" : {
 				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT'",
@@ -160,8 +160,8 @@
 		},
 		"gestMoveFirstQuarter" :	{
 			"narrative" : {
-				"title" : "Mean grip aperture during gesture (movement)",
-				"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
+				"title" : "Mean grip aperture during gesture (only first 25% of movement)",
+				"intro" : "The mean and median distance between the markers on the thumb and index finger during the first 25% of the period when the hand was moving during gesture."
 			},
 			"processing" : {
 				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT'",
@@ -178,7 +178,7 @@
 		"gestMoveTop2mm" :	{
 			"narrative" : {
 				"title" : "Mean grip aperture during gesture (movement)",
-				"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
+				"intro" : "The mean and median distance between the markers on the thumb and index finger when that grip is within 2mm of the maximum grip."
 			},
 			"processing" : {
 				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT'",
