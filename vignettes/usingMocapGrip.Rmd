@@ -115,6 +115,9 @@ addAnalysesToRun(dataNew)
 A small amount of data is included with the package in order to show what a data object looks like and how to easily process this data into a report. This data comes from a pure replication of previous work. This data can be found in the `pureReplication` data object. It induces an `action` dataSet and an `estimation` dataSet from 11 subjects. A report can be run directly with the following commands. 
 
 ```{r, eval=FALSE, echo=TRUE}
+# for updating the pureReplication data
+pureReplicationNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", c("action", "estimation"))
+
 # replication
-pureReplicationModeled <- makeReport(pureReplication, title="Pure replication report", reportPath="./reportReplication.Rmd")
+pureReplicationModeled <- makeReport(pureReplicationNew, title="Pure replication report", reportPath="./reportReplication.Rmd")
 ```
