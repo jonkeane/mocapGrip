@@ -161,6 +161,20 @@
 			},
 			"defaultAnalysis" : "meanGrip.stickAsCategorical"
 		},
+		"gestMoveOnlyOpen" :	{
+			"narrative" : {
+				"title" : "Mean grip aperture during gesture (only *open* movement)",
+				"intro" : "The mean and median distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture."
+			},
+			"processing" : {
+				"filterString" : "type == 'GESTURE' & period == 'MOVEMENT' & gripType == 'OPEN'",
+				"processFunction" : "meanMedianFinder",
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
+			},
+			"defaultAnalysis" : "meanGrip.stickAsCategorical"
+		},
 		"gestMoveFirstQuarter" :	{
 			"narrative" : {
 				"title" : "Mean grip aperture during gesture (only first 25% of movement)",

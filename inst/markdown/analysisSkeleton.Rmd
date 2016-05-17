@@ -31,7 +31,7 @@ mocapGrip:::CoefficientPlot(list(params$data[["<>$dataSet<>"]]$analyses[["<>$ana
 These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
 
 ```{r}
-ggplot(mocapGrip:::pred(params$data[["<>$dataSet<>"]]$analyses[["<>$analysis<>"]]$bestModel[[1]]$modelObject)) + aes(x=<>$plotPredictor1<>, y=<>$plotOutcome<>, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="<>$outcomeVariable<>")
+ggplot(mocapGrip:::pred(params$data[["<>$dataSet<>"]]$analyses[["<>$analysis<>"]]$bestModel[[1]]$modelObject)) + aes(x=<>$plotPredictor1<>, y=<>$plotOutcome<>, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for grip", x="stick size (in cm)", y="<>$outcomeVariable<>")
 ```
 
 ### Full model output
@@ -57,6 +57,14 @@ There are estimates of the intercept and slope adjustments by subject. and 95% c
 
 ```{r, results="hide", message=FALSE}
 mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["<>$dataSet<>"]]$analyses[["<>$analysis<>"]]$bestModel[[1]]$modelObject, condVar = TRUE))
+```
+
+### Raw data
+
+These are the raw data that was used in the model.
+
+```{r}
+ggplot(params$data[["<>$dataSet<>"]]$data) + aes(x=<>$plotPredictor1<>, y=<>$plotOutcome<>, group=fins, color=fins) + geom_point(position = position_dodge(width=0.5), alpha = 0.5) + labs(title = "Raw data for  grip", x="stick size (in cm)", y="<>$outcomeVariable<>")
 ```
 
 ### Number of observations and occlusion
