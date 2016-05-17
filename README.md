@@ -1,6 +1,6 @@
 # Mocap-Grip project at the [Center for Gesture, Sign, and Language at the University of Chicago](https://gslcenter.uchicago.edu/)
 
-[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=devel)](https://travis-ci.org/jonkeane/mocapGrip)
+[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=master)](https://travis-ci.org/jonkeane/mocapGrip)
 
 This [R](https://www.r-project.org/) package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
 
@@ -21,7 +21,7 @@ For both, you must install devtools, just type `install.packages("devtools")` at
 ### 1. Install the most recent stable packaged release
 
 To install mocapGrip copy and paste the following command into R:   
-`devtools::install_url("https://github.com/jonkeane/mocapGrip/releases/download/v0.1.1/mocapGrip_0.1.tar.gz")`
+`devtools::install_url("https://github.com/jonkeane/mocapGrip/releases/download/v0.2.0/mocapGrip_0.2.tar.gz")`
 
 ### 2. Install the most recent source version
 
