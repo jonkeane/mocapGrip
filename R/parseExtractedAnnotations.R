@@ -160,6 +160,11 @@ processDataSet <- function(dataSet, data, modelMd = modelMetadata) {
   dataSetData[["analysesToRun"]] <-
     modelMd$dataSets[[dataSet]]$defaultAnalysis
 
+  # run the dataSetPostprocessing commands
+  for (line in modelMd$dataSetPostProcessing) {
+    eval(parse(text = line))
+  }
+
   return(dataSetData)
 }
 
@@ -177,53 +182,52 @@ processDataSet <- function(dataSet, data, modelMd = modelMetadata) {
 #' @return a data object. Wellformedness of this object can be checked with \code{\link{checkData}}
 #'
 #' @export
-readExtractedMocapData <-
-  function(path,
-           dataSets = c("action", "estimation"),
-           includeFullData = FALSE,
-           modelMd = modelMetadata) {
-    # to be added to main function for oparsing data
-    files <-
-      list.files(path,
-                 recursive = TRUE,
-                 pattern = NULL,
-                 full.names = TRUE)
+readExtractedMocapData <- function(path, dataSets = c("action", "estimation"), includeFullData = FALSE, modelMd = modelMetadata) {
+  # check if this folder exists
+  noFolderMsg <- paste0("The folder, ", path, " does not exist. Check the path for typos. If you are using a relative path, this could be due to the path here not being able to be found in R's working directory. Try changing R's working directory to be a folder that contains ", path, " or, use a full, absolute path rather than a relative one.", sep="")
+  if(!file.exists(path)){stop(noFolderMsg)} else if(!file.info(path)$isdir) {stop(noFolderMsg)}
+  # grab files that have the correct format, warn if there are none.
+  files <- list.files(path,
+                      recursive = TRUE,
+                      pattern = "GRI_...-SESSION_...-TRIAL_....csv",
+                      full.names = TRUE)
+  if(length(files)<1){stop("The folder, ", path, " does not have any csvs of the form GRI_...-SESSION_...-TRIAL_....csv. This means this folder (and its children) don't contain extracted annotation data.")}
 
-    data <-
-      plyr::ldply(
-        files,
-        process,
-        conditionCodesFile = system.file(
-          "GRIPMLstimuli.csv",
-          package = "mocapGrip",
-          mustWork = TRUE
-        ),
-        verbose = FALSE,
-        .progress = "text"
-      )
+  data <-
+    plyr::ldply(
+      files,
+      process,
+      conditionCodesFile = system.file(
+        "GRIPMLstimuli.csv",
+        package = "mocapGrip",
+        mustWork = TRUE
+      ),
+      verbose = FALSE,
+      .progress = "text"
+    )
 
-    # run the preprocessing commans
-    for (line in modelMd$dataPreProcessing) {
-      eval(parse(text = line))
-    }
-
-    # add check if there are no known types found.
-    dataSetData <-
-      sapply(
-        dataSets,
-        processDataSet,
-        data = data,
-        modelMd = modelMd,
-        USE.NAMES = TRUE,
-        simplify = FALSE
-      )
-
-    if (includeFullData == TRUE) {
-      dataSetData[["fullData"]] <- data
-    }
-
-    return(dataSetData)
+  # run the preprocessing commans
+  for (line in modelMd$dataPreProcessing) {
+    eval(parse(text = line))
   }
+
+  # add check if there are no known types found.
+  dataSetData <-
+    sapply(
+      dataSets,
+      processDataSet,
+      data = data,
+      modelMd = modelMd,
+      USE.NAMES = TRUE,
+      simplify = FALSE
+    )
+
+  if (includeFullData == TRUE) {
+    dataSetData[["fullData"]] <- data
+  }
+
+  return(dataSetData)
+}
 
 
 

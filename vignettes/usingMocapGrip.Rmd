@@ -77,7 +77,7 @@ In order to make reports about the data, first you need to load the data in with
 ```{r, fig.show='hold', eval=FALSE}
 dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"))
 
-dataModeled <- makeReport(dataNew, reportPath="./reportGestureTrials.Rmd")
+dataModeled <- makeReport(dataNew, reportPath="./reportGestureTrials")
 ```
 
 Alternatively, if you want to run the analyses/models separately from making the report you can do this using the `modelAllData()` command. This will return a data object the same as it is given, but with the fit models attached. This data with models object can then be passed to the `makeReport()` function which will write the report (without refitting the models, to save time). If you would prefer that all of the models are refit, you can use the option `refitModels = TRUE` with the `makeReport()` command.
@@ -87,7 +87,7 @@ dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/"
 
 dataModeled <- modelAllData(dataNew)
 
-dataModeled <- makeReport(dataModeled, reportPath="./reportGestureTrials.Rmd")
+dataModeled <- makeReport(dataModeled, reportPath="./reportGestureTrials")
 ```
 
 ## Advanced analysis/model manipulation
@@ -115,6 +115,9 @@ addAnalysesToRun(dataNew)
 A small amount of data is included with the package in order to show what a data object looks like and how to easily process this data into a report. This data comes from a pure replication of previous work. This data can be found in the `pureReplication` data object. It induces an `action` dataSet and an `estimation` dataSet from 11 subjects. A report can be run directly with the following commands. 
 
 ```{r, eval=FALSE, echo=TRUE}
+# for updating the pureReplication data
+pureReplicationNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", c("action", "estimation"))
+
 # replication
-pureReplicationModeled <- makeReport(pureReplication, title="Pure replication report", reportPath="./reportReplication.Rmd")
+pureReplicationModeled <- makeReport(pureReplicationNew, title="Pure replication report", reportPath="./reportReplication")
 ```

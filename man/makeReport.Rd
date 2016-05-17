@@ -4,13 +4,13 @@
 \alias{makeReport}
 \title{Make a full report from data}
 \usage{
-makeReport(data, reportPath = "./report.Rmd", title = "Grip Project Report",
+makeReport(data, reportPath = "./report", title = "Grip Project Report",
   refitModels = FALSE, modelMd = modelMetadata, ...)
 }
 \arguments{
 \item{data}{A list conforming to the structure of data for the project from \code{\link{extractMocapDataFromAnnotations}} (an example of this is the \code{\link{pureReplication}} object). If this data object includes fit models, they will not be refit by default.}
 
-\item{reportPath}{a string with the path and name of the report to be made (this should end in \code{.Rmd}), by default it is: \code{"./report.Rmd"}}
+\item{reportPath}{a string with the path and name of the report to be made, by default it is: \code{"./report"} The final report will have this name (and path), and the extension \code{.html} Any extensions on the \code{reportPath} (like \code{.Rmd} or \code{.html}) will be ignored.}
 
 \item{title}{a string for the title of the report, the default is "Grip Project Report"}
 
@@ -24,6 +24,6 @@ makeReport(data, reportPath = "./report.Rmd", title = "Grip Project Report",
 An object that is a code of \code{data}, but with the models appened to each analysis present. This is useful if you need to inspect the models or use this for further analysis or reporting.
 }
 \description{
-takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelMetadata.
+takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelMetadata. This will write two files: a polished html-based report (with the extension \code{.html}) and an intermediary R Markdown file that this html report is made from (with the extension \code{.Rmd}). For the most part, the R Markdown file can be ignored, the polished html report is the final product.
 }
 

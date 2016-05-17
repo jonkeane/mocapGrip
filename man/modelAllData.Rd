@@ -2,7 +2,7 @@
 % Please edit documentation in R/analyze.R
 \name{modelAllData}
 \alias{modelAllData}
-\title{Pick one model as the bist}
+\title{Model all data in a data object}
 \usage{
 modelAllData(data, refitModels = FALSE, modelMd = modelMetadata, ...)
 }

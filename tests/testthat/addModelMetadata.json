@@ -35,6 +35,7 @@
 		}
 	},
 	"dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
-												"contrasts(data$stick) <- contr.treatment(levels(data$stick), base = 2) # make seven the reference level",
-												"data$stickcmCentered <- data$stickcm - 8"]
+												"data$stickcmCentered <- data$stickcm - 8"],
+	"dataSetPostProcessing" : ["contrasts(dataSetData[['data']]$stick) <- contr.treatment(levels(dataSetData[['data']]$stick), base = 2) # make seven the reference level"]
+
 }
