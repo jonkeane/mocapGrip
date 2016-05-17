@@ -1,9 +1,9 @@
 #' Make a full report from data
 #'
-#' takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelMetadata.
+#' takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelMetadata. This will write two files: a polished html-based report (with the extension \code{.html}) and an intermediary R Markdown file that this html report is made from (with the extension \code{.Rmd}). For the most part, the R Markdown file can be ignored, the polished html report is the final product.
 #'
 #' @param data A list conforming to the structure of data for the project from \code{\link{extractMocapDataFromAnnotations}} (an example of this is the \code{\link{pureReplication}} object). If this data object includes fit models, they will not be refit by default.
-#' @param reportPath a string with the path and name of the report to be made (this should end in \code{.Rmd}), by default it is: \code{"./report.Rmd"}
+#' @param reportPath a string with the path and name of the report to be made, by default it is: \code{"./report"} The final report will have this name (and path), and the extension \code{.html} Any extensions on the \code{reportPath} (like \code{.Rmd} or \code{.html}) will be ignored.
 #' @param refitModels logical, if there are models that are already fit, should they be refit? Default: \code{FALSE}
 #' @param title a string for the title of the report, the default is "Grip Project Report"
 #' @param modelMd a modelMetadata object. If you have loaded a different modelMetadata object that you would like to use, place it here. The default is `modelMetadata` which comes with the package.
@@ -14,7 +14,10 @@
 #' @export
 # add kinds of models?
 # add in different analysis skeletons?
-makeReport <- function(data, reportPath="./report.Rmd", title = "Grip Project Report", refitModels = FALSE, modelMd = modelMetadata, ...){
+makeReport <- function(data, reportPath="./report", title = "Grip Project Report", refitModels = FALSE, modelMd = modelMetadata, ...){
+
+  # change reportPath to add .Rmd if it's not there already.
+  reportPath <- paste0(tools::file_path_sans_ext(reportPath), ".", "Rmd")
 
   # fit models from analyze
   # pick the best model (add warnings here?)
