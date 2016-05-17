@@ -26,6 +26,10 @@ test_that("checkDataer errors when there is an errant dataSet",{
   fakeReplication <- pureReplication
   fakeReplication$foo <- list()
   expect_error(checkData(fakeReplication, modelMd = modelMetadata))
+  dataList <- list()
+  expect_error(checkData(dataList, modelMd = modelMetadata))
+  dataList <- character()
+  expect_error(checkData(dataList, modelMd = modelMetadata))
 })
 
 test_that("checkDataer errors when there is an errant name in an existing dataSet",{
@@ -66,4 +70,11 @@ test_that("checkDataer errors when there is an errant type in an existing dataSe
 test_that("checkDataer silently returns the data object it was presented",{
   expect_silent(checkData(pureReplication, modelMd = modelMetadata))
   expect_equal(checkData(pureReplication, modelMd = modelMetadata), pureReplication)
+})
+
+
+context("additional functions")
+test_that("possibleModels works", {
+  expect_equal(possibleModels(pureReplication$action), c("maxGrip.stickAsContinuous",  "maxGrip.stickAsCategorical"))
+  expect_equal(possibleModels(pureReplication$estimation), c("meanGrip.stickAsContinuous", "medianGrip.stickAsContinuous", "meanGrip.stickAsCategorical", "medianGrip.stickAsCategorical"))
 })
