@@ -25,6 +25,9 @@ after_success:
 - Rscript -e 'covr::codecov(function_exclusions=c("promptForModelInput", "addAnalysesToRun\\.*", "removeAnalysesToRun\\.*"))'
 - Rscript -e 'covr::package_coverage(function_exclusions=c("promptForModelInput", "addAnalysesToRun\\.*", "removeAnalysesToRun\\.*"))'
 
+before_deploy:
+ - cp mocapGrip*.tar.gz mocapGrip.tar.gz 
+
 deploy:
   provider: releases
   api_key:
