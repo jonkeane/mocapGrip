@@ -1,8 +1,5 @@
 { "variableExplanations" : {
-		"maxGrip" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)",
-		"stickcmScaled" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)",
-		"fins" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)",
-		"obsisSubj" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)"
+		"stickcmScaled" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)"
 	},
 	"models" : {
 		"analysisSkeleton" : "analysisSkeleton.Rmd",

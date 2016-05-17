@@ -7,6 +7,11 @@
 #' @export
 modelMetadata <- jsonlite::fromJSON(system.file("modelMetadata.json", package = "mocapGrip", mustWork = TRUE))
 
+#' Check that modelMetadata conforms to the standard
+#'
+#' @param modelMd a modelMetadata object
+#'
+#' @return the modelMetadata object that was checked (if it passes)
 checkmodelMetadata <- function(modelMd){
   # check if modelMd is a list.
   if( !is.list(modelMd) ) { stop("The model metadata is not a list.") }
@@ -134,6 +139,9 @@ checkmodelMetadata <- function(modelMd){
   # check that there are no other names
   if( any(! names(modelMd) %in% c("variableExplanations", "models", "dataSets", "dataPreProcessing", "dataSetPostProcessing")) ) { stop("The model metadata has more sections than just variableExplanations, models, dataSets. It has: ", names(modelMd)) }
 
+
+  modelMd <- checkVariablesToUse(modelMd)
+
   return(modelMd)
 }
 
@@ -181,4 +189,21 @@ writeModelMetadata <- function(modelMd, path, overwrite = FALSE){
 }
 
 
-# checker that modelMetadata is complete?
+#' Check that modelMetadata has all the variables and explanations that are needed
+#'
+#' @param modelMd a modelMetadata object
+#'
+#' @return the modelMetadata object that was checked (if it passes)
+checkVariablesToUse <- function(modelMd){
+  varExp <- names(modelMd$variableExplanations)
+  sapply(names(modelMd$models$analyses), function(analysis){
+    sapply(modelMd$models$analyses[[analysis]]$variablesToUse, function(var){
+      if(! var %in% varExp) {
+        stop("The variable ", var, " in the analysis ", analysis, "does not also have a variable explanation. Please add it to the modelMetadata (or modelMetadata.json file)")
+      }
+    })
+  }, simplify = TRUE, USE.NAMES = TRUE)
+
+
+  return(modelMd)
+}

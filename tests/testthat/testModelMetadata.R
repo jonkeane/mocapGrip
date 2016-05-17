@@ -245,4 +245,8 @@ test_that("writeModelMetadata works out.", {
   unlink(c("./modelMetadataOut.jsn", "./modelMetadataOut.json")) # clean up
 })
 
-
+context("modelMetadata variable checking")
+test_that("readModelMetadata works out.", {
+  expect_error(checkVariablesToUse(readModelMetadata("./addModelMetadataMissingVarExp.json")))
+  expect_silent(checkVariablesToUse(modelMetadata))
+})
