@@ -1,0 +1,41 @@
+{ "variableExplanations" : {
+		"stickcmScaled" : "the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)"
+	},
+	"models" : {
+		"analysisSkeleton" : "analysisSkeleton.Rmd",
+		"analyses" : {
+			"maxGrip.stickAsContinuous" : {
+				"variablesToUse" : {
+					"outcome" : "maxGrip",
+					"predictor1" : "stickcmScaled",
+					"predictor2" : "fins",
+					"grouping1" : "obsisSubj"
+				},
+				"plottingDetails" : {}
+			}
+		},
+		"modelStructures" : {
+			"interactionInPredAndGroup" : "paste0(outcome, '~', predictor1, '*', predictor2, '+', '(', '1+', predictor1, '*', predictor2, '|', grouping1, ')')"
+		}
+	},
+	"dataSets" : {
+		"action" :	{
+			"narrative" : {
+				"title" : "Maximum grip aperture (on reach to grasp)",
+				"intro" : "The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system)."
+			},
+			"processing" : {
+				"filterString" : "type == 'ACTION' & period == 'GRIP'",
+				"processFunction" : "maxGripFinder",
+				"processFunctionOptions": {
+					"percOcclusion" : 0.05
+				}
+			},
+			"defaultAnalysis" : "maxGrip.stickAsContinuous"
+		}
+	},
+	"dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
+												"data$stickcmCentered <- data$stickcm - 8"],
+	"dataSetPostProcessing" : ["contrasts(dataSetData[['data']]$stick) <- contr.treatment(levels(dataSetData[['data']]$stick), base = 2) # make seven the reference level"]
+
+}

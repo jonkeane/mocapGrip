@@ -230,7 +230,19 @@ context("the supplied modelMetadatas comply with checks")
 test_that("modelMetadata Checkes out.", {
   expect_silent(checkmodelMetadata(modelMetadata))
 })
-test_that("modelMetadata Checkes out.", {
-  expect_silent(checkmodelMetadata(jsonlite::fromJSON("./addModelMetadata.json")))
+
+context("reading/writing of modelMetadata")
+test_that("readModelMetadata works out.", {
+  expect_warning(readModelMetadata("./addModelMetadata.jsn"))
+  expect_silent(readModelMetadata("./addModelMetadata.json"))
 })
+
+test_that("writeModelMetadata works out.", {
+  expect_warning(writeModelMetadata(modelMetadata, "./modelMetadataOut.jsn"))
+  expect_silent(writeModelMetadata(modelMetadata, "./modelMetadataOut.json"))
+  expect_error(writeModelMetadata(modelMetadata, "./modelMetadataOut.json")) # check warning if asking to overwrite
+  expect_silent(writeModelMetadata(modelMetadata, "./modelMetadataOut.json", overwrite = TRUE)) # check that overwrite = TRUE works
+  unlink(c("./modelMetadataOut.jsn", "./modelMetadataOut.json")) # clean up
+})
+
 

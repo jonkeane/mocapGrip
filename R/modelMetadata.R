@@ -131,11 +131,54 @@ checkmodelMetadata <- function(modelMd){
     })
   }
 
-
-
   # check that there are no other names
   if( any(! names(modelMd) %in% c("variableExplanations", "models", "dataSets", "dataPreProcessing", "dataSetPostProcessing")) ) { stop("The model metadata has more sections than just variableExplanations, models, dataSets. It has: ", names(modelMd)) }
 
   return(modelMd)
 }
 
+#' reads model metadata from a specially formated json file
+#'
+#' This is useful if you want to use different types of models/analyses or dataSets. Pass the modelMetadata object that is returned form this object to functions that take it as an argument (e.g. \code{\link{readExtractedMocapData}}, \code{\link{makeReport}}) to override the package defaults.
+#' Additionally, it preforms checks to make sure that the modelMetadata conforms to expected structure.
+#'
+#' @param file a path to a json file that includes modelMetadata
+#'
+#' @return a modelMetadata object
+#'
+#' @export
+readModelMetadata <- function(file){
+  if(tools::file_ext(file) != "json") {warning("The file specified (", file, ") does not end in .json. This is likely a typo, however this will not stop the reading of the file.")}
+
+  modelMetadataNew <- jsonlite::fromJSON(file)
+  checkmodelMetadata(modelMetadataNew)
+}
+
+#' writes model metadata from a specially formated json file
+#'
+#' Writes the modelMetadata object to a json file. This is useful if you want to change the modelMetadata, but don't know what the structure should look like. As an additional precaution, the modelMetadata that is given is checked to make sure that it is valid before it is written.
+#'
+#' @param modelMd a modelMetadata object
+#' @param path a path to write a json file out
+#' @param overwrite if the path exists, should it be overwritten?
+#'
+#' @return nothing
+#'
+#' @export
+writeModelMetadata <- function(modelMd, path, overwrite = FALSE){
+  if(tools::file_ext(path) != "json") {warning("The path specified (", path, ") does not end in .json. This is likely a typo, however this will not stop the writting of the file.")}
+  if(!overwrite & file.exists(path) ) {stop("The path specified (", path, ") already exits. If you want to overwrite, please pass the argument overwrite = TRUE")}
+  modelMdToWrite <- NULL
+  modelMdToWrite <- checkmodelMetadata(modelMd)
+  if(!is.null(modelMdToWrite)){
+    jsonOut <- jsonlite::prettify(jsonlite::toJSON(modelMdToWrite))
+    fileConn<-file(path)
+    writeLines(jsonOut, fileConn)
+    close(fileConn)
+  } else {
+    stop("The modelMetadata ",  deparse(substitute(modelMd)), " was not well formed, so no modelMetadata was written.")
+  }
+}
+
+
+# checker that modelMetadata is complete?
