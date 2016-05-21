@@ -55,8 +55,11 @@ The package vignettes give step by step walkthroughs of how to use mocapGrip:
  `vignette("modelMetadata")`
 
 
+## Best practices for scientific computing
 
-## Testing
+As many best practices as possible were adopted in the development of this package, including unit testing, continuous integration, version control, semantic versioning, DRY principles, etc. See [Best Practices for Scientific Computing](http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1001745) for an introduction and discussion to many of these practices.
+
+### Testing
 This project uses unit testing and the package [testthat](https://github.com/hadley/testthat) to run those unit tests (found in the `tests/testthat/` directory). These tests (as well as general R package well-formedness) are also run externally on [Travis CI](https://travis-ci.org).
 
 This project includes a decent amount of code from other projects that were not test-driven. Therefore not all functions are well tested.
