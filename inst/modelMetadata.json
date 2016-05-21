@@ -219,7 +219,7 @@
 		"contrasts(dataSetData[['data']]$stickNineRef) <- contr.treatment(levels(dataSetData[['data']]$stickNineRef), base = 3)",
 		"dataSetData[['data']]$stickElevenRef <- dataSetData[['data']]$stick",
 		"contrasts(dataSetData[['data']]$stickElevenRef) <- contr.treatment(levels(dataSetData[['data']]$stickElevenRef), base = 4)",
-		"contrasts(dataSetData[['data']]$finsSumCoded) <- contr.sum(levels(dataSetData[['data']]$fins))",
+		"dataSetData[['data']]$finsSumCoded <- dataSetData[['data']]$fins",
 		"contrasts(dataSetData[['data']]$finsSumCoded) <- contr.sum(levels(dataSetData[['data']]$finsSumCoded))"
 
 	]
