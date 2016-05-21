@@ -3,7 +3,7 @@ Type: Package
 Title: Illusion-Grip Motion Capture Package
 Version: 0.2
 Date: 2016-04-22
-Authors@R: person("Jonathan", “Keane", email = "jonkeane@uchicago.edu", role = c("aut", "cre"))
+Authors@R: person("Jonathan", "Keane", email = "jonkeane@uchicago.edu", role = c("aut", "cre"))
 Description: This package contains all of the code to synchronize, clip,
     extract, and analyze data from a project that uses motion capture to understand
     visual illusion, reach to grasp action, size estimation, and gesture.
