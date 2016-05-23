@@ -22,11 +22,11 @@ before_install:
 r_github_packages:
 - jimhester/covr
 after_success:
-- Rscript -e 'covr::codecov(function_exclusions=c("promptForModelInput", "addAnalysesToRun\\.*", "removeAnalysesToRun\\.*"))'
-- Rscript -e 'covr::package_coverage(function_exclusions=c("promptForModelInput", "addAnalysesToRun\\.*", "removeAnalysesToRun\\.*"))'
+- echo 'covr::codecov(function_exclusions=c("promptForModelInput", "addAnalysesToRun\\.*", "removeAnalysesToRun\\.*"))' | R --vanilla
+- echo 'covr::package_coverage(function_exclusions=c("promptForModelInput", "addAnalysesToRun\\.*", "removeAnalysesToRun\\.*"))' | R --vanilla
 
 before_deploy:
- - cp mocapGrip*.tar.gz mocapGrip.tar.gz 
+ - cp mocapGrip*.tar.gz mocapGrip.tar.gz
 
 deploy:
   provider: releases

@@ -23,6 +23,7 @@ test_that("readExtractedMocapData matches precomputed action data", {
   # expect_equal(dataToBeTested$action$data$stickcm, actionData$stickcm)
   # expect_equal(dataToBeTested$action$data$stickcmScaled, actionData$stickcmScaled)
   # expect_equal(dataToBeTested$action$data$orientation, actionData$orientation)
+  colsToTest <- names(dataToBeTested$action$data)
   colsToTest <- names(actionData)
   colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
   lapply(colsToTest, function(co) expect_equal(dataToBeTested$action$data[co], actionData[co]))
