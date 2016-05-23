@@ -26,6 +26,12 @@ test_that("meanMedianSubsetFinder errors or warns when start or stop is too larg
   expect_error(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=2, stop=1))
   expect_error(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=-1, stop=1))
   expect_error(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=1, stop=-1))
+  expect_warning(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=100, stop=101, timeType = "msecs"))
+  expect_error(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=-1, stop=-1, timeType = "msecs"))
+  expect_error(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=-1, stop=1, timeType = "percent"))
+  expect_error(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=2, stop=1, timeType = "percent"))
+  expect_error(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=0, stop=-1, timeType = "percent"))
+  expect_error(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=0, stop=2, timeType = "percent"))
   expect_error(mocapGrip:::meanMedianSubsetFinder(subset(fullData, period == "GRIP"), start=0, stop=1, timeType = "foo"))
 })
 test_that("meanMedianSubsetFinder runs silently", {
