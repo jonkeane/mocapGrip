@@ -198,6 +198,8 @@ checkData <- function(data, modelMd) {
   dataSetNames <- names(data)
   if(!all(dataSetNames %in% c(names(modelMd$dataSets), "fullData"))) { stop(errormsg, dataSet, "names of the dataSets") }
 
+  dataSetNames <- dataSetNames[dataSetNames!="fullData"]
+
   for(dataSet in dataSetNames) {
     # check that the names within each dataSet are correct
     dataSetSubNames <- names(data[[dataSet]])
