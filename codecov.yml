@@ -1,3 +1,2 @@
-codecov:
-  token: 87c11f70-4461-4671-8c76-f533d67d9d3f
-  branch: devel
+coverage:
+  range: "0...100"
