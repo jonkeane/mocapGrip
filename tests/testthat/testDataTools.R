@@ -72,6 +72,12 @@ test_that("checkDataer silently returns the data object it was presented",{
   expect_equal(checkData(pureReplication, modelMd = modelMetadata), pureReplication)
 })
 
+test_that("checkData accepts data objects with fullData included", {
+  dataToTestFull <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action"), includeFullData = TRUE)
+  dataToTest <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action"))
+  expect_silent(checkData(dataToTestFull, modelMd = modelMetadata))
+  expect_silent(checkData(dataToTest, modelMd = modelMetadata))
+})
 
 context("additional functions")
 test_that("possibleModels works", {
