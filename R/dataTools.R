@@ -8,14 +8,15 @@
 #' @export
 writeCSVsFromData <- function(data, namePrefix = "", path="./", overwrite = FALSE) {
   dataNames <- names(data)
+  dataNames <- dataNames[dataNames != "fullData"]
   filenamesout <- paste0(path, namePrefix, dataNames, ".csv")
 
   # test if file exists
   if(!overwrite & any(file.exists(filenamesout))) {
     stop("At least one of the files (", filenamesout, ") already exist. Use overwrite = TRUE to overwrite them.")
   }
-
-  result <- mapply(function(dataSet, filenameout) {readr::write_csv(dataSet$data, filenameout)}, data, filenamesout)
+  dataSansFullData <- data[names(data) != "fullData"]
+  result <- mapply(function(dataSet, filenameout) {readr::write_csv(dataSet$data, filenameout)}, dataSansFullData, filenamesout)
 
   sapply(names(result), function(dataSet){
     message("Successfully wrote the ", dataSet, " data to ", result[[dataSet]])
