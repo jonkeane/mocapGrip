@@ -38,4 +38,4 @@ deploy:
     tags: true
     repo: jonkeane/mocapGrip
     branch: master
-    condition: "$TRAVIS_R_VERSION == release && ($TRAVIS_OS_NAME == linux)"
+    condition: "$TRAVIS_R_VERSION != devel && ($TRAVIS_R_VERSION != oldrel) && ($TRAVIS_OS_NAME == linux)"
