@@ -6,7 +6,7 @@ load(file.path('./dataForParsingTests/GRI057-001-002release.RData')) # releaseDa
 load(file.path('./dataForParsingTests/GRI057-001-013estimation.RData')) # estimationData
 load(file.path('./dataForParsingTests/GRI057-001-013estimationMaxGrip.RData')) # estimationMaxGripData
 
-
+# these tests check that the readExtractedMocapData outputs data in the correct form by checking to see if they match data that has already been extracted. These will be sensitive to changes in modelMetadata structure (particularly pre- and postdataset- processing)
 test_that("readExtractedMocapData matches precomputed action data", {
   expect_output(dataToBeTested <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action")))
   # expect_equal(dataToBeTested$action$data$duration, actionData$duration)
@@ -23,6 +23,7 @@ test_that("readExtractedMocapData matches precomputed action data", {
   # expect_equal(dataToBeTested$action$data$stickcm, actionData$stickcm)
   # expect_equal(dataToBeTested$action$data$stickcmScaled, actionData$stickcmScaled)
   # expect_equal(dataToBeTested$action$data$orientation, actionData$orientation)
+  colsToTest <- names(dataToBeTested$action$data)
   colsToTest <- names(actionData)
   colsToTest <- colsToTest[!{colsToTest %in% c("file")}]
   lapply(colsToTest, function(co) expect_equal(dataToBeTested$action$data[co], actionData[co]))

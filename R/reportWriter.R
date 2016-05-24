@@ -9,7 +9,7 @@
 #' @param modelMd a modelMetadata object. If you have loaded a different modelMetadata object that you would like to use, place it here. The default is `modelMetadata` which comes with the package.
 #' @param ... options to pass to \code{\link{modelAllData}}, (e.g. \code{last=TRUE} if the last model that converged should be selected rather than the default (\code{last=FALSE}) first).
 #'
-#' @return An object that is a code of \code{data}, but with the models appened to each analysis present. This is useful if you need to inspect the models or use this for further analysis or reporting.
+#' @return Returns a data object (with all of the same data as the data object given in the \code{data} argument) with all of the models that were fit included.
 #'
 #' @export
 # add kinds of models?

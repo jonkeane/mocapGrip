@@ -11,7 +11,7 @@ vignette: >
 
 This package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm. 
 
-The general paradigm for data collection follows the following pipeline:
+The general paradigm for data collection follows the following pipeline. The first group of tasks is generally run on the RCC server (midway.rcc.uchicago.edu, where the data is housed), although these commands can be run from anywhere as long as all of the data the commands need to read is on the computer the commands are run on.
 
 1. **Collect motion capture and video data** The motion capture data is collected using *Obsis*, currently there are two video streams, the modified clapperboard needs to be clapped at the beginning and end of each trial.
 
@@ -23,7 +23,7 @@ The general paradigm for data collection follows the following pipeline:
 
 1. **Extract the mocap data based on the annotations** After the elan files are annotated, the mocap data can be extracted based on those annotations. The command `extractMocapDataFromAnnotations(...)` first checks that the annotations conform to the standard, and then extracts the mocap data labeling it with each period/condition/trial type.
 
-After the processing pipeline is completed, the data can be read into R, analyzed/modeled, and a report can be made.
+After the processing pipeline is completed, the data can be read into R, analyzed/modeled, and a report can be made.  The second group of tasks is generally run on a user's local machine. Although again these commands can be run from anywhere (including on the RCC server) as long as all of the data the commands need to read is on the computer the commands are run on. The `makeReport()` command requires pandoc to be installed (which comes with RStudio, so no extra work is needed if you run the commands within RStudio), on the RCC server, to load pandoc type the command `module load pandoc` at the same time that you load the R module (but before you run the command to get to an R prompt).
 
 1. **Read in the extracted mocap data and extract data sets** The function `readExtractedMocapData(...)` reads in extracted mocap data, and extracts dataSets (e.g. the maximum grip from the grip portion of *action* trials). 
 
@@ -31,16 +31,16 @@ After the processing pipeline is completed, the data can be read into R, analyze
 
 1. **Make a report** the command `makeReport()` makes a report based on the data (or modeled data) that it is given.
 
-## Data processing pipline
+There are a number of functions (all of which are documented for use with R's help system or can be found in the `./man/` folder of the package), but a basic workflow would look something like this:
 
-There are a number of functions (all of which are documented in the man folder for use with R's help system), but a basic workflow would look something like this:
+## Data processing pipeline (server, usually)
 
 ### `makeElanFiles(...)`
 
  `makeElanFiles(...)`makes blank elan files and links the videos, audio, and motion capture data that is necessary to then annotate the videos. This command relies on the video, audio, and motion capture files being put into the folder structure that has already been established:
 
-* `AUDIO` for audio files, one folder per subject (e.g. `./AUDIO/057GRI_057-SESSION_001-TRIAL_002.wav`)
-* `Clipped Videos` for video files, one folder per subject (e.g. `./Clipped Video/057GRI_057-SESSION_001-TRIAL_002.mov`)
+* `AUDIO` for audio files, one folder per subject (e.g. `./AUDIO/057/GRI_057-SESSION_001-TRIAL_002.wav`)
+* `Clipped Videos` for video files, one folder per subject (e.g. `./Clipped Video/057/GRI_057-SESSION_001-TRIAL_002.mov`)
 * `mocapData` for the motion capture data files, one subfolder called `GRIP`, and then one folder per subject (e.g. `./mocapData/GRIP/GRI_057/[phase space / obsis folder structure]`)
 
 The script will then save files to the following two folders:
@@ -48,15 +48,23 @@ The script will then save files to the following two folders:
 * `mocapCSVs` for clipped motion capture CSVs, one folder per subject (e.g. `./mocapCSVs/GRI_057/GRI_057-SESSION_001-TRIAL_002.csv`)
 * `elanFilesOut` for elan files the script will then make one folder per subject  (e.g. `./elanFilesOut/GRI_057/GRI_057-SESSION_001-TRIAL_002.eaf` and `./elanFilesOut/GRI_057/GRI_057-SESSION_001-TRIAL_002_tsconf.xml`), and put the created elan files as well as the time series configuration files (`\*.eaf` and `\*_tsconf.xml`)
 
-An example of this command is: `makeElanFiles(files=c("./Clipped Video/059/GRI_059-SESSION_001-TRIAL_001.mov", "./Clipped Video/059/GRI_059-SESSION_001-TRIAL_002.mov"))` You can also use wildcards with this command: `makeElanFiles(files="./Clipped Video/0??/GRI_0??-SESSION_0??-TRIAL_0??.mov")` which will match any files that have any character in each of the positions with a `?`.
+An example of this command is:   
+`makeElanFiles(files=c("./Clipped Video/059/GRI_059-SESSION_001-TRIAL_001.mov", "./Clipped Video/059/GRI_059-SESSION_001-TRIAL_002.mov"))`^[It is important to understand how file paths work with R. Most of the examples here will start with `./` which is a shorthand for *whatever folder is set as R's working directory.* In order for the commands to find the data correctly, you may need to change the working directory. There are [many](https://support.rstudio.com/hc/en-us/articles/200711843-Working-Directories-and-Workspaces) [tutorials](https://sites.google.com/site/manabusakamoto/home/r-tutorials/r-tutorial-4) [that explain](http://rprogramming.net/set-working-directory-in-r/) how to do this.]
+
+You can also use wildcards with this command:   
+`makeElanFiles(files="./Clipped Video/0??/GRI_0??-SESSION_0??-TRIAL_0??.mov")`  
+which will match any files that have any character in each of the positions with a `?`.
 
 The empty elan files are then annotated according to annotation guidelines.
 
 ### `extractMocapDataFromAnnotations(...)`
 
-`extractMocapDataFromAnnotations(...)` extracts completed annotations from the files specified, and checks to make sure that the format is correct. Currently it will give warnings if the checks it runs don't work, and will suggest possible fixes. Any file that has a warning will not have any annotations extract. You can supply it with a destination directory, which must already exist. An example of this command is: `extractMocapDataFromAnnotations(files=c("./elanFilesCompleted/GRI_059/GRI_059-SESSION_001-TRIAL_001.eaf", "./elanFilesCompleted/GRI_059/GRI_059-SESSION_001-TRIAL_002.eaf"), destDir="./extractedData/")` You can also use wildcards with this command: `extractMocapDataFromAnnotations(files="./elanFilesCompleted/GRI_0??/GRI_0??-SESSION_0??-TRIAL_0??.eaf", destDir="./extractedData/")` which will match any files that have any character in each of the positions with a `?`.
+`extractMocapDataFromAnnotations(...)` extracts completed annotations from the files specified, and checks to make sure that the format is correct. Currently it will give warnings if the checks it runs don't work, and will suggest possible fixes. Any file that has a warning will not have any annotations extract. You can supply it with a destination directory, which must already exist. An example of this command is:  
+`extractMocapDataFromAnnotations(files=c("./elanFilesCompleted/GRI_059/GRI_059-SESSION_001-TRIAL_001.eaf", "./elanFilesCompleted/GRI_059/GRI_059-SESSION_001-TRIAL_002.eaf"), destDir="./extractedData/")`  
+You can also use wildcards with this command:   `extractMocapDataFromAnnotations(files="./elanFilesCompleted/GRI_0??/GRI_0??-SESSION_0??-TRIAL_0??.eaf", destDir="./extractedData/")`   
+which will match any files that have any character in each of the positions with a `?`.
 
-## Read data, analyze/model, write reports
+## Read data, analyze/model, write reports (local machine, usually)
 
 ### `readExtractedMocapData(...)`
 `readExtractedMocapData(...)` reads in the extracted motion capture data (that are written by the command `extractMocapDataFromAnnotations(...)` above). This function can extract as many or as few types of data (dataSets) for analysis as we want. Possible dataSets include:
@@ -69,13 +77,17 @@ The empty elan files are then annotated according to annotation guidelines.
 * `gestMove` Extracts the mean and median grip from the *movement* period of *gesture* trials
 * `gestMoveOnlyOpen` Extracts the mean and median grip from the *movement* period of *gesture* trials, but only if the griptype is *open*
 * `gestMoveFirstQuarter` Extracts the mean and median grip from the first 25% of the *movement* period of *gesture* trials
-* `gestMoveTop2mm` Extracts the mean and median grip from the grips that are within 2mm of the maximum grip during the *movement* period of *gesture* trials
+* `gestMoveTop2mm` Extracts the mean and median grip from the grips that are within 2mm of the maximum grip during the *movement* period of *gesture* trials as well as information as to how long during the movement period the grip was in that 2mm band.
 
-An example of this command is `readExtractedMocapData(path="./extractData", dataSets = c("action", "estimation"))` which would extract `action` and `estimation` from all of the data that is in the folder `./extractedData`
+An example of this command is:  
+`readExtractedMocapData(path="./extractData", dataSets = c("action", "estimation"))`^[Again, for paths in R `./` is a shorthand for *whatever folder is set as R's working directory.* In order for the commands to find the data correctly, you may need to change the working directory. There are [many](https://support.rstudio.com/hc/en-us/articles/200711843-Working-Directories-and-Workspaces) [tutorials](https://sites.google.com/site/manabusakamoto/home/r-tutorials/r-tutorial-4) [that explain](http://rprogramming.net/set-working-directory-in-r/) how to do this.]       
+which would extract `action` and `estimation` from all of the data that is in the folder `./extractedData`
+
+The object that is returned by the `readExtractedMocapData()` command is a data object. It will include each dataSet that is specified in the `dataSets` argument (in the example above, *action* and *estimation*). More information about data objects can be found in the [data objects vignette](dataObjects.html).
 
 ### Analysis/modeling and report writing
 
-In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()` after that, you can use the `makeReport()` function to write the report for all of the analyses for all of the dataSets (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. The `makeReport()` function returns the data object with models included if it is needed for other uses. If you want the fullData to be included in the data object you can use the option `includeFullData = TRUE` with the function `readExtractedMocapData()`. A full example is below: 
+In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()`. After that, you can use the `makeReport()` function to write the report for all of the analyses for all of the dataSets (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. The `makeReport()` function returns the data object with the models that were fit included in it (in case it is needed for other uses).  More information about data objects can be found in the [data objects vignette](dataObjects.html). The `makeReport()` function if you want to change the title that is displayed at the top of the report, use the optional argument `title = "New title"`. If no title is specified, the default ("Grip Project Report") will be used.  If you want the fullData to be included in the data object you can use the option `includeFullData = TRUE` with the function `readExtractedMocapData()`. A full example is below: 
 
 ```{r, fig.show='hold', eval=FALSE}
 dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"))
@@ -83,10 +95,10 @@ dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/"
 dataModeled <- makeReport(dataNew, reportPath="./reportGestureTrials")
 ```
 
-Alternatively, if you want to run the analyses/models separately from making the report you can do this using the `modelAllData()` command. This will return a data object the same as it is given, but with the fit models attached. This data with models object can then be passed to the `makeReport()` function which will write the report (without refitting the models, to save time). If you would prefer that all of the models are refit, you can use the option `refitModels = TRUE` with the `makeReport()` command.
+Alternatively, if you want to run the analyses/models separately from making the report you can do this using the `modelAllData()` command. This will return a data object the same as it is given, but with the fit models included. Again,  more information about data objects can be found in the [data objects vignette](dataObjects.html). This data object (with models included) can then be passed to the `makeReport()` function which will write the report (without refitting the models, to save time). If you would prefer that all of the models are refit, you can use the option `refitModels = TRUE` with the `makeReport()` command.
 
 ```{r, fig.show='hold', eval=FALSE}
-dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove", "gestMoveOnlyOpen"))
+dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"))
 
 dataModeled <- modelAllData(dataNew)
 
@@ -95,7 +107,7 @@ dataModeled <- makeReport(dataModeled, reportPath="./reportGestureTrials")
 
 ## Advanced analysis/model manipulation
 
-By default, the `analysesToRun` for each data set are set as the default analyses given in the `modelMetadata` object. You can see what analyses are set to run for a specific data object with the command `displayAnalysesToRun()` Further, You can add or remove analyses with the commands `addAnalysesToRun()`, `removeAnalysesToRun()`. For both the add and remove functions, the first argument is the data object to add or remove analyses from, and they both return the data object with the new set of analyses. Using the `dataNew` object from before, 
+By default, the `analysesToRun` for each data set are set as the default analyses given in the `modelMetadata` object.  More information about modelMetadata objects can be found in the [model metadata vignette](modelMetadata.html). You can see what analyses are set to run for a specific data object with the command `displayAnalysesToRun()` Further, You can add or remove analyses with the commands `addAnalysesToRun()`, `removeAnalysesToRun()`. For both the add and remove functions, the first argument is the data object to add or remove analyses from, and they both return the data object with the new set of analyses. Using the `dataNew` object from before, 
 
 ```{r, fig.show='hold', eval=FALSE}
 # See what analyses are to be run.
@@ -113,7 +125,25 @@ addAnalysesToRun(dataNew)
 
 ```
 
-## Data included with the package.
+## Writing csvs of the dataSets
+
+If you want to extract the raw data from the dataSets, you can used the `writeCSVsFromData()` function. This will write one csv for each dataSet in the data object that it is given. Each csv will be named with the name of the dataSet followed by `.csv`. For example, the *action* dataSet will be called `action.csv` You can add a string onto the front of every csv with the optional argument `namePrefix = "examplePrefix"`, which would add `examplePrefix` to the beginning of each filename (continuing our example with *action*, the csv would be `examplePrefixaction.csv`). By default, the csvs will be saved to the working directory. You can change this by specifying a different path with the optional argument `path = "/new/path/to/csvs"`. The folder that you specify in this path must already exist or you will get an error. By default, this function will not overwrite csv files if they already exist. If you want to overwrite the csv files, used the optional argument `overwrite = TRUE`
+
+```{r, eval=FALSE, echo=TRUE}
+writeCSVsFromData(dataNew)
+```
+
+## Adding new dataSets
+
+If the data object has the full data included (this can be done by including the argument `includeFullData = TRUE` when you run the `readExtractedMocapData` command), you can add new dataSets with the command `addNewDataSets()`. This command will return a data object that has all of the same dataSets as the data in the `data` arugment, but with the additional dataSets that are specificed in the `dataSets` argument. In this example, the dataSet "gestMoveOnlyOpen" is added to the `dataNew` data object that we made before and we save it as the object `dataWithNewDataSets`.
+
+```{r, eval=FALSE, echo=TRUE}
+dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"), includeFullData = TRUE)
+
+dataWithNewDataSets <- addNewDataSets(data = dataNew, dataSets = c("gestMoveOnlyOpen"))
+```
+
+## Data included with the package
 
 A small amount of data is included with the package in order to show what a data object looks like and how to easily process this data into a report. This data comes from a pure replication of previous work. This data can be found in the `pureReplication` data object. It induces an `action` dataSet and an `estimation` dataSet from 11 subjects. A report can be run directly with the following commands. 
 
@@ -124,3 +154,4 @@ pureReplicationNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis
 # replication
 pureReplicationModeled <- makeReport(pureReplication, title="Pure replication report", reportPath="./reportReplication")
 ```
+

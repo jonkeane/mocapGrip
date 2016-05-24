@@ -21,19 +21,23 @@ test_that("display models works", {
   expect_message(displayAnalysesToRun(pureReplication))
 })
 
-context("checkDataer errors where appropriate")
-test_that("checkDataer errors when there is an errant dataSet",{
+context("checkData errors where appropriate")
+test_that("checkData errors when there is an errant dataSet",{
   fakeReplication <- pureReplication
   fakeReplication$foo <- list()
   expect_error(checkData(fakeReplication, modelMd = modelMetadata))
+  dataList <- list()
+  expect_error(checkData(dataList, modelMd = modelMetadata))
+  dataList <- character()
+  expect_error(checkData(dataList, modelMd = modelMetadata))
 })
 
-test_that("checkDataer errors when there is an errant name in an existing dataSet",{
+test_that("checkData errors when there is an errant name in an existing dataSet",{
   fakeReplication <- pureReplication
   fakeReplication$action$foo <- list()
   expect_error(checkData(fakeReplication, modelMd = modelMetadata))
 })
-test_that("checkDataer errors when there is an errant type in an existing dataSet",{
+test_that("checkData errors when there is an errant type in an existing dataSet",{
   fakeReplication <- pureReplication[names(pureReplication) == "action"]
   fakeReplication$action$data <- list() # wrong
   fakeReplication$action$warnings <- list()
@@ -63,7 +67,23 @@ test_that("checkDataer errors when there is an errant type in an existing dataSe
   expect_error(checkData(fakeReplication, modelMd = modelMetadata))
 })
 
-test_that("checkDataer silently returns the data object it was presented",{
+context("checkData runs silently")
+test_that("checkData silently returns the data object it was presented",{
   expect_silent(checkData(pureReplication, modelMd = modelMetadata))
   expect_equal(checkData(pureReplication, modelMd = modelMetadata), pureReplication)
+})
+
+test_that("checkData accepts data objects with fullData included", {
+  dataToTestFull <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action"), includeFullData = TRUE)
+  dataToTest <- readExtractedMocapData(path = "./dataForParsingTests/extractedData/", dataSets = c("action"))
+  expect_silent(checkData(dataToTestFull, modelMd = modelMetadata))
+  expect_equal(dataToTestFull, checkData(dataToTestFull, modelMd = modelMetadata))
+  expect_silent(checkData(dataToTest, modelMd = modelMetadata))
+  expect_equal(dataToTest, checkData(dataToTest, modelMd = modelMetadata))
+})
+
+context("additional functions")
+test_that("possibleModels works", {
+  expect_equal(possibleModels(pureReplication$action), c("maxGrip.stickAsContinuous",  "maxGrip.stickAsCategorical"))
+  expect_equal(possibleModels(pureReplication$estimation), c("meanGrip.stickAsContinuous", "medianGrip.stickAsContinuous", "meanGrip.stickAsCategorical", "medianGrip.stickAsCategorical"))
 })

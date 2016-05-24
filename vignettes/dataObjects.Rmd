@@ -1,0 +1,16 @@
+---
+title: "Data objects"
+author: "Jonathan Keane"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{data Objects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Data objects store all of the information about the data, dataSets, and analyses after they are read in from the extract annotatoins (or after the models are run in the case of analyses). They are a critical component that houses the dataSets to be analyzed, the analyses after the models are fit, and they are used to write reports.
+
+## Structure
+
+Data objects are a list of lists (of lists...). 

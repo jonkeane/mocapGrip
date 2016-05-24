@@ -1,6 +1,6 @@
 # Mocap-Grip project at the [Center for Gesture, Sign, and Language at the University of Chicago](https://gslcenter.uchicago.edu/)
 
-[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=master)](https://travis-ci.org/jonkeane/mocapGrip)
+[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=devel)](https://travis-ci.org/jonkeane/mocapGrip)  [![codecov](https://codecov.io/gh/jonkeane/mocapGrip/branch/devel/graph/badge.svg)](https://codecov.io/gh/jonkeane/mocapGrip)
 
 This [R](https://www.r-project.org/) package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
 
@@ -21,7 +21,11 @@ For both, you must install devtools, just type `install.packages("devtools")` at
 ### 1. Install the most recent stable packaged release
 
 To install mocapGrip copy and paste the following command into R:   
+<<<<<<< HEAD
+`devtools::install_url("https://github.com/jonkeane/mocapGrip/releases/download/v0.3.0/mocapGrip.tar.gz")`
+=======
 `devtools::install_url("https://github.com/jonkeane/mocapGrip/releases/download/v0.2.3/mocapGrip_0.2.tar.gz")`
+>>>>>>> master
 
 ### 2. Install the most recent source version
 
@@ -55,8 +59,11 @@ The package vignettes give step by step walkthroughs of how to use mocapGrip:
  `vignette("modelMetadata")`
 
 
+## Best practices for scientific computing
 
-## Testing
+As many best practices as possible were adopted in the development of this package, including unit testing, continuous integration, version control, semantic versioning, DRY principles, etc. See [Best Practices for Scientific Computing](http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1001745) for an introduction and discussion to many of these practices.
+
+### Testing
 This project uses unit testing and the package [testthat](https://github.com/hadley/testthat) to run those unit tests (found in the `tests/testthat/` directory). These tests (as well as general R package well-formedness) are also run externally on [Travis CI](https://travis-ci.org).
 
 This project includes a decent amount of code from other projects that were not test-driven. Therefore not all functions are well tested.
