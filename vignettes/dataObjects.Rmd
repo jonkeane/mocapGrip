@@ -4,13 +4,68 @@ author: "Jonathan Keane"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{data Objects}
+  %\VignetteIndexEntry{Data objects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 Data objects store all of the information about the data, dataSets, and analyses after they are read in from the extract annotatoins (or after the models are run in the case of analyses). They are a critical component that houses the dataSets to be analyzed, the analyses after the models are fit, and they are used to write reports.
 
+First, we should create a data object:
+```{r, fig.show='hold', eval=FALSE}
+data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation"))
+```
+
 ## Structure
 
 Data objects are a list of lists (of lists...). 
+
+### dataSets
+The first level of lists are all of the dataSets^[If the data object includes the full data, there will be one more level here called `fullData` which is a dataframe of all of the motion capture data that was read in by `readExtractedMocapData`. See the fullData section of this vignette for more information.] that are included with the data object (e.g. *action* and *estimation*).  
+
+You can access each level (*action* or *estimation* in our example) with the `data$level` operator or the `data[[level]]` construction. For example if we want the *action* dataSet we can use `data$action`.
+
+Within each dataSet the next level has the following:
+
+1. `data`  
+a dataframe that has the processed data for this data set.
+1. `warnings`  
+warnings that were encountered when the dataSet was processed (occlusion, for example)
+1. `analysesToRun`   
+a vector of model names to run (for example, for action, by default this will be `"maxGrip.stickAsContinuous"`)
+1. `analyses` (sometimes)   
+The analyses that have already been fit, which will be described in detail in the next section
+
+### analyses structure
+The analyses part of a dataSet within a data object have more structure inside of them. These will only exist if the dataSet has been modeled (for example, with the `modelAllData()` command). The first level is the name of the model that was fit (there can be more than one model fit here if there is more than one model listed in the `analysesToRun` above.) This name corresponds to the names in the `analyses` section of the `model` section in modelMetadata. Each one has a unique name, and a unique set of outcome and predictor variables (see the [model metadata vignette](modelMetadata.html) for more information).
+
+Each of these analyses will have two levels below it:
+
+1. `bestModel`  
+This is the model that was chosen as the best model when the models were fit. Best here is typically defined as the most complex model that did not have an error or warning when it was fit. The level under this has a name that corresponds to the kind of model (for example `interactionInPredAndGroup`) (which is described in more detail in the model levels section below)
+1. `allModels`  
+This level has all of the models that were fit (or attempted to be fit). Each one has the same structure (which is described in more detail in the model levels section below). 
+
+To reiterate, the difference between `allModels` and `bestModel` is that `bestModel` has just one model, where as `allModels` has all of the models that were fit.
+
+### model levels
+
+The name of this level describes what kind of model was fit. For now, the only differences between the kinds of models are if they include interactions or not. More details about these are given in the modelStructures section of the [model metadata vignette](modelMetadata.html)
+
+This object has the following levels:
+
+1. `modelObject`  
+This is the model object that was fit using the `lme4` package. This is useful if you need to manually inspect the model.
+1. `converged`  
+This is a logical that is `TRUE` if the model converged and `FALSE` if the model did not converge.
+1. `convWarnCode`  
+This is the warning code that `lme4` produced if there was a convergence warning.
+1. `convWarnMsgs`  
+This is the warning messages that `lme4` produced if there was a convergence warning.
+
+
+## fullData
+
+If the data object includes the full data, there will be one more level at the top of the data object called `fullData` which is a dataframe of all of the motion capture data that was read in by `readExtractedMocapData`. This includes each and every observation (milisecond by milisecond) from the mocap system, with columns for subject, trial, condition, etc. which is **a lot** of data usually.
+
+This full data can be useful if you want to extract more dataSets without reading in the data over and over, or if there are manual analyses or porcessing that must be run.
