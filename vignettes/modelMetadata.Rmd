@@ -9,11 +9,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Each of the models and analyses is only able to run because `mocapGrip` has metadata about what to do. There is a large amount of default information included in mocapGrip (this is stored in the modelMetadata object by default), but this can be extended by adding your own model metadata. The rest of this vignette will describe how to do that, and what structure you need to have to do that.
+Each of the models and analyses is only able to run because `mocapGrip` has metadata about what to do. There is a large amount of default information included in mocapGrip (this is stored in the `modelMetadata` object by default), but this can be replaced with your own model metadata. The rest of this vignette will describe how to do that, and what structure you need to have to do that.
 
 ## modelMetadata json file structure
 
-The model metadata is read into `mocapGrip` from a specially formatted [json file](http://blog.scottlowe.org/2013/11/08/a-non-programmers-introduction-to-json/). These files take the same format as the [default file that comes with the package](https://github.com/jonkeane/mocapGrip/blob/master/inst/modelMetadata.json). The basic structure of this file for action maximum grip, using the predictor variable for stick (as continuous) looks like:
+The model metadata is read into `mocapGrip` from a specially formatted [json file](http://blog.scottlowe.org/2013/11/08/a-non-programmers-introduction-to-json/). These files take the same format as the [default file that comes with the package](https://github.com/jonkeane/mocapGrip/blob/master/inst/modelMetadata.json). The basic structure of this file (although with only the action maximum grip dataSet and using the predictor variable for stick (as continuous)) looks like:
 
 ```
 { "variableExplanations" : {
@@ -113,14 +113,14 @@ This section contains information about what variables will be used in the model
 ```
 
 #### `modalStructures`
-This section describes how the variables should be used within the models. Specifically, this part specifies if the variables should be included as just the predictor, or if they should also be included in interactions. When you run the analysis from the section above, each of these formulas will be used, and then one will be selected as the best (based on the options for `findtheBest()` or `fitAllModels()`). This section will always be named `modelStructures`. Each structure within have a name and then a string that tells `R` how to make the formula for [`lme4`](https://cran.r-project.org/web/packages/lme4/index.html). The format for the formula lists each of the variables, with the formula syntax (e.g. `~`, `+`, `*`), in quotes, all surrounded by `paste0()` so that when they are needed the variable names that are specified above can be put together with the formula syntax and be made into a full formula.
+This section describes how the variables should be used within the models. Specifically, this part specifies if the variables should be included as just the predictor, or if they should also be included in interactions. When you run the analysis from the section above, each of these formulas will be used, and then one will be selected as the best (based on the options for `findtheBest()` or `fitAllModels()`). This section will always be named `modelStructures`. Each structure within will have a name and then a string that tells `R` how to make the formula for [`lme4`](https://cran.r-project.org/web/packages/lme4/index.html). The format for the formula lists each of the variables, with the formula syntax (e.g. `~`, `+`, `*`), in quotes, all surrounded by `paste0()` so that when they are needed the variable names that are specified above can be put together with the formula syntax and be made into a full formula.
 
-*For the most part, these should be sufficient for most models. Adding different configurations should be done with care.*
+**For the most part, these should be sufficient for most models. Adding different configurations should be done with care.**
 
 * `interactionInPredAndGroup` This includes all possible interactions in both the predictors (sometimes called main effects) and the slope adjustments (aka mixed effects)    
 formula: maxGrip~stickcmScaled\*fins+(1+stickcmScaled\*fins|obsisSubj)
 * `interactionInPred` This includes all possible interactions in the predictors (sometimes called main effects) but not in the the slope adjustments (aka mixed effects)    
-formula: maxGrip~stickcmScaled\*fins+(1+stickcmScaled\*fins|obsisSubj)
+formula: maxGrip~stickcmScaled\*fins+(1+stickcmScaled+fins|obsisSubj)
 
 * `noInteractions` This has no interactions in either the predictors (sometimes called main effects) or the slope adjustments (aka mixed effects)       		
 formula: maxGrip~stickcmScaled+fins+(1+stickcmScaled+fins|obsisSubj)
@@ -190,7 +190,7 @@ options:
     * `start` time to start the subset. If percentage this should be greater than or equal to 0 (which means 0%) and less than 1 (which means 100%). If milliseconds, it should be greater than 0, but less than the duration of the period (warnings will be producded if this period does not contain any data)
     * `stop` time to stop the subset. If percentage this should be greater than 0 (which means 0%) and less than or equal to 1 (which means 100%). If milliseconds, it should be greater than 0, but less than the duration of the period (warnings will be producded if this period does not contain any data)
     * `timeType` should the times above be interpreted as percentages (`percent`) of the time period or miliseconds (`msecs`)
-* `ceilingFinder` find the mean and the median of a grip that is in a band at the top of the range. How large the band is is defined by the `bandWidth` option below. The data also includes a measure of how during the period the grip is within this band (column name: `durInBand`).
+* `ceilingFinder` find the mean and the median of a grip that is in a band at the top of the range. How large the band is is defined by the `bandWidth` option below. The data also includes a measure of how long during the period the grip is within this band (column name: `durInBand`, in msecs).
 options:  
     * `percOcclusion` the maximum allowable occlusion as a percentage (in decimal notation). Default: 0.05 (meaning 5%)
     * `bandWidth` the width of the band at the top of the grip range. In either millimeters or as a percentage of the total grip range (for this period)
@@ -222,7 +222,7 @@ This section has a list of commands to run before processing any of the dataSets
 
 ```
 "dataPreProcessing" : ["data$stick <- factor(as.character(data$stick), levels = c('five', 'seven', 'nine', 'eleven'))",
-											"data$stickcmCentered <- data$stickcm - 8"]
+                       "data$stickcmCentered <- data$stickcm - 8"]
 ```
 
 
@@ -240,8 +240,44 @@ This section has a list of commands to run after the processing of each of the d
 ]	
 ```
 
-## extending the default modelMetadata
-TBW
-
 ## replacing the default modelMetadata
-TBW
+
+If the modelMetadata that is included with the package does not cover your needs, you can write a new one that includes different analyses. The first step in writing your own should be to write a copy of the `modelMetadata` included with the package to see what a complete modelMetadata file looks like:
+
+```
+writeModelMetadata(modelMd = modelMetada, path = "./defaultModelMetadata.json")
+```
+
+This file is saved as a *json* file (in this example it will be named `defaultModelMetadata.json`, in R's working directory). You should use this file as a template to add new sections in the format described above. When you are done, you need to read your new modelMetdata json file into a new `modelMetadata` object. This function will not only read in and parse the *json* file, but it will also run some checks on the information that is inside the json file to make sure that it conforms to the structure for model metadata objects which will create a new object called `newModelMetadata`. If you see an error or warning, read the following section which helps with some common errors.
+
+```
+newModelMetadata <- readModelMetadata(file = "./editedModelMetadata.json")
+```
+
+If you see an error that looks similar to:
+
+```
+Error in feed_push_parser(readBin(con, raw(), n), reset = TRUE) : 
+  parse error: invalid object key (must be a string)
+    "obsisSubj" : "by subject", 	}, 	"models" : { 		"analysisSke
+                (right here) ------^ 
+```
+
+This means that the *json* file you've provided does not have the right format for *json* files. Likely there is a missing or extra comma or misplaced bracket. The *json* parser tries to tell you where the error is, but it is not always accurate.
+
+The errors that are displayed if the modelMetadata structure being run in does not conform to what the package expects will have some details about possible fixes.
+
+Now that you have the new model metadata object `newModelMetadata`, you can pass that as the `modelMd` argument to any mocapGrip functions that have that argument. When you pass your new model metadata to a function, that function will use that metadata to extract, analyze, etc. the data.
+
+The following functions can take this new model metadata object as an argument:
+* `addAnalysesToRun.Rd`
+* `addNewDataSets.Rd`
+* `fitModels.Rd`
+* `makeReport.Rd`
+* `modelAllData.Rd`
+* `readExtractedMocapData.Rd`
+* `removeAnalysesToRun.Rd`
+
+If you extract a new dataSet with a new model metadata object, you will need to use that model metadata object with each subsequent command that you run with that data object (e.g. `modelAllData()` and `makeReport()`).
+
+**Adding or changing model metadata objects should be done with care.** Some changes are simple (e.g. adding additional information to a narrative section for a variable that already exists), but others are more complicated and could require adding new code to the package (e.g. making a new dataSet specification that needs a new processing function.). You can use trial and error to see if the changes you are making work. You can always access the model metadata object that comes with the pacakge with the object name `mocapGrip::modelMetadata`

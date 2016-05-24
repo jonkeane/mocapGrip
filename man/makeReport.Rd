@@ -21,7 +21,7 @@ makeReport(data, reportPath = "./report", title = "Grip Project Report",
 \item{...}{options to pass to \code{\link{modelAllData}}, (e.g. \code{last=TRUE} if the last model that converged should be selected rather than the default (\code{last=FALSE}) first).}
 }
 \value{
-An object that is a code of \code{data}, but with the models appened to each analysis present. This is useful if you need to inspect the models or use this for further analysis or reporting.
+Returns a data object (with all of the same data as the data object given in the \code{data} argument) with all of the models that were fit included.
 }
 \description{
 takes a data object, fits (and finds the best) model, and then produces a report based on the provided analysisSkeleton and narrative found in modelMetadata. This will write two files: a polished html-based report (with the extension \code{.html}) and an intermediary R Markdown file that this html report is made from (with the extension \code{.Rmd}). For the most part, the R Markdown file can be ignored, the polished html report is the final product.

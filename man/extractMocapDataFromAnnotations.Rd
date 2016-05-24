@@ -9,7 +9,7 @@ extractMocapDataFromAnnotations(files, destDir)
 \arguments{
 \item{files}{A vector of elan files}
 
-\item{destDir}{The destination directory where the extract csvs should be saved}
+\item{destDir}{The destination directory where the extracted csvs should be saved}
 }
 \value{
 Nothing, not useful currently.

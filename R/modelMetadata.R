@@ -2,7 +2,7 @@
 
 #' model analysis structure, and explanation information
 #'
-#' This is read from modelMetadata.json, and different structures can be read by \code{readmodelMetadata()}
+#' This is read from modelMetadata.json, and different structures can be read by \code{\link{readModelMetadata}}
 #'
 #' @export
 modelMetadata <- jsonlite::fromJSON(system.file("modelMetadata.json", package = "mocapGrip", mustWork = TRUE))

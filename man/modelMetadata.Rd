@@ -9,7 +9,7 @@
 modelMetadata
 }
 \description{
-This is read from modelMetadata.json, and different structures can be read by \code{readmodelMetadata()}
+This is read from modelMetadata.json, and different structures can be read by \code{\link{readModelMetadata}}
 }
 \keyword{datasets}
 
