@@ -26,6 +26,8 @@ after_success:
 
 before_deploy:
   - cp mocapGrip*.tar.gz mocapGrip.tar.gz
+  - echo $TRAVIS_R_VERSION
+  - echo $TRAVIS_OS_NAME
 
 deploy:
   provider: releases
