@@ -23,11 +23,15 @@ r_github_packages:
 - jimhester/covr
 after_success:
 - echo 'covr::codecov(function_exclusions=c("promptForModelInput", "addAnalysesToRun\\.*", "removeAnalysesToRun\\.*"))' | R --vanilla
+- echo $TRAVIS_R_VERSION
+- echo $TRAVIS_OS_NAME
+- echo oldrel
+- echo release
+- echo devel
 
 before_deploy:
   - cp mocapGrip*.tar.gz mocapGrip.tar.gz
-  - echo $TRAVIS_R_VERSION
-  - echo $TRAVIS_OS_NAME
+
 
 deploy:
   provider: releases
@@ -40,4 +44,4 @@ deploy:
     tags: true
     repo: jonkeane/mocapGrip
     branch: master
-    condition: "$TRAVIS_R_VERSION != devel && ($TRAVIS_R_VERSION != oldrel) && ($TRAVIS_OS_NAME == linux)"
+    condition: "(($TRAVIS_R_VERSION != devel) || ($TRAVIS_R_VERSION != oldrel)) && ($TRAVIS_OS_NAME == linux)"
