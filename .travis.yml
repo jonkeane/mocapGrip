@@ -24,16 +24,12 @@ r_github_packages:
 after_success:
 - echo 'covr::codecov(function_exclusions=c("promptForModelInput", "addAnalysesToRun\\.*", "removeAnalysesToRun\\.*"))' | R --vanilla
 
-before_deploy:
- - cp mocapGrip*.tar.gz mocapGrip.tar.gz
-
 deploy:
   provider: releases
   api_key:
     secure: J3EjlduNp/5hbHo4x2xIhtPZTnTzeDvql9H9cV/WIt0EzCJG15fyYSBcfvPdbmaNNm0bIuSnV6IZMhJ+IWHfzBUqjv9eYmWuwwl+37J4MSozW4rn843VvXJ43aRYWlrgXhH2BmEYG5WCGLVlwjL1Jti3nQrGpvzMjs82KcFM5WwiD4MzRjzbmW3KMn2kBblZewUWXbc9JTAsnsGDPy9bISy9JSwYiJ11wmFKhvvftecDU/arZN26jrjyamZTKHGJkHjTZUSUFrTnMi3PO9xfppe6QzCgXh1TGGwCpILNgfYuoQbptZXpAF5Rm2q0cCSfZtmiD4+YebohZFtHyk04CwOE/aUMzMVIe284LlWbr3cHxk0MvZPI+of+FaMKMgNHjYvJxEY1MwFnl4O2E/KsFS+7ZE1qEB9l5HOUB6RwLwx3gJ6srP0sAAE+deiDSTd+n1tFDz5cB8soIUv3bvxfv5U2qTJl5M+xWW3wKBBOGRGL0G+5bvq25y2GHsHWfjYaiCxpAv3Ko9vqQbMydXF5MQzsi3/DVwaxReZx0/W8YzSdq++hlFYqzloSa09oTpB8muCh7Tjgbk3IIkdXm22+EX5i8m1KhSynYuIUyMr8ROR6CFVavXoHUgTm4X8Jq6AOC0VXoF0/bKcRCy68jJDCuzcwCSM/8Sf6cDpqse3ysAE=
-  file: "mocapGrip.tar.gz"
+  file: "mocapGrip_0.3.tar.gz"
   skip_cleanup: true
-  overwrite: true
   on:
     tags: true
     repo: jonkeane/mocapGrip
