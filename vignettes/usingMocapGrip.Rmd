@@ -17,7 +17,7 @@ The general paradigm for data collection follows the following pipeline. The fir
 
 1. **Process the mocap data and move data** The motion capture data needs to be processed within *Obsis*, and then that processed data (especially the *Filtered Markers.txt*, which is where `mocapGrip` extracts the mocap data from) as well as the (clipped) videos are uploaded to the server in the folder structure that is described in the `makeElanFiles(...)` section below.
 
-1. **Make blank elan files** The command `makeElanFiles(...)` us used to make blank elan files to be annotated.
+1. **Make blank elan files** The command `makeElanFiles(...)` is used to make blank elan files to be annotated.
 
 1. **Annotate** The elan files are time annotated to segment out different periods of each trial, and associate the condition number with each trial.
 
@@ -114,15 +114,14 @@ By default, the `analysesToRun` for each data set are set as the default analyse
 displayAnalysesToRun(dataNew)
 
 # Run through prompts for each dataSet
-# asking if you want to remove any of
-# the analyses present
-removeAnalysesToRun(dataNew)
-
-# Run through prompts for each dataSet
 # asking if you want to add to any of
 # the analyses present
-addAnalysesToRun(dataNew)
+dataNew <- addAnalysesToRun(dataNew)
 
+# Run through prompts for each dataSet
+# asking if you want to remove any of
+# the analyses present
+dataNew <- removeAnalysesToRun(dataNew)
 ```
 
 ## Writing csvs of the dataSets
