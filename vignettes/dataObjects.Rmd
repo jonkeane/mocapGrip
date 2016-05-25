@@ -11,9 +11,15 @@ vignette: >
 
 Data objects store all of the information about the data, dataSets, and analyses after they are read in from the extract annotatoins (or after the models are run in the case of analyses). They are a critical component that houses the dataSets to be analyzed, the analyses after the models are fit, and they are used to write reports.
 
+```{r, echo = FALSE, results = 'hide', message=FALSE}
+library(mocapGrip)
+
+pathToExtractedData <- system.file("extData", "minimalSubset", "extractedData", package = "mocapGrip")
+```
+
 First, we should create a data object:
-```{r, eval=FALSE}
-data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation"), includeFullData = TRUE)
+```{r, results = 'hide'}
+data <- readExtractedMocapData(pathToExtractedData, c("action", "estimation"), includeFullData = TRUE)
 
 data <- modelAllData(data)
 ```
@@ -103,8 +109,7 @@ There is no difference between the model that is selected as best (here *interac
 
 ```{r, eval=FALSE}
 all.equal(
-  data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGroup$modelObject,
-  data$action$analyses$maxGrip.stickAsContinuous$allModels$interactionInPredAndGroup$modelObject
+data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGroup$modelObject, data$action$analyses$maxGrip.stickAsContinuous$allModels$interactionInPredAndGroup$modelObject
   )
 ```
 
