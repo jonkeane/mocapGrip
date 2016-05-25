@@ -1,14 +1,5 @@
 #################### functions ####################
 
-timecodeBegEnd <- function(trial) {
-  start <- sub("LTC: ", "", as.character(head(trial[[2]], n=1)))
-  end  <- sub("LTC: ", "", as.character(tail(trial[[2]], n=1)))
-  out <- data.frame(timecodeStartObsis=start, timecodeEndObsis=end)
-  out$timecodeStartObsis <- as.character(out$timecodeStartObsis)
-  out$timecodeEndObsis <- as.character(out$timecodeEndObsis)
-  return(out)
-}
-
 csvWithNames <- function(file){
   # read a csv and add a column for the filename
   out <- utils::read.csv(file,sep="\t", header=TRUE)
