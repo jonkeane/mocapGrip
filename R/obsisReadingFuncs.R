@@ -37,7 +37,7 @@ timeToSecs <- function(time, fps = 30){
 }
 
 
-markerRead <- function(file,beginTime=0,endTime=600,verbose=FALSE) {
+markerRead <- function(file,beginTime=0,endTime=600,verbose=TRUE) {
   Time..sec. <- NULL # to get rid of note errors
   if(verbose){
     print(file)
