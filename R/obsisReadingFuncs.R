@@ -1,12 +1,5 @@
 #################### functions ####################
 
-csvWithNames <- function(file){
-  # read a csv and add a column for the filename
-  out <- utils::read.csv(file,sep="\t", header=TRUE)
-  out$file <- file
-  return(out)
-}
-
 #converts timecodes into seconds
 timeToSecs <- function(time, fps = 30){
   hms<- lubridate::hms(substr(time,0,8))
