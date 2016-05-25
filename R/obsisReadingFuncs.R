@@ -37,14 +37,14 @@ timeToSecs <- function(time, fps = 30){
 }
 
 
-markerRead <- function(file,beginTime=0,endTime=600,verbose=TRUE) {
+markerRead <- function(file,beginTime=0,endTime=600,verbose=FALSE) {
   Time..sec. <- NULL # to get rid of note errors
   if(verbose){
     print(file)
     print(beginTime)
     print(endTime)
   }
-  file <- utils::read.csv(file, sep="\t", na.strings = c("NA","NaN"))
+  file <- utils::read.csv(file, sep="\t", na.strings = c("NA","NaN")) # travis on linux can't find this file.
   out <- subset(file, Time..sec. >=beginTime & Time..sec. <=endTime )
   return(out)
 }
