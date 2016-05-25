@@ -86,14 +86,14 @@ videoLength <- function(file){
     return(ffmpegDurParse(ffmpegout))
   }, error=function(cond) {
     message(paste(call, "does not seem to exist."))
-    message("Here's the original error message:")
-    message(cond)
+    # message("Here's the original error message:") # the details caused errors when testing
+    # message(cond)                                 # the details caused errors when testing
     # Choose a return value in case of error
     return(NA)
   }, warning=function(cond) {
     message(paste(call, "had a warning."))
-    message("Here's the original error message:")
-    message(cond)
+    # message("Here's the original error message:") # the details caused errors when testing
+    # message(cond)                                 # the details caused errors when testing
     return(NA)
 #     # ffmpeg throws a warning when there is no output, maybe change the call to something else?
 #     suppressWarnings({
