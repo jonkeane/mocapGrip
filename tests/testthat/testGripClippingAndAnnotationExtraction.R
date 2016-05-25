@@ -3,8 +3,10 @@ context("testing grip clipping")
 
 utils::unzip("./GRIP/mocapData.zip", exdir = "./GRIP/")
 
+print(dir(recursive = TRUE))
+
 test_that("makeElanFiles warns (because of NAs)", {
-  expect_warning(makeElanFiles("./GRIP/Clipped Video/070/GRI_070-SESSION_001-TRIAL_00?.mov"))
+  expect_warning(makeElanFiles("./GRIP/Clipped\ Video/070/GRI_070-SESSION_001-TRIAL_00?.mov"))
 })
 
 test_that("elanFiles are created", {
@@ -28,13 +30,19 @@ test_that("extractMocapDataFromAnnotations errors appropriately", {
 
 test_that("path fixing works", {
   expect_output(fixPaths("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_00?.eaf"))
-  # clean up
-  unlink(c("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_002_tsconf.xml.bak",
-           "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_002.eaf.bak",
-           "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_005_tsconf.xml.bak",
-           "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_005.eaf.bak",
-           "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_009_tsconf.xml.bak",
-           "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_009.eaf.bak"))
+  # clean up (these should return the backups to the originals instead.)
+  file.rename("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_002_tsconf.xml.bak",
+              "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_002_tsconf.xml")
+  file.rename("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_002.eaf.bak",
+              "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_002.eaf")
+  file.rename("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_005_tsconf.xml.bak",
+              "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_005_tsconf.xml")
+  file.rename("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_005.eaf.bak",
+              "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_005.eaf")
+  file.rename("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_009_tsconf.xml.bak",
+              "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_009_tsconf.xml")
+  file.rename("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_009.eaf.bak",
+              "./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_009.eaf")
 })
 
 test_that("extractMocapDataFromAnnotations runs fine on minimal data", {
