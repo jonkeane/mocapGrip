@@ -109,18 +109,19 @@ dataModeled <- makeReport(dataModeled, reportPath="./reportGestureTrials")
 
 By default, the `analysesToRun` for each data set are set as the default analyses given in the `modelMetadata` object.  More information about modelMetadata objects can be found in the [model metadata vignette](modelMetadata.html). You can see what analyses are set to run for a specific data object with the command `displayAnalysesToRun()` Further, You can add or remove analyses with the commands `addAnalysesToRun()`, `removeAnalysesToRun()`. For both the add and remove functions, the first argument is the data object to add or remove analyses from, and they both return the data object with the new set of analyses. Using the `dataNew` object from before, 
 
+See what analyses are to be run:
+
 ```{r, fig.show='hold', eval=FALSE}
-# See what analyses are to be run.
 displayAnalysesToRun(dataNew)
+```
 
-# Run through prompts for each dataSet
-# asking if you want to add to any of
-# the analyses present
+Run through prompts for each dataSet asking if you want to add to any of the analyses present:
+```{r, fig.show='hold', eval=FALSE}
 dataNew <- addAnalysesToRun(dataNew)
+```
 
-# Run through prompts for each dataSet
-# asking if you want to remove any of
-# the analyses present
+Run through prompts for each dataSet asking if you want to remove any of the analyses present:
+```{r, fig.show='hold', eval=FALSE}
 dataNew <- removeAnalysesToRun(dataNew)
 ```
 
