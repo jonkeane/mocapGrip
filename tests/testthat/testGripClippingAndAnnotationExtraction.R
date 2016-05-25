@@ -38,18 +38,13 @@ test_that("path fixing works", {
 })
 
 test_that("extractMocapDataFromAnnotations runs fine on minimal data", {
-  expect_message(extractMocapDataFromAnnotations("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_00?.eaf",
-                                                 destDir = "./extractedData/"))
-  expect_equal(read.csv("./extractedData/GRI_070/GRI_070-SESSION_001-TRIAL_002.csv"),
+  expect_message(extractMocapDataFromAnnotations("./GRIP/elanFilesCompleted/GRI_070/GRI_070-SESSION_001-TRIAL_00?.eaf", destDir = "./GRIP/extractedData/"))
+  expect_equal(read.csv("./GRIP/extractedData/GRI_070/GRI_070-SESSION_001-TRIAL_002.csv"),
                read.csv("./extractedDataGoldStd/GRI_070/GRI_070-SESSION_001-TRIAL_002.csv"))
-  expect_equal(read.csv("./extractedData/GRI_070/GRI_070-SESSION_001-TRIAL_005.csv"),
+  expect_equal(read.csv("./GRIP/extractedData/GRI_070/GRI_070-SESSION_001-TRIAL_005.csv"),
                read.csv("./extractedDataGoldStd/GRI_070/GRI_070-SESSION_001-TRIAL_005.csv"))
-  expect_equal(read.csv("./extractedData/GRI_070/GRI_070-SESSION_001-TRIAL_009.csv"),
+  expect_equal(read.csv("./GRIP/extractedData/GRI_070/GRI_070-SESSION_001-TRIAL_009.csv"),
                read.csv("./extractedDataGoldStd/GRI_070/GRI_070-SESSION_001-TRIAL_009.csv"))
-  # clean up
-  unlink(c("./extractedData/GRI_070/GRI_070-SESSION_001-TRIAL_002.csv",
-           "./extractedData/GRI_070/GRI_070-SESSION_001-TRIAL_005.csv",
-           "./extractedData/GRI_070/GRI_070-SESSION_001-TRIAL_009.csv"))
 })
 
 # clean up
@@ -57,3 +52,6 @@ unlink("./GRIP/elanFilesOut/GRI_070", recursive = TRUE)
 unlink("./GRIP/mocapCSVs/GRI_070", recursive = TRUE)
 unlink("./GRIP/mocapData", recursive = TRUE)
 unlink("./Rplots.pdf")
+
+# clean up
+unlink("./GRIP/extractedData/GRI_070/", recursive = TRUE)
