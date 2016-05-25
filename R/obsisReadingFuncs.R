@@ -1,18 +1,5 @@
 #################### functions ####################
 
-pathsToDF <- function(input,pathToRemove) {
-  Experiment<- subj<- session<- trial<- folder<- file<-  path <- NULL # to get ride of notes
-  # split the input vector into a data frame on /
-  processed <- sub(paste(normalizePath(pathToRemove),"/",sep=""), "", input)
-  out <- data.frame( do.call( rbind, strsplit( processed, '/' ) ) )
-  # name the columns
-  names(out) <- c("", "Experiment","subj","session","trial","folder","file")
-  # add the path back
-  out$path <- input
-
-  subset(out, select = c(Experiment,subj,session,trial,folder,file, path))
-}
-
 timecodeBegEnd <- function(trial) {
   start <- sub("LTC: ", "", as.character(head(trial[[2]], n=1)))
   end  <- sub("LTC: ", "", as.character(tail(trial[[2]], n=1)))
@@ -115,5 +102,3 @@ minNotInf <- function(vector, ...){
   vector <- ifelse(is.infinite(vector),NA,vector)
   min(vector, ...)
 }
-
-
