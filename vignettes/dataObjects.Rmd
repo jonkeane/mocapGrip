@@ -17,6 +17,8 @@ library(mocapGrip)
 pathToExtractedData <- system.file("extData", "minimalSubset", "extractedData", package = "mocapGrip")
 ```
 
+Throughout this guide, we will use `pathToExtractedData` to stand in for the path, on your computer, to the extracted motion capture data. This will look something like `"./extractedData/"`. Remeber when you run the code on your compute to replace `pathToExtractedData` with a string that matches the folder structure on your computer.
+
 First, we should create a data object:
 ```{r, results = 'hide'}
 data <- readExtractedMocapData(pathToExtractedData, c("action", "estimation"), includeFullData = TRUE)
