@@ -166,7 +166,7 @@ clipper <- function(data, verbose=FALSE, parallel=TRUE){
   `5-7` <- `6-8` <- `10-11` <- `9-12` <- NULL # to get rid of note errors
   file <- data[["pathMarkers"]]
 
-  filteredMarkerData <- markerRead(file = file, verbose=TRUE)
+  filteredMarkerData <- markerRead(file = file, verbose=FALSE)
 
   filteredMarkers <- extractMarkers(filteredMarkerData, c(0,1,2,3,4,5,6,7,8,9,10,11,12))
   filteredMarkers <- calculateDistances(filteredMarkers, c(5,7))

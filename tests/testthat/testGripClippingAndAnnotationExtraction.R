@@ -3,8 +3,6 @@ context("testing grip clipping")
 
 utils::unzip("./GRIP/mocapData.zip", exdir = "./GRIP/")
 
-print(dir(recursive = TRUE))
-
 # makeElanFiles will error because the movie files are not real, but empty files
 # (and because ffmpeg is not on travis)
 test_that("makeElanFiles warns (because of NAs)", {
