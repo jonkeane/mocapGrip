@@ -20,17 +20,6 @@ markerRead <- function(file,beginTime=0,endTime=600,verbose=FALSE) {
   return(out)
 }
 
-countOccluded <- function(data, verbose=FALSE){
-  if(verbose){print(data[,c("subj","session","trial")])}
-  data <- data[,"markerData"][[1]]
-  dfOut <- data.frame(marker=character(0), numOccluded=integer(0), numTotal=integer(0))
-  for(n in 0:23){ # 55 for all markers, 47 for all used markers, 24 for markers used in dynamic trials
-    conds <- data[paste("cond",n,sep="")]
-    dfOut <- rbind(dfOut, data.frame(marker = n, numOccluded = nrow(subset(conds, conds==-1)), numTotal = nrow(conds)))
-  }
-  dfOut
-}
-
 
 ffmpegDurParse <- function(ffmpegout){
   # extract the line with duration in it, and then turn extract the time
