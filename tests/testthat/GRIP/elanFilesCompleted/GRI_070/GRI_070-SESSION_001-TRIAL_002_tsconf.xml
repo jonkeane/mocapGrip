@@ -1,5 +1,5 @@
-<timeseries date="2016-05-25T13:54:11.333747" version="1.0">
-  <tracksource sample-type="Continuous Rate" source-url="file:///Users/jkeane/Dropbox/mocap/gripStudy/mocapGrip/tests/testthat/GRIP/mocapCSVs/GRI_070-SESSION_001-TRIAL_002.csv" time-column="0">
+<timeseries date="2016-05-25T15:54:31.272861" version="1.0">
+  <tracksource sample-type="Continuous Rate" source-url="file:///Users/jkeane/Dropbox/mocap/gripStudy/mocapGrip/tests/testthat/GRIP/mocapCSVs/GRI_070/GRI_070-SESSION_001-TRIAL_002.csv" time-column="0">
     <property key="provider" value="mpi.eudico.client.annotator.timeseries.csv.CSVServiceProvider" />
     <track derivative="0" name="meanY">
       <property key="detect-range" value="true" />
