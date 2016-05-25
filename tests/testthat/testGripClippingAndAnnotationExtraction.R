@@ -5,8 +5,12 @@ utils::unzip("./GRIP/mocapData.zip", exdir = "./GRIP/")
 
 print(dir(recursive = TRUE))
 
+# makeElanFiles will error because the movie files are not real, but empty files
+# (and because ffmpeg is not on travis)
 test_that("makeElanFiles warns (because of NAs)", {
-  expect_warning(makeElanFiles("./GRIP/Clipped\ Video/070/GRI_070-SESSION_001-TRIAL_00?.mov"))
+  expect_warning(makeElanFiles(c("./GRIP/Clipped Video/070/GRI_070-SESSION_001-TRIAL_002.mov",
+                                 "./GRIP/Clipped Video/070/GRI_070-SESSION_001-TRIAL_005.mov",
+                                 "./GRIP/Clipped Video/070/GRI_070-SESSION_001-TRIAL_009.mov")))
 })
 
 test_that("elanFiles are created", {
