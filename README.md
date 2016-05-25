@@ -55,9 +55,9 @@ The package vignettes give step by step walkthroughs of how to use mocapGrip:
    To view, after loading the package (with `library(mocapGrip)`), use the command:  
  `vignette("modelMetadata")`
 
- * *dataObjects* is a description of the data object which is stores dataSets, models/analyses, and is used in reporting.
-    To view, after loading the package (with `library(mocapGrip)`), use the command:  
-  `vignette("dataObjects")`
+* *dataObjects* is a description of the data object which is stores dataSets, models/analyses, and is used in reporting.
+  To view, after loading the package (with `library(mocapGrip)`), use the command:  
+`vignette("dataObjects")`
 
   Use the command `browseVignettes("mocapGrip")` to see all of the available vignettes.
 
