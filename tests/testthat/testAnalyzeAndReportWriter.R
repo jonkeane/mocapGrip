@@ -121,7 +121,7 @@ test_that("writeMarkdown conforms to standard", {
 
 context("makeReport")
 test_that("makeReport conforms to standard", {
-  expect_output(newDataModeled <- makeReport(dataModeled, reportPath = "./toTest"))
-  expect_equal(readLines("./toTest.html"), readLines("./pureReplicationReport.html"))
+  expect_output(newDataModeled <- makeReport(dataModeled, reportPath = "./toTestPR"))
+  expect_equal(readLines("./toTestPR.html"), readLines("./pureReplicationReport.html"))
   expect_equal(newDataModeled, dataModeled)
 })
