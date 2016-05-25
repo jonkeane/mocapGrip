@@ -1,35 +1,37 @@
-<timeseries date="2016-05-25T15:54:31.365418" version="1.0">
-  <tracksource sample-type="Continuous Rate" source-url="file:///Users/jkeane/Dropbox/mocap/gripStudy/mocapGrip/tests/testthat/GRIP/mocapCSVs/GRI_070/GRI_070-SESSION_001-TRIAL_009.csv" time-column="0">
-    <property key="provider" value="mpi.eudico.client.annotator.timeseries.csv.CSVServiceProvider" />
-    <track derivative="0" name="meanY">
-      <property key="detect-range" value="true" />
-      <sample-position>
-        <pos col="45" row="0" />
-      </sample-position>
-      <description />
-      <units />
-      <range max="1142.1926" min="965.76904" />
-      <color>0,0,0</color>
-    </track>
-    <track derivative="0" name="clapper">
-      <property key="detect-range" value="true" />
-      <sample-position>
-        <pos col="46" row="0" />
-      </sample-position>
-      <description />
-      <units />
-      <range max="371.2559" min="17.310555" />
-      <color>0,0,0</color>
-    </track>
-    <track derivative="0" name="grip">
-      <property key="detect-range" value="true" />
-      <sample-position>
-        <pos col="44" row="0" />
-      </sample-position>
-      <description />
-      <units />
-      <range max="134.1894" min="21.792974" />
-      <color>0,0,0</color>
-    </track>
-  </tracksource>
+<?xml version="1.0" encoding="UTF-8"?>
+<timeseries date="2016-03-22T15:06:35-05:00" version="1.0">
+    <tracksource sample-type="Continuous Rate"
+        source-url="file:///C:/Users/zcui/Desktop/GRIP/elanFilesToAnnotate/GRI_070/../../mocapCSVs/GRI_070/GRI_070-SESSION_001-TRIAL_009.csv" time-column="0">
+        <property key="provider" value="mpi.eudico.client.annotator.timeseries.csv.CSVServiceProvider"/>
+        <track derivative="0" name="meanY">
+            <property key="detect-range" value="true"/>
+            <sample-position>
+                <pos col="45" row="0"/>
+            </sample-position>
+            <description/>
+            <units/>
+            <range max="1142.1926" min="965.76904"/>
+            <color>0,0,0</color>
+        </track>
+        <track derivative="0" name="clapper">
+            <property key="detect-range" value="true"/>
+            <sample-position>
+                <pos col="46" row="0"/>
+            </sample-position>
+            <description/>
+            <units/>
+            <range max="371.2559" min="17.310555"/>
+            <color>0,0,0</color>
+        </track>
+        <track derivative="0" name="grip">
+            <property key="detect-range" value="true"/>
+            <sample-position>
+                <pos col="44" row="0"/>
+            </sample-position>
+            <description/>
+            <units/>
+            <range max="134.1894" min="21.792974"/>
+            <color>0,0,0</color>
+        </track>
+    </tracksource>
 </timeseries>
