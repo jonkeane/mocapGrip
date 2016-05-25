@@ -13,11 +13,12 @@
 extractMocapDataFromAnnotations <- function(files, destDir){
   pathToExtractScript <- system.file("python","extractMocapDataFromAnnotations.py", package = "mocapGrip", mustWork=TRUE)
 
-  # test if files is folder
-  if(file.info(files)$isdir) {stop("The file that was passed (", files ,") appears to be a folder. This should be a single elan file, a vector (list) of elan files, or a path with wild cards that lead to multiple elan files.")}
+  # test if files is folder, but only if it's not a glob
+  if(all(!is.na(file.info(files)))){
+    if(file.info(files)$isdir) {stop("The file that was passed (", files ,") appears to be a folder. This should be a single elan file, a vector (list) of elan files, or a path with wild cards that lead to multiple elan files.")}
+  }
 
   lapply(files, function(file) {
-    print(file)
     if(!grepl(".*\\.eaf", file)) {stop("The file that was passed (", file ,") does not end in .eaf, this function only accepts eaf files.")}
   })
 
