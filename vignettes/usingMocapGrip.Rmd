@@ -145,7 +145,7 @@ writeCSVsFromData(dataNew)
 
 If the data object has the full data included (this can be done by including the argument `includeFullData = TRUE` when you run the `readExtractedMocapData` command), you can add new dataSets with the command `addNewDataSets()`. This command will return a data object that has all of the same dataSets as the data in the `data` arugment, but with the additional dataSets that are specificed in the `dataSets` argument. In this example, the dataSet "gestMoveOnlyOpen" is added to the `dataNew` data object that we made before and we save it as the object `dataWithNewDataSets`.
 
-```{r, echo=TRUE, eval=TRUE, results='hide'}
+```{r, echo=TRUE, eval=FALSE, results='hide'}
 dataNew <- readExtractedMocapData(pathToExtractedData, c("action", "estimation",  "gestMaxGrip", "gestMove"), includeFullData = TRUE)
 
 dataWithNewDataSets <- addNewDataSets(data = dataNew, dataSets = c("gestMoveOnlyOpen"))
