@@ -10,11 +10,11 @@ The main functions are:
 * extract and check the annotations for errors,
 * run basic analyses on the extracted data
 
-If you do not yet have R installed on your computer I highly recommend using [RStudio](https://www.rstudio.com/products/rstudio/#Desktop). Once you have installed RStudio, you can install mocapGrip using the commands in the next section.
+If you do not yet have R installed on your computer, [RStudio](https://www.rstudio.com/products/rstudio/#Desktop) is highly recommended. Once you have installed R and RStudio, you can install mocapGrip using the commands in the next section.
 
 ## Install
 
-The easiest way to install the package is to use the [devtools](https://github.com/hadley/devtools) package. There are two different ways to install mocapGrip, you only need to do one of these. The preferred (and easiest) method is the first, but the second allows a bit more flexibility.
+The easiest way to install the package is to use the [devtools](https://github.com/hadley/devtools) package. There are two different ways to install mocapGrip, you only need to use one of these. The preferred (and easiest) method is the first, but the second allows a bit more flexibility.
 
 For both, you must install devtools, just type `install.packages("devtools")` at an R command prompt. (You can skip this step if you already have devtools installed.)
 
