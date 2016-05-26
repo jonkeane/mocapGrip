@@ -1,8 +1,8 @@
 language: r
 r:
-- oldrel
 - release
 - devel
+- oldrel
 os:
 - linux
 - osx
