@@ -5,3 +5,4 @@
 ^inst/dataForConstructingTests$
 ^inst/extdata$
 ^codecov.yml$
+^tests/testthat/GRIP/mocapData/GRIP/.*$

@@ -88,7 +88,7 @@ This contains explanatory descriptions of each of the variables that are used in
 
 
 ### `models`
-This section contains information to fit different kinds of (linear regression) models. Each model can be applied to different dataSets, although the dataSet must have all of the variables (`outcome`, `predictor1`, `predictor2`, and `grouping1`) in order for it to fit.  Then there are two different sections (`analyses` and `modelStructures`) describe in turn.
+This section contains information to fit different kinds of (linear regression) models. Each model can be applied to different dataSets, although the dataSet must have all of the variables (`outcome`, `predictor1`, `predictor2`, and `grouping1`) in order for it to fit.  Then there are two different sections (`analyses` and `modelStructures`) described in turn.
 
 #### `analyses`
 This section contains information about what variables will be used in the models. Each model has a name (this model is named `maxGrip.stickAsContinuous`) that is a short description of what is going on. When you fit the models, this will be how you find these models in the `data` object. Each model also must have four variables contained in `variablesToUse`.
@@ -96,7 +96,7 @@ This section contains information about what variables will be used in the model
 * `outcome`  This is the outcome (dependent) variable in the linear model, in this example it is `maxGrip`
 * `predictor1` This is the first predictor (independent) variable in the linear model, in this example it is `stickcmScaled`
 * `predictor2` This is the second predictor (independent) variable in the linear model, in this example it is `fins`
-* `grouping1` This is the grouping parameter (also known as levels for mixed effects) for most models (including the one her) this should be `obsisSubj`
+* `grouping1` This is the grouping parameter (also known as levels for mixed effects) for most models (including the one here) this should be `obsisSubj`
 
 ```
 "models" : {
@@ -111,6 +111,45 @@ This section contains information about what variables will be used in the model
 		}
 	},
 ```
+
+There are a number of analyses that are built in to mocapGrip. The following are all of the current possibilties:
+
+* `maxGrip.stickAsContinuous`
+An analyses where the outcome is the maximum grip, and the predictors are stick size (as a continuous variable, in cm, where 0=7cm) and the configuration of the fins (categorical, reference level: closed) and the grouping variable is subject.  
+    * *outcome* maxGrip    
+    * *predictor1* stickcmCentered    
+    * *predictor2* fins    
+    * *grouping1* obsisSubj
+* `meanGrip.stickAsContinuous` 
+An analyses where the outcome is the mean grip, and the predictors are stick size (as a continuous variable, in cm, where 0=7cm) and the configuration of the fins (categorical, reference level: closed) and the grouping variable is subject.    
+    * *outcome* meanGrip  
+    * *predictor1* stickcmCentered  
+    * *predictor2* fins  
+    * *grouping1* obsisSubj
+* `medianGrip.stickAsContinuous`
+An analyses where the outcome is the median grip, and the predictors are stick size (as a continuous variable, in cm, where 0=7cm) and the configuration of the fins (categorical, reference level: closed) and the grouping variable is subject.    
+    * *outcome* medianGrip    
+    * *predictor1* stickcmCentered    
+    * *predictor2* fins    
+    * *grouping1* obsisSubj
+* `maxGrip.stickAsCategorical`
+An analyses where the outcome is the maximum grip, and the predictors are stick size (as a categorical variable, reference level: seven cm) and the configuration of the fins (categorical, reference level: closed) and the grouping variable is subject.    
+    * *outcome* maxGrip    
+    * *predictor1* stick    
+    * *predictor2* fins    
+    * *grouping1* obsisSubj
+* `meanGrip.stickAsCategorical`
+An analyses where the outcome is the mean grip, and the predictors are stick size (as a categorical variable, reference level: seven cm) and the configuration of the fins (categorical, reference level: closed) and the grouping variable is subject.    
+    * *outcome* meanGrip  
+    * *predictor1* stick  
+    * *predictor2* fins  
+    * *grouping1* obsisSubj
+* `medianGrip.stickAsCategorical`
+An analyses where the outcome is the median grip, and the predictors are stick size (as a categorical variable, reference level: seven cm) and the configuration of the fins (categorical, reference level: closed) and the grouping variable is subject.    
+    * *outcome* medianGrip    
+    * *predictor1* stick    
+    * *predictor2* fins    
+    * *grouping1* obsisSubj
 
 #### `modelStructures`
 This section describes how the variables should be used within the models. Specifically, this part specifies if the variables should be included as just the predictor, or if they should also be included in interactions. When you run the analysis from the section above, each of these formulas will be used, and then one will be selected as the best (based on the options for `findtheBest()` or `fitAllModels()`). This section will always be named `modelStructures`. Each structure within will have a name and then a string that tells `R` how to make the formula for [`lme4`](https://cran.r-project.org/web/packages/lme4/index.html). The format for the formula lists each of the variables, with the formula syntax (e.g. `~`, `+`, `*`), in quotes, all surrounded by `paste0()` so that when they are needed the variable names that are specified above can be put together with the formula syntax and be made into a full formula.

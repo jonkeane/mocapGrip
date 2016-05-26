@@ -17,7 +17,7 @@ The general paradigm for data collection follows the following pipeline. The fir
 
 1. **Process the mocap data and move data** The motion capture data needs to be processed within *Obsis*, and then that processed data (especially the *Filtered Markers.txt*, which is where `mocapGrip` extracts the mocap data from) as well as the (clipped) videos are uploaded to the server in the folder structure that is described in the `makeElanFiles(...)` section below.
 
-1. **Make blank elan files** The command `makeElanFiles(...)` us used to make blank elan files to be annotated.
+1. **Make blank elan files** The command `makeElanFiles(...)` is used to make blank elan files to be annotated.
 
 1. **Annotate** The elan files are time annotated to segment out different periods of each trial, and associate the condition number with each trial.
 
@@ -89,8 +89,16 @@ The object that is returned by the `readExtractedMocapData()` command is a data 
 
 In order to make reports about the data, first you need to load the data in with the command `readExtractedMocapData()`. After that, you can use the `makeReport()` function to write the report for all of the analyses for all of the dataSets (*action*, *estimation*, etc.) that were extracted with `readExtractedMocapData()`. The `makeReport()` function returns the data object with the models that were fit included in it (in case it is needed for other uses).  More information about data objects can be found in the [data objects vignette](dataObjects.html). The `makeReport()` function if you want to change the title that is displayed at the top of the report, use the optional argument `title = "New title"`. If no title is specified, the default ("Grip Project Report") will be used.  If you want the fullData to be included in the data object you can use the option `includeFullData = TRUE` with the function `readExtractedMocapData()`. A full example is below: 
 
+```{r, echo = FALSE, results = 'hide', message=FALSE}
+library(mocapGrip)
+
+pathToExtractedData <- system.file("extData", "minimalSubset", "extractedData", package = "mocapGrip")
+```
+
+Throughout this guide, we will use `pathToExtractedData` to stand in for the path to the extracted motion capture data (on your computer). This will look something like `"./extractedData/"`. Remeber when you run the code on your compute to replace `pathToExtractedData` with a string that matches the folder structure on your computer.
+
 ```{r, fig.show='hold', eval=FALSE}
-dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"))
+dataNew <- readExtractedMocapData(pathToExtractedData, c("action", "estimation",  "gestMaxGrip", "gestMove"))
 
 dataModeled <- makeReport(dataNew, reportPath="./reportGestureTrials")
 ```
@@ -98,7 +106,7 @@ dataModeled <- makeReport(dataNew, reportPath="./reportGestureTrials")
 Alternatively, if you want to run the analyses/models separately from making the report you can do this using the `modelAllData()` command. This will return a data object the same as it is given, but with the fit models included. Again,  more information about data objects can be found in the [data objects vignette](dataObjects.html). This data object (with models included) can then be passed to the `makeReport()` function which will write the report (without refitting the models, to save time). If you would prefer that all of the models are refit, you can use the option `refitModels = TRUE` with the `makeReport()` command.
 
 ```{r, fig.show='hold', eval=FALSE}
-dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"))
+dataNew <- readExtractedMocapData(pathToExtractedData, c("action", "estimation",  "gestMaxGrip", "gestMove"))
 
 dataModeled <- modelAllData(dataNew)
 
@@ -109,20 +117,20 @@ dataModeled <- makeReport(dataModeled, reportPath="./reportGestureTrials")
 
 By default, the `analysesToRun` for each data set are set as the default analyses given in the `modelMetadata` object.  More information about modelMetadata objects can be found in the [model metadata vignette](modelMetadata.html). You can see what analyses are set to run for a specific data object with the command `displayAnalysesToRun()` Further, You can add or remove analyses with the commands `addAnalysesToRun()`, `removeAnalysesToRun()`. For both the add and remove functions, the first argument is the data object to add or remove analyses from, and they both return the data object with the new set of analyses. Using the `dataNew` object from before, 
 
+See what analyses are to be run:
+
 ```{r, fig.show='hold', eval=FALSE}
-# See what analyses are to be run.
 displayAnalysesToRun(dataNew)
+```
 
-# Run through prompts for each dataSet
-# asking if you want to remove any of
-# the analyses present
-removeAnalysesToRun(dataNew)
+Run through prompts for each dataSet asking if you want to add to any of the analyses present:
+```{r, fig.show='hold', eval=FALSE}
+dataNew <- addAnalysesToRun(dataNew)
+```
 
-# Run through prompts for each dataSet
-# asking if you want to add to any of
-# the analyses present
-addAnalysesToRun(dataNew)
-
+Run through prompts for each dataSet asking if you want to remove any of the analyses present:
+```{r, fig.show='hold', eval=FALSE}
+dataNew <- removeAnalysesToRun(dataNew)
 ```
 
 ## Writing csvs of the dataSets
@@ -137,8 +145,8 @@ writeCSVsFromData(dataNew)
 
 If the data object has the full data included (this can be done by including the argument `includeFullData = TRUE` when you run the `readExtractedMocapData` command), you can add new dataSets with the command `addNewDataSets()`. This command will return a data object that has all of the same dataSets as the data in the `data` arugment, but with the additional dataSets that are specificed in the `dataSets` argument. In this example, the dataSet "gestMoveOnlyOpen" is added to the `dataNew` data object that we made before and we save it as the object `dataWithNewDataSets`.
 
-```{r, eval=FALSE, echo=TRUE}
-dataNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation",  "gestMaxGrip", "gestMove"), includeFullData = TRUE)
+```{r, echo=TRUE, eval=FALSE, results='hide'}
+dataNew <- readExtractedMocapData(pathToExtractedData, c("action", "estimation",  "gestMaxGrip", "gestMove"), includeFullData = TRUE)
 
 dataWithNewDataSets <- addNewDataSets(data = dataNew, dataSets = c("gestMoveOnlyOpen"))
 ```
@@ -147,9 +155,9 @@ dataWithNewDataSets <- addNewDataSets(data = dataNew, dataSets = c("gestMoveOnly
 
 A small amount of data is included with the package in order to show what a data object looks like and how to easily process this data into a report. This data comes from a pure replication of previous work. This data can be found in the `pureReplication` data object. It induces an `action` dataSet and an `estimation` dataSet from 11 subjects. A report can be run directly with the following commands. 
 
-```{r, eval=FALSE, echo=TRUE}
+```{r, echo=TRUE, eval=FALSE}
 # for updating the pureReplication data
-pureReplicationNew <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/analysis/extractedData/", c("action", "estimation"))
+pureReplicationNew <- readExtractedMocapData(pathToExtractedData, c("action", "estimation"))
 
 # replication
 pureReplicationModeled <- makeReport(pureReplication, title="Pure replication report", reportPath="./reportReplication")

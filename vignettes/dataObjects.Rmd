@@ -11,9 +11,19 @@ vignette: >
 
 Data objects store all of the information about the data, dataSets, and analyses after they are read in from the extract annotatoins (or after the models are run in the case of analyses). They are a critical component that houses the dataSets to be analyzed, the analyses after the models are fit, and they are used to write reports.
 
+```{r, echo = FALSE, results = 'hide', message=FALSE}
+library(mocapGrip)
+
+pathToExtractedData <- system.file("extData", "minimalSubset", "extractedData", package = "mocapGrip")
+```
+
+Throughout this guide, we will use `pathToExtractedData` to stand in for the path, on your computer, to the extracted motion capture data. This will look something like `"./extractedData/"`. Remeber when you run the code on your compute to replace `pathToExtractedData` with a string that matches the folder structure on your computer.
+
 First, we should create a data object:
-```{r, fig.show='hold', eval=FALSE}
-data <- readExtractedMocapData("~/Dropbox/mocap/gripStudy/extractedGestData/", c("action", "estimation"))
+```{r, results = 'hide', eval = FALSE}
+data <- readExtractedMocapData(pathToExtractedData, c("action", "estimation"), includeFullData = TRUE)
+
+data <- modelAllData(data)
 ```
 
 ## Structure
@@ -35,6 +45,13 @@ warnings that were encountered when the dataSet was processed (occlusion, for ex
 a vector of model names to run (for example, for action, by default this will be `"maxGrip.stickAsContinuous"`)
 1. `analyses` (sometimes)   
 The analyses that have already been fit, which will be described in detail in the next section
+
+Using our example data object above, we can look at the *action* dataSet's data (which is contained in a dataframe) like this. We wrap the command that specifies the dataframe in the `head()` command so that it only displays the first few rows of the data.
+
+```{r, eval=FALSE}
+head(data$action$data)
+```
+
 
 ### analyses structure
 The analyses part of a dataSet within a data object have more structure inside of them. These will only exist if the dataSet has been modeled (for example, with the `modelAllData()` command). The first level is the name of the model that was fit (there can be more than one model fit here if there is more than one model listed in the `analysesToRun` above.) This name corresponds to the names in the `analyses` section of the `model` section in modelMetadata. Each one has a unique name, and a unique set of outcome and predictor variables (see the [model metadata vignette](modelMetadata.html) for more information).
@@ -59,13 +76,56 @@ This is the model object that was fit using the `lme4` package. This is useful i
 1. `converged`  
 This is a logical that is `TRUE` if the model converged and `FALSE` if the model did not converge.
 1. `convWarnCode`  
-This is the warning code that `lme4` produced if there was a convergence warning.
+This is the warning code that `lme4` produced if there was a convergence warning. (It will be 0 if the model converged / fit successfully)
 1. `convWarnMsgs`  
 This is the warning messages that `lme4` produced if there was a convergence warning.
+
+Using our example data object above, we can look at the *action* dataSet's *maxGrip.stickAsContinuous* analysis' best model structure (which is *interactionInPredAndGroup*) and which has a model object:
+
+```{r, eval=FALSE}
+data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGroup$modelObject
+```
+
+Additionally, we can see that `converged` is `TRUE`, there are `convWarnCode` is `0` and theere are no `convWarnMsgs`:
+```{r, eval=FALSE}
+data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGroup$converged
+
+data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGroup$convWarnCode
+
+data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGroup$convWarnMsgs
+```
+
+All of the model structures (*interactionInPredAndGroup*, *interactionInPred*, and *noInteraction*) are fit for the *maxGrip.stickAsContinuous* analysis and we can see those models with commands like:
+
+```{r, eval=FALSE}
+data$action$analyses$maxGrip.stickAsContinuous$allModels$interactionInPredAndGroup$modelObject
+
+data$action$analyses$maxGrip.stickAsContinuous$allModels$interactionInPred$modelObject
+
+data$action$analyses$maxGrip.stickAsContinuous$allModels$noInteraction$modelObject
+```
+
+The convergence codes and warnings work the same way for all Models as they do for the single best model. 
+
+There is no difference between the model that is selected as best (here *interactionInPredAndGroup*) in the bestModel level or in the allModels level, which we can test by seeing if the model objects are the same:
+
+```{r, eval=FALSE}
+all.equal(
+data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGroup$modelObject, data$action$analyses$maxGrip.stickAsContinuous$allModels$interactionInPredAndGroup$modelObject
+  )
+```
 
 
 ## fullData
 
-If the data object includes the full data, there will be one more level at the top of the data object called `fullData` which is a dataframe of all of the motion capture data that was read in by `readExtractedMocapData`. This includes each and every observation (milisecond by milisecond) from the mocap system, with columns for subject, trial, condition, etc. which is **a lot** of data usually.
+If the data object includes the full data, there will be one more level at the top of the data object called `fullData` which is a dataframe of all of the motion capture data that was read in by `readExtractedMocapData`. This includes each and every observation (milisecond by milisecond) from the mocap system, with columns for subject, trial, condition, etc. which is **a lot** of data usually. 
+
+Because this is a lot of data, in the example here we wrape the data object (and the level selector) with the `head()` command so that R will only print the first few rows of the dataframe.
+
+```{r, eval=FALSE}
+head(data$fullData)
+```
 
 This full data can be useful if you want to extract more dataSets without reading in the data over and over, or if there are manual analyses or porcessing that must be run.
+
+

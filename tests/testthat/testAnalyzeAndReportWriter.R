@@ -113,8 +113,17 @@ test_that("replaceText works with formatGatherReplacements", {
   expect_equal(replaceText(list("$groupingVariable"), formatGatherReplacements("action", "maxGrip.stickAsContinuous", dataModeledSimplest)),c("by subject"))
 })
 
-writeMarkdown(dataModeled, markdownPath = "./toTest.Rmd")
-# Disable testing while report writting is in flux.
-# test_that("writeMarkdown conforms to standard", {
-#   expect_equal(readLines("./toTest.Rmd"), readLines("./pureReplicationReport.Rmd"))
-# })
+context("writeMarkdown")
+test_that("writeMarkdown conforms to standard", {
+  expect_silent(writeMarkdown(dataModeled, markdownPath = "./toTest.Rmd"))
+  expect_equal(readLines("./toTest.Rmd"), readLines("./pureReplicationReport.Rmd"))
+})
+
+context("makeReport")
+test_that("makeReport conforms to standard", {
+  expect_output(newDataModeled <- makeReport(dataModeled, reportPath = "./toTestPR"))
+  expect_equal(readLines("./toTestPR.Rmd"), readLines("./pureReplicationReport.Rmd"))
+  # test only the length of the html documents due to rendering variabilities
+  expect_equal(length(readLines("./toTestPR.html")), length(readLines("./pureReplicationReport.html")))
+  expect_equal(newDataModeled, dataModeled)
+})

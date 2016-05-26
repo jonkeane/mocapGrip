@@ -1,34 +1,5 @@
 #################### functions ####################
 
-pathsToDF <- function(input,pathToRemove) {
-  Experiment<- subj<- session<- trial<- folder<- file<-  path <- NULL # to get ride of notes
-  # split the input vector into a data frame on /
-  processed <- sub(paste(normalizePath(pathToRemove),"/",sep=""), "", input)
-  out <- data.frame( do.call( rbind, strsplit( processed, '/' ) ) )
-  # name the columns
-  names(out) <- c("", "Experiment","subj","session","trial","folder","file")
-  # add the path back
-  out$path <- input
-
-  subset(out, select = c(Experiment,subj,session,trial,folder,file, path))
-}
-
-timecodeBegEnd <- function(trial) {
-  start <- sub("LTC: ", "", as.character(head(trial[[2]], n=1)))
-  end  <- sub("LTC: ", "", as.character(tail(trial[[2]], n=1)))
-  out <- data.frame(timecodeStartObsis=start, timecodeEndObsis=end)
-  out$timecodeStartObsis <- as.character(out$timecodeStartObsis)
-  out$timecodeEndObsis <- as.character(out$timecodeEndObsis)
-  return(out)
-}
-
-csvWithNames <- function(file){
-  # read a csv and add a column for the filename
-  out <- utils::read.csv(file,sep="\t", header=TRUE)
-  out$file <- file
-  return(out)
-}
-
 #converts timecodes into seconds
 timeToSecs <- function(time, fps = 30){
   hms<- lubridate::hms(substr(time,0,8))
@@ -44,20 +15,9 @@ markerRead <- function(file,beginTime=0,endTime=600,verbose=FALSE) {
     print(beginTime)
     print(endTime)
   }
-  file <- utils::read.csv(file, sep="\t", na.strings = c("NA","NaN"))
+  file <- utils::read.csv(file, sep="\t", na.strings = c("NA","NaN")) # travis on linux can't find this file.
   out <- subset(file, Time..sec. >=beginTime & Time..sec. <=endTime )
   return(out)
-}
-
-countOccluded <- function(data, verbose=FALSE){
-  if(verbose){print(data[,c("subj","session","trial")])}
-  data <- data[,"markerData"][[1]]
-  dfOut <- data.frame(marker=character(0), numOccluded=integer(0), numTotal=integer(0))
-  for(n in 0:23){ # 55 for all markers, 47 for all used markers, 24 for markers used in dynamic trials
-    conds <- data[paste("cond",n,sep="")]
-    dfOut <- rbind(dfOut, data.frame(marker = n, numOccluded = nrow(subset(conds, conds==-1)), numTotal = nrow(conds)))
-  }
-  dfOut
 }
 
 
@@ -86,14 +46,14 @@ videoLength <- function(file){
     return(ffmpegDurParse(ffmpegout))
   }, error=function(cond) {
     message(paste(call, "does not seem to exist."))
-    message("Here's the original error message:")
-    message(cond)
+    # message("Here's the original error message:") # the details caused errors when testing
+    # message(cond)                                 # the details caused errors when testing
     # Choose a return value in case of error
     return(NA)
   }, warning=function(cond) {
     message(paste(call, "had a warning."))
-    message("Here's the original error message:")
-    message(cond)
+    # message("Here's the original error message:") # the details caused errors when testing
+    # message(cond)                                 # the details caused errors when testing
     return(NA)
 #     # ffmpeg throws a warning when there is no output, maybe change the call to something else?
 #     suppressWarnings({
@@ -115,5 +75,3 @@ minNotInf <- function(vector, ...){
   vector <- ifelse(is.infinite(vector),NA,vector)
   min(vector, ...)
 }
-
-

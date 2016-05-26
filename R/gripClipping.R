@@ -230,7 +230,7 @@ makeOneElanFile <- function(videoFile){
                    subj = strsplit(base, "-", fixed=TRUE)[[1]][1],
                    session = strsplit(base, "-", fixed=TRUE)[[1]][2],
                    trial = strsplit(base, "-", fixed=TRUE)[[1]][3])
-  df$pathMarkers <- paste(baseDir,"mocapData",df$Experiment, df$subj, df$session, df$trial,"Filtered Markers","Filtered Markers.txt",sep="/")
+  df$pathMarkers <- file.path(baseDir,"mocapData",df$Experiment, df$subj, df$session, df$trial,"Filtered Markers","Filtered Markers.txt")
 
   #   csvDir <- paste(dirPath,"mocapCSVs",unique(df$subj),sep="/")
   csvDir <- paste(baseDir,"mocapCSVs",unique(df$subj),sep="/")

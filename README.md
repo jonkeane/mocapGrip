@@ -1,6 +1,6 @@
 # Mocap-Grip project at the [Center for Gesture, Sign, and Language at the University of Chicago](https://gslcenter.uchicago.edu/)
 
-[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=master)](https://travis-ci.org/jonkeane/mocapGrip)  [![codecov](https://codecov.io/gh/jonkeane/mocapGrip/branch/master/graph/badge.svg)](https://codecov.io/gh/jonkeane/mocapGrip)
+[![Travis-CI Build Status](https://travis-ci.org/jonkeane/mocapGrip.svg?branch=devel)](https://travis-ci.org/jonkeane/mocapGrip)  [![codecov](https://codecov.io/gh/jonkeane/mocapGrip/branch/devel/graph/badge.svg)](https://codecov.io/gh/jonkeane/mocapGrip)
 
 This [R](https://www.r-project.org/) package contains all of the code used to process and analyze motion capture data from experiments that use a reach to grasp, size estimation, and gesture about objects (and actions taken on them) that are (sometimes) in a visual illusion paradigm.
 
@@ -55,6 +55,11 @@ The package vignettes give step by step walkthroughs of how to use mocapGrip:
    To view, after loading the package (with `library(mocapGrip)`), use the command:  
  `vignette("modelMetadata")`
 
+* *dataObjects* is a description of the data object which is stores dataSets, models/analyses, and is used in reporting.
+  To view, after loading the package (with `library(mocapGrip)`), use the command:  
+`vignette("dataObjects")`
+
+  Use the command `browseVignettes("mocapGrip")` to see all of the available vignettes.
 
 ## Best practices for scientific computing
 

@@ -1,0 +1,405 @@
+---
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+params:
+  data: "No Data"
+  title: "Grip Project Report"
+---
+
+---
+title: `r params$title`
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Maximum grip aperture (on reach to grasp)
+
+The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system).
+
+We fit a hierarchical (mixed effects) linear regression model.
+
+#### The outcome (dependent) variable is:
+
+* the maximum grip aperture (in mm)
+
+#### The predictor (independent) variables are:
+
+
+* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)
+* the configuration of the fins (closed, none, open; where closed is the reference level)
+* the interaction between the size of the stick and configuration of fins
+
+There are varying intercepts by subject, and the effects of all the predictors (including interactions) are also allowed to vary by subject (these are the mixed effects). The full formula^[See [the lme4 documentation](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf) (especially section 2) for explanation of the formula format.] for this model is:
+
+maxGrip ~ stickcmCentered * fins + (1 + stickcmCentered * fins | obsisSubj)
+
+### Coefficient plot
+
+These are the estimates of the effect sizes for the predictors (and interactions) in the model. The dot is the point estimate, the thick line is the 95% confidence interval, and the thin line the 99% confidence interval. One rule of thumb is: if the confidence intervals do not the effect is statistically significant.
+
+```{r}
+mocapGrip:::CoefficientPlot(list(params$data[["action"]]$analyses[["maxGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject))
+```
+
+### Model predictions
+
+These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
+
+```{r}
+ggplot(mocapGrip:::pred(params$data[["action"]]$analyses[["maxGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmCentered+8, y=maxGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for grip", x="stick size (in cm)", y="the maximum grip aperture (in mm)")
+```
+
+### Full model output
+
+```{r, fig.keep='none', results="asis", message=FALSE}
+texreg::htmlreg(list(params$data[["action"]]$analyses[["maxGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject),
+        method = "boot", # only needed for the overriding of pvalues
+        use.se=TRUE, # only needed for the overriding of pvalues
+        #        override.pval = list(lengthLMscaleSum$coefficients[,"Pr(>|t|)"]),
+        float.pos = "p!",
+        single.row=TRUE,
+        caption="Hierarchical linear regression coefficient estimates and standard errors.",
+        use.packas=FALSE,
+        custom.model.names=c("est. (s.e.)"),
+        stars = c(0.001, 0.01, 0.05, 0.1),
+        star.symbol = "\\*"
+)
+```
+
+### Intercept and slope adjustments
+
+There are estimates of the intercept and slope adjustments by subject. and 95% confidence intervals around those estimates. This is also referred to as the mixed effects structure and is one way to see variability between subjects.
+
+```{r, results="hide", message=FALSE}
+mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["action"]]$analyses[["maxGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject, condVar = TRUE))
+```
+
+### Raw data
+
+These are the raw data that was used in the model.
+
+```{r}
+ggplot(params$data[["action"]]$data) + aes(x=stickcmCentered+8, y=maxGrip, group=fins, color=fins) + geom_point(position = position_dodge(width=0.5), alpha = 0.5) + labs(title = "Raw data for  grip", x="stick size (in cm)", y="the maximum grip aperture (in mm)")
+```
+
+### Number of observations and occlusion
+
+```{r, results='asis'}
+knitr::kable(
+  params$data[["action"]]$data %>% dplyr::group_by(stick, fins) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+
+if("action" %in% c("gestMove")){
+  cat("#### Observations with gripType included *this is temporary*  \n The vast majority of the movements are open, with very few being open/closed. Currently, all of these (including the closed grips) are included in the analysis. We probably should exclude the closed, and possibly even the open.closed ones in the future. Thoughts?")
+
+knitr::kable(
+  params$data[["action"]]$data %>% dplyr::group_by(stick, fins, gripType) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+}
+```
+
+There were `r length(params$data[["action"]]$warnings)` trials that were excluded because there was occlusion.
+
+```{r, results='asis'}
+if(length(params$data[["action"]]$warnings)>0){
+  # don't print anythign if there are no occlusions.
+  cat(paste0("  \n* ", params$data[["action"]]$warnings, collapse = ""))
+}
+```
+
+
+## Size estimation
+
+The mean grip aperture is the mean of the distance measurements between the markers on the thumb and index finger during the period when the subject said the word ready (this period is labeled as *steady* in our annotation system).
+
+We fit a hierarchical (mixed effects) linear regression model.
+
+#### The outcome (dependent) variable is:
+
+* the mean grip aperture (in mm)
+
+#### The predictor (independent) variables are:
+
+
+* the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)
+* the configuration of the fins (closed, none, open; where closed is the reference level)
+* the interaction between the size of the stick and configuration of fins
+
+There are varying intercepts by subject, and the effects of all the predictors  are also allowed to vary by subject (these are the mixed effects). The full formula^[See [the lme4 documentation](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf) (especially section 2) for explanation of the formula format.] for this model is:
+
+meanGrip ~ stickcmCentered * fins + (1 + stickcmCentered + fins | obsisSubj)
+
+### Coefficient plot
+
+These are the estimates of the effect sizes for the predictors (and interactions) in the model. The dot is the point estimate, the thick line is the 95% confidence interval, and the thin line the 99% confidence interval. One rule of thumb is: if the confidence intervals do not the effect is statistically significant.
+
+```{r}
+mocapGrip:::CoefficientPlot(list(params$data[["estimation"]]$analyses[["meanGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject))
+```
+
+### Model predictions
+
+These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
+
+```{r}
+ggplot(mocapGrip:::pred(params$data[["estimation"]]$analyses[["meanGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmCentered+8, y=meanGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for grip", x="stick size (in cm)", y="the mean grip aperture (in mm)")
+```
+
+### Full model output
+
+```{r, fig.keep='none', results="asis", message=FALSE}
+texreg::htmlreg(list(params$data[["estimation"]]$analyses[["meanGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject),
+        method = "boot", # only needed for the overriding of pvalues
+        use.se=TRUE, # only needed for the overriding of pvalues
+        #        override.pval = list(lengthLMscaleSum$coefficients[,"Pr(>|t|)"]),
+        float.pos = "p!",
+        single.row=TRUE,
+        caption="Hierarchical linear regression coefficient estimates and standard errors.",
+        use.packas=FALSE,
+        custom.model.names=c("est. (s.e.)"),
+        stars = c(0.001, 0.01, 0.05, 0.1),
+        star.symbol = "\\*"
+)
+```
+
+### Intercept and slope adjustments
+
+There are estimates of the intercept and slope adjustments by subject. and 95% confidence intervals around those estimates. This is also referred to as the mixed effects structure and is one way to see variability between subjects.
+
+```{r, results="hide", message=FALSE}
+mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["estimation"]]$analyses[["meanGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject, condVar = TRUE))
+```
+
+### Raw data
+
+These are the raw data that was used in the model.
+
+```{r}
+ggplot(params$data[["estimation"]]$data) + aes(x=stickcmCentered+8, y=meanGrip, group=fins, color=fins) + geom_point(position = position_dodge(width=0.5), alpha = 0.5) + labs(title = "Raw data for  grip", x="stick size (in cm)", y="the mean grip aperture (in mm)")
+```
+
+### Number of observations and occlusion
+
+```{r, results='asis'}
+knitr::kable(
+  params$data[["estimation"]]$data %>% dplyr::group_by(stick, fins) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+
+if("estimation" %in% c("gestMove")){
+  cat("#### Observations with gripType included *this is temporary*  \n The vast majority of the movements are open, with very few being open/closed. Currently, all of these (including the closed grips) are included in the analysis. We probably should exclude the closed, and possibly even the open.closed ones in the future. Thoughts?")
+
+knitr::kable(
+  params$data[["estimation"]]$data %>% dplyr::group_by(stick, fins, gripType) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+}
+```
+
+There were `r length(params$data[["estimation"]]$warnings)` trials that were excluded because there was occlusion.
+
+```{r, results='asis'}
+if(length(params$data[["estimation"]]$warnings)>0){
+  # don't print anythign if there are no occlusions.
+  cat(paste0("  \n* ", params$data[["estimation"]]$warnings, collapse = ""))
+}
+```
+
+
+## Maximum grip aperture during gesture
+
+The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it looked like it was picking up the stick during gesture.
+
+We fit a hierarchical (mixed effects) linear regression model.
+
+#### The outcome (dependent) variable is:
+
+* the maximum grip aperture (in mm)
+
+#### The predictor (independent) variables are:
+
+
+* the size of the stick in centimeters as a categorical variable (factor), with seven as the reference level.
+* the configuration of the fins (closed, none, open; where closed is the reference level)
+* the interaction between the size of the stick (as a categorical variable) and configuration of fins
+
+There are varying intercepts by subject, and the effects of all the predictors (including interactions) are also allowed to vary by subject (these are the mixed effects). The full formula^[See [the lme4 documentation](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf) (especially section 2) for explanation of the formula format.] for this model is:
+
+maxGrip ~ stick * fins + (1 + stick * fins | obsisSubj)
+
+### Coefficient plot
+
+These are the estimates of the effect sizes for the predictors (and interactions) in the model. The dot is the point estimate, the thick line is the 95% confidence interval, and the thin line the 99% confidence interval. One rule of thumb is: if the confidence intervals do not the effect is statistically significant.
+
+```{r}
+mocapGrip:::CoefficientPlot(list(params$data[["gestMaxGrip"]]$analyses[["maxGrip.stickAsCategorical"]]$bestModel[[1]]$modelObject))
+```
+
+### Model predictions
+
+These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
+
+```{r}
+ggplot(mocapGrip:::pred(params$data[["gestMaxGrip"]]$analyses[["maxGrip.stickAsCategorical"]]$bestModel[[1]]$modelObject)) + aes(x=stick, y=maxGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for grip", x="stick size (in cm)", y="the maximum grip aperture (in mm)")
+```
+
+### Full model output
+
+```{r, fig.keep='none', results="asis", message=FALSE}
+texreg::htmlreg(list(params$data[["gestMaxGrip"]]$analyses[["maxGrip.stickAsCategorical"]]$bestModel[[1]]$modelObject),
+        method = "boot", # only needed for the overriding of pvalues
+        use.se=TRUE, # only needed for the overriding of pvalues
+        #        override.pval = list(lengthLMscaleSum$coefficients[,"Pr(>|t|)"]),
+        float.pos = "p!",
+        single.row=TRUE,
+        caption="Hierarchical linear regression coefficient estimates and standard errors.",
+        use.packas=FALSE,
+        custom.model.names=c("est. (s.e.)"),
+        stars = c(0.001, 0.01, 0.05, 0.1),
+        star.symbol = "\\*"
+)
+```
+
+### Intercept and slope adjustments
+
+There are estimates of the intercept and slope adjustments by subject. and 95% confidence intervals around those estimates. This is also referred to as the mixed effects structure and is one way to see variability between subjects.
+
+```{r, results="hide", message=FALSE}
+mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["gestMaxGrip"]]$analyses[["maxGrip.stickAsCategorical"]]$bestModel[[1]]$modelObject, condVar = TRUE))
+```
+
+### Raw data
+
+These are the raw data that was used in the model.
+
+```{r}
+ggplot(params$data[["gestMaxGrip"]]$data) + aes(x=stick, y=maxGrip, group=fins, color=fins) + geom_point(position = position_dodge(width=0.5), alpha = 0.5) + labs(title = "Raw data for  grip", x="stick size (in cm)", y="the maximum grip aperture (in mm)")
+```
+
+### Number of observations and occlusion
+
+```{r, results='asis'}
+knitr::kable(
+  params$data[["gestMaxGrip"]]$data %>% dplyr::group_by(stick, fins) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+
+if("gestMaxGrip" %in% c("gestMove")){
+  cat("#### Observations with gripType included *this is temporary*  \n The vast majority of the movements are open, with very few being open/closed. Currently, all of these (including the closed grips) are included in the analysis. We probably should exclude the closed, and possibly even the open.closed ones in the future. Thoughts?")
+
+knitr::kable(
+  params$data[["gestMaxGrip"]]$data %>% dplyr::group_by(stick, fins, gripType) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+}
+```
+
+There were `r length(params$data[["gestMaxGrip"]]$warnings)` trials that were excluded because there was occlusion.
+
+```{r, results='asis'}
+if(length(params$data[["gestMaxGrip"]]$warnings)>0){
+  # don't print anythign if there are no occlusions.
+  cat(paste0("  \n* ", params$data[["gestMaxGrip"]]$warnings, collapse = ""))
+}
+```
+
+
+## Mean grip aperture during gesture (movement)
+
+The mean and median distance between the markers on the thumb and index finger during the period between when the hand was moving during gesture.
+
+We fit a hierarchical (mixed effects) linear regression model.
+
+#### The outcome (dependent) variable is:
+
+* the mean grip aperture (in mm)
+
+#### The predictor (independent) variables are:
+
+
+* the size of the stick in centimeters as a categorical variable (factor), with seven as the reference level.
+* the configuration of the fins (closed, none, open; where closed is the reference level)
+* the interaction between the size of the stick (as a categorical variable) and configuration of fins
+
+There are varying intercepts by subject, and the effects of all the predictors  are also allowed to vary by subject (these are the mixed effects). The full formula^[See [the lme4 documentation](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf) (especially section 2) for explanation of the formula format.] for this model is:
+
+meanGrip ~ stick * fins + (1 + stick + fins | obsisSubj)
+
+### Coefficient plot
+
+These are the estimates of the effect sizes for the predictors (and interactions) in the model. The dot is the point estimate, the thick line is the 95% confidence interval, and the thin line the 99% confidence interval. One rule of thumb is: if the confidence intervals do not the effect is statistically significant.
+
+```{r}
+mocapGrip:::CoefficientPlot(list(params$data[["gestMove"]]$analyses[["meanGrip.stickAsCategorical"]]$bestModel[[1]]$modelObject))
+```
+
+### Model predictions
+
+These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
+
+```{r}
+ggplot(mocapGrip:::pred(params$data[["gestMove"]]$analyses[["meanGrip.stickAsCategorical"]]$bestModel[[1]]$modelObject)) + aes(x=stick, y=meanGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for grip", x="stick size (in cm)", y="the mean grip aperture (in mm)")
+```
+
+### Full model output
+
+```{r, fig.keep='none', results="asis", message=FALSE}
+texreg::htmlreg(list(params$data[["gestMove"]]$analyses[["meanGrip.stickAsCategorical"]]$bestModel[[1]]$modelObject),
+        method = "boot", # only needed for the overriding of pvalues
+        use.se=TRUE, # only needed for the overriding of pvalues
+        #        override.pval = list(lengthLMscaleSum$coefficients[,"Pr(>|t|)"]),
+        float.pos = "p!",
+        single.row=TRUE,
+        caption="Hierarchical linear regression coefficient estimates and standard errors.",
+        use.packas=FALSE,
+        custom.model.names=c("est. (s.e.)"),
+        stars = c(0.001, 0.01, 0.05, 0.1),
+        star.symbol = "\\*"
+)
+```
+
+### Intercept and slope adjustments
+
+There are estimates of the intercept and slope adjustments by subject. and 95% confidence intervals around those estimates. This is also referred to as the mixed effects structure and is one way to see variability between subjects.
+
+```{r, results="hide", message=FALSE}
+mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["gestMove"]]$analyses[["meanGrip.stickAsCategorical"]]$bestModel[[1]]$modelObject, condVar = TRUE))
+```
+
+### Raw data
+
+These are the raw data that was used in the model.
+
+```{r}
+ggplot(params$data[["gestMove"]]$data) + aes(x=stick, y=meanGrip, group=fins, color=fins) + geom_point(position = position_dodge(width=0.5), alpha = 0.5) + labs(title = "Raw data for  grip", x="stick size (in cm)", y="the mean grip aperture (in mm)")
+```
+
+### Number of observations and occlusion
+
+```{r, results='asis'}
+knitr::kable(
+  params$data[["gestMove"]]$data %>% dplyr::group_by(stick, fins) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+
+if("gestMove" %in% c("gestMove")){
+  cat("#### Observations with gripType included *this is temporary*  \n The vast majority of the movements are open, with very few being open/closed. Currently, all of these (including the closed grips) are included in the analysis. We probably should exclude the closed, and possibly even the open.closed ones in the future. Thoughts?")
+
+knitr::kable(
+  params$data[["gestMove"]]$data %>% dplyr::group_by(stick, fins, gripType) %>% dplyr::summarize(n=n(), subjs=length(unique(obsisSubj)), meanPerSubj=n/subjs)
+)
+}
+```
+
+There were `r length(params$data[["gestMove"]]$warnings)` trials that were excluded because there was occlusion.
+
+```{r, results='asis'}
+if(length(params$data[["gestMove"]]$warnings)>0){
+  # don't print anythign if there are no occlusions.
+  cat(paste0("  \n* ", params$data[["gestMove"]]$warnings, collapse = ""))
+}
+```

@@ -25,7 +25,13 @@ knitr::opts_chunk$set(echo = FALSE)
 
 The maximum grip aperture is the maximum distance between the markers on the thumb and index finger during the period between when the hand left the table and when it touched the stick (this period is labeled as *grip* in our annotation system).
 
-We fit a hierarchical (mixed effects) linear regression model. The outcome (dependent) variable is the maximum grip aperture (in mm), and the predictor (independent) variables are:
+We fit a hierarchical (mixed effects) linear regression model.
+
+#### The outcome (dependent) variable is:
+
+* the maximum grip aperture (in mm)
+
+#### The predictor (independent) variables are:
 
 
 * the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)
@@ -49,7 +55,7 @@ mocapGrip:::CoefficientPlot(list(params$data[["action"]]$analyses[["maxGrip.stic
 These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
 
 ```{r}
-ggplot(mocapGrip:::pred(params$data[["action"]]$analyses[["maxGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmCentered+8, y=maxGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="maximum grip aperture (in mm)")
+ggplot(mocapGrip:::pred(params$data[["action"]]$analyses[["maxGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmCentered+8, y=maxGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for grip", x="stick size (in cm)", y="the maximum grip aperture (in mm)")
 ```
 
 ### Full model output
@@ -75,6 +81,14 @@ There are estimates of the intercept and slope adjustments by subject. and 95% c
 
 ```{r, results="hide", message=FALSE}
 mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["action"]]$analyses[["maxGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject, condVar = TRUE))
+```
+
+### Raw data
+
+These are the raw data that was used in the model.
+
+```{r}
+ggplot(params$data[["action"]]$data) + aes(x=stickcmCentered+8, y=maxGrip, group=fins, color=fins) + geom_point(position = position_dodge(width=0.5), alpha = 0.5) + labs(title = "Raw data for  grip", x="stick size (in cm)", y="the maximum grip aperture (in mm)")
 ```
 
 ### Number of observations and occlusion
@@ -107,7 +121,13 @@ if(length(params$data[["action"]]$warnings)>0){
 
 The mean grip aperture is the mean of the distance measurements between the markers on the thumb and index finger during the period when the subject said the word ready (this period is labeled as *steady* in our annotation system).
 
-We fit a hierarchical (mixed effects) linear regression model. The outcome (dependent) variable is the mean grip aperture (in mm), and the predictor (independent) variables are:
+We fit a hierarchical (mixed effects) linear regression model.
+
+#### The outcome (dependent) variable is:
+
+* the mean grip aperture (in mm)
+
+#### The predictor (independent) variables are:
 
 
 * the size of the stick in centimeters (centered at 8 cm, where 1 unit difference is 1 cm difference in stick size)
@@ -131,7 +151,7 @@ mocapGrip:::CoefficientPlot(list(params$data[["estimation"]]$analyses[["meanGrip
 These are predictions from the model for specific conditions. The dots are point estimates, and the lines are 95% confidence intervals.
 
 ```{r}
-ggplot(mocapGrip:::pred(params$data[["estimation"]]$analyses[["meanGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmCentered+8, y=meanGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for maximum grip", x="stick size (in cm)", y="mean grip aperture (in mm)")
+ggplot(mocapGrip:::pred(params$data[["estimation"]]$analyses[["meanGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject)) + aes(x=stickcmCentered+8, y=meanGrip, ymin=plo, ymax=phi, group=fins, color=fins) + geom_pointrange(position = position_dodge(width=0.5)) + labs(title = "Model predictions for grip", x="stick size (in cm)", y="the mean grip aperture (in mm)")
 ```
 
 ### Full model output
@@ -157,6 +177,14 @@ There are estimates of the intercept and slope adjustments by subject. and 95% c
 
 ```{r, results="hide", message=FALSE}
 mocapGrip:::ggCaterpillar(lme4::ranef(params$data[["estimation"]]$analyses[["meanGrip.stickAsContinuous"]]$bestModel[[1]]$modelObject, condVar = TRUE))
+```
+
+### Raw data
+
+These are the raw data that was used in the model.
+
+```{r}
+ggplot(params$data[["estimation"]]$data) + aes(x=stickcmCentered+8, y=meanGrip, group=fins, color=fins) + geom_point(position = position_dodge(width=0.5), alpha = 0.5) + labs(title = "Raw data for  grip", x="stick size (in cm)", y="the mean grip aperture (in mm)")
 ```
 
 ### Number of observations and occlusion
