@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Data objects store all of the information about the data, dataSets, and analyses after they are read in from the extract annotations (or after the models are run in the case of analyses). They are a critical component that houses the dataSets to be analyzed, the analyses after the models are fit, and they are used to write reports.
+Data objects store all of the information about the data, dataSets, and analyses after they are read in from the extracted annotations (or after the models are run in the case of analyses). They are a critical component that houses the dataSets to be analyzed, the analyses after the models are fit, and they are used to write reports.
 
 ```{r, echo = FALSE, results = 'hide', message=FALSE}
 library(mocapGrip)
@@ -59,12 +59,12 @@ head(data$action$data)
 
 
 ### analyses structure
-The analyses part of a dataSet within a data object have more structure inside of them. These will only exist if the dataSet has been modeled (for example, with the `modelAllData()` command). The first level is the name of the model that was fit (there can be more than one model fit here if there is more than one model listed in the `analysesToRun` above.) This name corresponds to the names in the `analyses` section of the `model` section in modelMetadata. Each one has a unique name, and a unique set of outcome and predictor variables (see the [model metadata vignette](modelMetadata.html) for more information).
+The analyses part of a dataSet within a data object has more structure inside of them. These will only exist if the dataSet has been modeled (for example, with the `modelAllData()` command). The first level is the name of the model that was fit (there can be more than one model fit here if there is more than one model listed in the `analysesToRun` above.) This name corresponds to the names in the `analyses` section of the `model` section in modelMetadata. Each one has a unique name, and a unique set of outcome and predictor variables (see the [model metadata vignette](modelMetadata.html) for more information).
 
 Each of these analyses will have two levels below it:
 
 1. `bestModel`  
-This is the model that was chosen as the best model when the models were fit. Best here is typically defined as the most complex model that did not have an error or warning when it was fit. The level under this has a name that corresponds to the kind of model (for example `interactionInPredAndGroup`) (which is described in more detail in the model levels section below)
+This is the model that was chosen as the best model when the models were fit. Best here is typically defined as the most complex model that did not have an error or warning when it was fit^[For more details about fitting and convergence warnings and errors, see the [lme4 documentation](https://cran.r-project.org/web/packages/lme4/lme4.pdf), as well as the [glmm faq](http://glmm.wikidot.com/faq) and [r-sig-mixed-models list](https://stat.ethz.ch/mailman/listinfo/r-sig-mixed-models)]. The level under this has a name that corresponds to the kind of model (for example `interactionInPredAndGroup`) (which is described in more detail in the model levels section below)
 1. `allModels`  
 This level has all of the models that were fit (or attempted to be fit). Each one has the same structure (which is described in more detail in the model levels section below). 
 
@@ -77,7 +77,7 @@ The name of this level describes what kind of model was fit. For now, the only d
 This object has the following levels:
 
 1. `modelObject`  
-This is the model object that was fit using the `lme4` package. This is useful if you need to manually inspect the model.
+This is the model object that was fit using the [`lme4`](https://cran.r-project.org/web/packages/lme4/index.html) package. This is useful if you need to manually inspect the model.
 1. `converged`  
 This is a logical that is `TRUE` if the model converged and `FALSE` if the model did not converge.
 1. `convWarnCode`  
