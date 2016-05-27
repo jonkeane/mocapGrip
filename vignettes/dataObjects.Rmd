@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Data objects store all of the information about the data, dataSets, and analyses after they are read in from the extract annotatoins (or after the models are run in the case of analyses). They are a critical component that houses the dataSets to be analyzed, the analyses after the models are fit, and they are used to write reports.
+Data objects store all of the information about the data, dataSets, and analyses after they are read in from the extract annotations (or after the models are run in the case of analyses). They are a critical component that houses the dataSets to be analyzed, the analyses after the models are fit, and they are used to write reports.
 
 ```{r, echo = FALSE, results = 'hide', message=FALSE}
 library(mocapGrip)
@@ -17,7 +17,12 @@ library(mocapGrip)
 pathToExtractedData <- system.file("extData", "minimalSubset", "extractedData", package = "mocapGrip")
 ```
 
-Throughout this guide, we will use `pathToExtractedData` to stand in for the path, on your computer, to the extracted motion capture data. This will look something like `"./extractedData/"`. Remeber when you run the code on your compute to replace `pathToExtractedData` with a string that matches the folder structure on your computer.
+Throughout this guide, we will use `pathToExtractedData` to stand in for the path to the extracted motion capture data (on your computer). This will look something like `"./extractedData/"`. Remember when you run the code on your compute to replace `pathToExtractedData` with a string that matches the folder structure on your computer. If you want to be able to cut and paste these examples, you can store the path (either from R's working directory or as an absolute path) in the variable `pathToExtractedData` (like that shown below), and then each of these commands will look in that specific location on your computer for the extracted data.
+
+```{r, fig.show='hold', eval=FALSE}
+pathToExtractedData <- "./path/to/extracted/data"
+```
+
 
 First, we should create a data object:
 ```{r, results = 'hide', eval = FALSE}
@@ -86,7 +91,7 @@ Using our example data object above, we can look at the *action* dataSet's *maxG
 data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGroup$modelObject
 ```
 
-Additionally, we can see that `converged` is `TRUE`, there are `convWarnCode` is `0` and theere are no `convWarnMsgs`:
+Additionally, we can see that `converged` is `TRUE`, there are `convWarnCode` is `0` and there are no `convWarnMsgs`:
 ```{r, eval=FALSE}
 data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGroup$converged
 
@@ -118,14 +123,14 @@ data$action$analyses$maxGrip.stickAsContinuous$bestModel$interactionInPredAndGro
 
 ## fullData
 
-If the data object includes the full data, there will be one more level at the top of the data object called `fullData` which is a dataframe of all of the motion capture data that was read in by `readExtractedMocapData`. This includes each and every observation (milisecond by milisecond) from the mocap system, with columns for subject, trial, condition, etc. which is **a lot** of data usually. 
+If the data object includes the full data, there will be one more level at the top of the data object called `fullData` which is a dataframe of all of the motion capture data that was read in by `readExtractedMocapData`. This includes each and every observation (millisecond by millisecond) from the mocap system, with columns for subject, trial, condition, etc. which is **a lot** of data usually. 
 
-Because this is a lot of data, in the example here we wrape the data object (and the level selector) with the `head()` command so that R will only print the first few rows of the dataframe.
+Because this is a lot of data, in the example here we wrap the data object (and the level selector) with the `head()` command so that R will only print the first few rows of the dataframe.
 
 ```{r, eval=FALSE}
 head(data$fullData)
 ```
 
-This full data can be useful if you want to extract more dataSets without reading in the data over and over, or if there are manual analyses or porcessing that must be run.
+This full data can be useful if you want to extract more dataSets without reading in the data over and over, or if there are manual analyses or processing that must be run.
 
 
